@@ -28,7 +28,10 @@ const Index = () => {
     <div className="relative">
       {/* Hero */}
       <section className="relative min-h-screen flex items-center justify-center overflow-hidden">
-        <div className="absolute inset-0 bg-gradient-to-b from-primary/5 via-transparent to-secondary/5" />
+        <div className="absolute inset-0">
+          <img src={heroImage} alt="" className="w-full h-full object-cover opacity-20" width={1920} height={1080} />
+          <div className="absolute inset-0 bg-gradient-to-b from-background/60 via-background/80 to-background" />
+        </div>
         <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[600px] h-[600px] rounded-full bg-gradient-to-br from-primary/10 to-secondary/10 blur-3xl" />
         
         <div className="relative z-10 max-w-5xl mx-auto px-4 text-center">
