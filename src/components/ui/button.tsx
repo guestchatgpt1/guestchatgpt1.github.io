@@ -8,14 +8,14 @@ const buttonVariants = cva(
   {
     variants: {
       variant: {
-        default: "bg-primary text-primary-foreground hover:bg-primary/90 hover:shadow-[0_0_20px_hsl(var(--neon-blue)/0.4)]",
+        default: "bg-primary text-primary-foreground hover:bg-primary/90 hover:shadow-[0_0_20px_hsl(var(--glow-primary)/0.4)]",
         destructive: "bg-destructive text-destructive-foreground hover:bg-destructive/90",
-        outline: "border border-primary/50 bg-transparent text-primary hover:bg-primary/10 hover:border-primary hover:shadow-[0_0_15px_hsl(var(--neon-blue)/0.2)]",
-        secondary: "bg-secondary text-secondary-foreground hover:bg-secondary/80 hover:shadow-[0_0_20px_hsl(var(--neon-violet)/0.3)]",
+        outline: "border border-primary/50 bg-transparent text-primary hover:bg-primary/10 hover:border-primary hover:shadow-[0_0_15px_hsl(var(--glow-primary)/0.2)]",
+        secondary: "bg-secondary text-secondary-foreground hover:bg-secondary/80 hover:shadow-[0_0_20px_hsl(var(--glow-secondary)/0.3)]",
         ghost: "hover:bg-muted hover:text-foreground",
         link: "text-primary underline-offset-4 hover:underline",
-        hero: "bg-gradient-to-r from-primary to-secondary text-foreground font-semibold hover:shadow-[0_0_30px_hsl(var(--neon-blue)/0.5)] hover:scale-105 transition-all duration-300",
-        "hero-outline": "border border-primary/60 bg-transparent text-foreground hover:bg-primary/10 hover:border-primary hover:shadow-[0_0_20px_hsl(var(--neon-blue)/0.3)] transition-all duration-300",
+        hero: "bg-gradient-to-r from-primary to-accent text-primary-foreground font-semibold hover:shadow-[0_0_30px_hsl(var(--glow-primary)/0.5)] hover:scale-105 transition-all duration-300",
+        "hero-outline": "border border-primary/60 bg-transparent text-foreground hover:bg-primary/10 hover:border-primary hover:shadow-[0_0_20px_hsl(var(--glow-primary)/0.3)] transition-all duration-300",
       },
       size: {
         default: "h-10 px-4 py-2",

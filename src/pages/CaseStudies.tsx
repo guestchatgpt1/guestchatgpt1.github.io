@@ -46,7 +46,7 @@ const CaseStudies = () => {
   return (
     <div className="pt-16">
       <section className="section-padding">
-        <div className="max-w-6xl mx-auto">
+        <div className="container-max">
           <SectionHeading
             label="Case Studies"
             title="Real-World Quantum Impact"
@@ -55,14 +55,14 @@ const CaseStudies = () => {
 
           <div className="space-y-12">
             {cases.map((c) => (
-              <div key={c.title} className="glass rounded-xl overflow-hidden">
+              <article key={c.title} className="glass rounded-xl overflow-hidden">
                 <div className="p-8 md:p-10">
                   <div className="flex items-center gap-4 mb-6">
-                    <div className="w-12 h-12 rounded-lg bg-primary/10 flex items-center justify-center">
+                    <div className="w-12 h-12 rounded-lg bg-primary/10 flex items-center justify-center shrink-0">
                       <c.icon size={24} className="text-primary" />
                     </div>
                     <div>
-                      <h3 className="font-display text-xl font-bold text-foreground">{c.title}</h3>
+                      <h3 className="font-display text-base font-bold text-foreground">{c.title}</h3>
                       <p className="text-sm text-muted-foreground">{c.client}</p>
                     </div>
                   </div>
@@ -81,13 +81,13 @@ const CaseStudies = () => {
                   <div className="grid grid-cols-3 gap-4 p-6 bg-muted/50 rounded-lg">
                     {c.results.map((r) => (
                       <div key={r.label} className="text-center">
-                        <div className="font-display text-2xl font-bold gradient-text">{r.metric}</div>
+                        <div className="font-display text-xl sm:text-2xl font-bold gradient-text">{r.metric}</div>
                         <div className="text-xs text-muted-foreground mt-1">{r.label}</div>
                       </div>
                     ))}
                   </div>
                 </div>
-              </div>
+              </article>
             ))}
           </div>
 

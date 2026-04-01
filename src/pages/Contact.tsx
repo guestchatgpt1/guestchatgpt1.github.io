@@ -1,25 +1,64 @@
 import { useState } from "react";
 import SectionHeading from "@/components/SectionHeading";
 import { Button } from "@/components/ui/button";
-import { Mail, MapPin, Phone, Send } from "lucide-react";
+import { Mail, MapPin, Phone, Send, Loader2 } from "lucide-react";
 import { useToast } from "@/hooks/use-toast";
+import { z } from "zod";
+
+const contactSchema = z.object({
+  name: z.string().trim().min(1, "Name is required").max(100, "Name is too long"),
+  email: z.string().trim().email("Please enter a valid email").max(255),
+  company: z.string().trim().max(100).optional(),
+  message: z.string().trim().min(1, "Message is required").max(2000, "Message is too long"),
+});
+
+type FormData = z.infer<typeof contactSchema>;
+type FormErrors = Partial<Record<keyof FormData, string>>;
 
 const Contact = () => {
   const { toast } = useToast();
-  const [form, setForm] = useState({ name: "", email: "", company: "", message: "" });
+  const [form, setForm] = useState<FormData>({ name: "", email: "", company: "", message: "" });
+  const [errors, setErrors] = useState<FormErrors>({});
+  const [submitting, setSubmitting] = useState(false);
 
-  const handleSubmit = (e: React.FormEvent) => {
+  const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
+    setErrors({});
+
+    const result = contactSchema.safeParse(form);
+    if (!result.success) {
+      const fieldErrors: FormErrors = {};
+      result.error.issues.forEach((issue) => {
+        const field = issue.path[0] as keyof FormData;
+        if (!fieldErrors[field]) fieldErrors[field] = issue.message;
+      });
+      setErrors(fieldErrors);
+      return;
+    }
+
+    setSubmitting(true);
+    // Simulate network request
+    await new Promise((r) => setTimeout(r, 800));
+    setSubmitting(false);
+
     toast({ title: "Message sent!", description: "We'll get back to you within 24 hours." });
     setForm({ name: "", email: "", company: "", message: "" });
   };
 
-  const inputClass = "w-full h-12 px-4 rounded-lg bg-muted border border-border text-foreground placeholder:text-muted-foreground focus:outline-none focus:ring-2 focus:ring-primary/50 text-sm transition-all";
+  const update = (field: keyof FormData, value: string) => {
+    setForm((prev) => ({ ...prev, [field]: value }));
+    if (errors[field]) setErrors((prev) => ({ ...prev, [field]: undefined }));
+  };
+
+  const inputClass = (field: keyof FormData) =>
+    `w-full h-12 px-4 rounded-lg bg-muted border text-foreground placeholder:text-muted-foreground focus:outline-none focus:ring-2 focus:ring-primary/50 text-sm transition-all ${
+      errors[field] ? "border-destructive" : "border-border"
+    }`;
 
   return (
     <div className="pt-16">
       <section className="section-padding">
-        <div className="max-w-6xl mx-auto">
+        <div className="container-max">
           <SectionHeading
             label="Contact"
             title="Let's Build the Future Together"
@@ -28,82 +67,92 @@ const Contact = () => {
 
           <div className="grid lg:grid-cols-5 gap-12">
             <div className="lg:col-span-3">
-              <form onSubmit={handleSubmit} className="glass rounded-xl p-8 space-y-6">
+              <form onSubmit={handleSubmit} className="glass rounded-xl p-8 space-y-6" noValidate>
                 <div className="grid sm:grid-cols-2 gap-4">
+                  <div>
+                    <label htmlFor="contact-name" className="sr-only">Your Name</label>
+                    <input
+                      id="contact-name"
+                      type="text"
+                      placeholder="Your Name"
+                      value={form.name}
+                      onChange={(e) => update("name", e.target.value)}
+                      className={inputClass("name")}
+                      maxLength={100}
+                    />
+                    {errors.name && <p className="text-destructive text-xs mt-1">{errors.name}</p>}
+                  </div>
+                  <div>
+                    <label htmlFor="contact-email" className="sr-only">Email Address</label>
+                    <input
+                      id="contact-email"
+                      type="email"
+                      placeholder="Email Address"
+                      value={form.email}
+                      onChange={(e) => update("email", e.target.value)}
+                      className={inputClass("email")}
+                      maxLength={255}
+                    />
+                    {errors.email && <p className="text-destructive text-xs mt-1">{errors.email}</p>}
+                  </div>
+                </div>
+                <div>
+                  <label htmlFor="contact-company" className="sr-only">Company</label>
                   <input
+                    id="contact-company"
                     type="text"
-                    placeholder="Your Name"
-                    value={form.name}
-                    onChange={(e) => setForm({ ...form, name: e.target.value })}
-                    className={inputClass}
-                    required
-                  />
-                  <input
-                    type="email"
-                    placeholder="Email Address"
-                    value={form.email}
-                    onChange={(e) => setForm({ ...form, email: e.target.value })}
-                    className={inputClass}
-                    required
+                    placeholder="Company (optional)"
+                    value={form.company}
+                    onChange={(e) => update("company", e.target.value)}
+                    className={inputClass("company")}
+                    maxLength={100}
                   />
                 </div>
-                <input
-                  type="text"
-                  placeholder="Company (optional)"
-                  value={form.company}
-                  onChange={(e) => setForm({ ...form, company: e.target.value })}
-                  className={inputClass}
-                />
-                <textarea
-                  placeholder="Tell us about your project..."
-                  value={form.message}
-                  onChange={(e) => setForm({ ...form, message: e.target.value })}
-                  rows={5}
-                  className="w-full px-4 py-3 rounded-lg bg-muted border border-border text-foreground placeholder:text-muted-foreground focus:outline-none focus:ring-2 focus:ring-primary/50 text-sm resize-none transition-all"
-                  required
-                />
-                <Button variant="hero" size="lg" type="submit" className="w-full sm:w-auto">
-                  Send Message <Send size={16} />
+                <div>
+                  <label htmlFor="contact-message" className="sr-only">Message</label>
+                  <textarea
+                    id="contact-message"
+                    placeholder="Tell us about your project..."
+                    value={form.message}
+                    onChange={(e) => update("message", e.target.value)}
+                    rows={5}
+                    maxLength={2000}
+                    className={`w-full px-4 py-3 rounded-lg bg-muted border text-foreground placeholder:text-muted-foreground focus:outline-none focus:ring-2 focus:ring-primary/50 text-sm resize-none transition-all ${
+                      errors.message ? "border-destructive" : "border-border"
+                    }`}
+                  />
+                  {errors.message && <p className="text-destructive text-xs mt-1">{errors.message}</p>}
+                </div>
+                <Button variant="hero" size="lg" type="submit" className="w-full sm:w-auto" disabled={submitting}>
+                  {submitting ? <><Loader2 size={16} className="animate-spin" /> Sending...</> : <>Send Message <Send size={16} /></>}
                 </Button>
               </form>
             </div>
 
             <div className="lg:col-span-2 space-y-6">
               <div className="glass rounded-xl p-8">
-                <h3 className="font-display text-lg font-semibold text-foreground mb-6">Get in Touch</h3>
+                <h3 className="font-display text-sm font-semibold text-foreground mb-6 uppercase tracking-wider">Get in Touch</h3>
                 <div className="space-y-5">
-                  <div className="flex items-start gap-4">
-                    <div className="w-10 h-10 rounded-lg bg-primary/10 flex items-center justify-center shrink-0">
-                      <Mail size={18} className="text-primary" />
+                  {[
+                    { icon: Mail, label: "Email", value: "hello@quantumnest.ai" },
+                    { icon: Phone, label: "Phone", value: "+1 (555) 0-QUANTUM" },
+                    { icon: MapPin, label: "Headquarters", value: "123 Innovation Drive\nSan Francisco, CA 94105" },
+                  ].map((item) => (
+                    <div key={item.label} className="flex items-start gap-4">
+                      <div className="w-10 h-10 rounded-lg bg-primary/10 flex items-center justify-center shrink-0">
+                        <item.icon size={18} className="text-primary" />
+                      </div>
+                      <div>
+                        <p className="text-sm font-medium text-foreground">{item.label}</p>
+                        <p className="text-sm text-muted-foreground whitespace-pre-line">{item.value}</p>
+                      </div>
                     </div>
-                    <div>
-                      <p className="text-sm font-medium text-foreground">Email</p>
-                      <p className="text-sm text-muted-foreground">hello@quantumnest.ai</p>
-                    </div>
-                  </div>
-                  <div className="flex items-start gap-4">
-                    <div className="w-10 h-10 rounded-lg bg-primary/10 flex items-center justify-center shrink-0">
-                      <Phone size={18} className="text-primary" />
-                    </div>
-                    <div>
-                      <p className="text-sm font-medium text-foreground">Phone</p>
-                      <p className="text-sm text-muted-foreground">+1 (555) 0-QUANTUM</p>
-                    </div>
-                  </div>
-                  <div className="flex items-start gap-4">
-                    <div className="w-10 h-10 rounded-lg bg-primary/10 flex items-center justify-center shrink-0">
-                      <MapPin size={18} className="text-primary" />
-                    </div>
-                    <div>
-                      <p className="text-sm font-medium text-foreground">Headquarters</p>
-                      <p className="text-sm text-muted-foreground">123 Innovation Drive<br />San Francisco, CA 94105</p>
-                    </div>
-                  </div>
+                  ))}
                 </div>
               </div>
 
               <div className="glass rounded-xl p-8">
-                <h3 className="font-display text-lg font-semibold text-foreground mb-3">Office Hours</h3>
+                <h3 className="font-display text-sm font-semibold text-foreground mb-3 uppercase tracking-wider">Office Hours</h3>
                 <div className="space-y-2 text-sm text-muted-foreground">
                   <div className="flex justify-between">
                     <span>Monday – Friday</span>

@@ -50,7 +50,7 @@ const Blog = () => {
   return (
     <div className="pt-16">
       <section className="section-padding">
-        <div className="max-w-6xl mx-auto">
+        <div className="container-max">
           <SectionHeading
             label="Blog & Insights"
             title="Perspectives from the Frontier"
@@ -59,17 +59,17 @@ const Blog = () => {
 
           <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-6">
             {posts.map((p) => (
-              <article key={p.title} className="glass rounded-xl p-6 hover:border-primary/50 transition-all duration-300 group cursor-pointer">
+              <article key={p.title} className="glass-hover rounded-xl p-6 group cursor-pointer">
                 <div className="flex items-center justify-between mb-4">
                   <span className={`text-xs font-medium px-2.5 py-1 rounded-full ${categoryColor[p.category]}`}>
                     {p.category}
                   </span>
-                  <span className="flex items-center gap-1 text-xs text-muted-foreground">
-                    <Calendar size={12} />
+                  <time className="flex items-center gap-1 text-xs text-muted-foreground">
+                    <Calendar size={12} aria-hidden="true" />
                     {p.date}
-                  </span>
+                  </time>
                 </div>
-                <h3 className="font-display text-base font-semibold text-foreground mb-3 group-hover:text-primary transition-colors leading-tight">
+                <h3 className="font-display text-sm font-semibold text-foreground mb-3 group-hover:text-primary transition-colors leading-tight">
                   {p.title}
                 </h3>
                 <p className="text-muted-foreground text-sm leading-relaxed mb-4">{p.excerpt}</p>
