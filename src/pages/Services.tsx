@@ -40,7 +40,7 @@ const Services = () => {
   return (
     <div className="pt-16">
       <section className="section-padding">
-        <div className="max-w-6xl mx-auto">
+        <div className="container-max">
           <SectionHeading
             label="Services"
             title="Solutions That Redefine Possible"
@@ -49,20 +49,20 @@ const Services = () => {
 
           <div className="space-y-8">
             {services.map((s, i) => (
-              <div key={s.title} className={`glass rounded-xl p-8 md:p-10 hover:border-primary/50 transition-all duration-500 ${i % 2 === 1 ? "md:ml-12" : "md:mr-12"}`}>
+              <div key={s.title} className={`glass-hover rounded-xl p-8 md:p-10 ${i % 2 === 1 ? "md:ml-12" : "md:mr-12"}`}>
                 <div className="flex flex-col md:flex-row gap-8">
                   <div className="shrink-0">
-                    <div className="w-16 h-16 rounded-xl bg-gradient-to-br from-primary/20 to-secondary/20 flex items-center justify-center">
+                    <div className="w-16 h-16 rounded-xl bg-gradient-to-br from-primary/15 to-secondary/15 flex items-center justify-center">
                       <s.icon size={32} className="text-primary" />
                     </div>
                   </div>
                   <div className="flex-1">
-                    <h3 className="font-display text-xl font-bold text-foreground mb-3">{s.title}</h3>
+                    <h3 className="font-display text-base font-bold text-foreground mb-3">{s.title}</h3>
                     <p className="text-muted-foreground leading-relaxed mb-4">{s.desc}</p>
-                    <div className="grid grid-cols-2 gap-2">
+                    <div className="grid grid-cols-1 sm:grid-cols-2 gap-2">
                       {s.features.map((f) => (
                         <div key={f} className="flex items-center gap-2 text-sm text-muted-foreground">
-                          <div className="w-1.5 h-1.5 rounded-full bg-primary" />
+                          <div className="w-1.5 h-1.5 rounded-full bg-primary shrink-0" aria-hidden="true" />
                           {f}
                         </div>
                       ))}

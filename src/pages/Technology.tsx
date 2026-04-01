@@ -32,7 +32,7 @@ const Technology = () => {
   return (
     <div className="pt-16">
       <section className="section-padding">
-        <div className="max-w-6xl mx-auto">
+        <div className="container-max">
           <SectionHeading
             label="Technology"
             title="The Science Behind Our Solutions"
@@ -41,20 +41,20 @@ const Technology = () => {
 
           <div className="grid md:grid-cols-2 gap-8">
             {technologies.map((t) => (
-              <div key={t.title} className="glass rounded-xl p-8 hover:border-primary/50 transition-all duration-500 group">
+              <div key={t.title} className="glass-hover rounded-xl p-8 group">
                 <div className="flex items-start gap-4 mb-6">
-                  <div className="w-12 h-12 rounded-lg bg-gradient-to-br from-primary/20 to-secondary/20 flex items-center justify-center shrink-0 group-hover:from-primary/30 group-hover:to-secondary/30 transition-all">
+                  <div className="w-12 h-12 rounded-lg bg-gradient-to-br from-primary/15 to-secondary/15 flex items-center justify-center shrink-0 group-hover:from-primary/25 group-hover:to-secondary/25 transition-all">
                     <t.icon size={24} className="text-primary" />
                   </div>
                   <div>
-                    <h3 className="font-display text-lg font-bold text-foreground">{t.title}</h3>
+                    <h3 className="font-display text-sm font-bold text-foreground">{t.title}</h3>
                     <p className="text-muted-foreground text-sm mt-1 leading-relaxed">{t.desc}</p>
                   </div>
                 </div>
                 <div className="space-y-2 ml-16">
                   {t.details.map((d) => (
                     <div key={d} className="flex items-center gap-2 text-sm text-muted-foreground">
-                      <div className="w-1.5 h-1.5 rounded-full bg-primary/60" />
+                      <div className="w-1.5 h-1.5 rounded-full bg-primary/60" aria-hidden="true" />
                       {d}
                     </div>
                   ))}
@@ -63,14 +63,13 @@ const Technology = () => {
             ))}
           </div>
 
-          {/* Architecture Diagram Placeholder */}
           <div className="mt-20">
             <SectionHeading label="Architecture" title="How It All Connects" />
-            <div className="glass rounded-xl p-12 text-center">
-              <div className="grid grid-cols-3 gap-4 max-w-2xl mx-auto">
+            <div className="glass rounded-xl p-8 sm:p-12">
+              <div className="grid grid-cols-2 sm:grid-cols-3 gap-4 max-w-2xl mx-auto">
                 {["Data Ingestion", "Classical Pre-Processing", "Quantum Circuit Execution", "Hybrid Optimization", "Model Training", "Deployment & Monitoring"].map((step, i) => (
                   <div key={step} className="relative">
-                    <div className="bg-muted rounded-lg p-4 border border-border/50 hover:border-primary/50 transition-colors">
+                    <div className="bg-muted rounded-lg p-4 border border-border/50 hover:border-primary/50 transition-colors text-center">
                       <div className="font-display text-xs text-primary mb-1">0{i + 1}</div>
                       <div className="text-xs text-foreground font-medium">{step}</div>
                     </div>

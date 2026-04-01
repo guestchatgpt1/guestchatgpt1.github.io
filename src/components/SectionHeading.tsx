@@ -13,11 +13,11 @@ const SectionHeading = ({ label, title, description, className = "" }: SectionHe
           {label}
         </span>
       )}
-      <h2 className="font-display text-3xl sm:text-4xl lg:text-5xl font-bold mb-4 gradient-text leading-tight">
+      <h2 className="font-display text-2xl sm:text-3xl lg:text-4xl font-bold mb-4 gradient-text leading-tight">
         {title}
       </h2>
       {description && (
-        <p className="text-muted-foreground text-lg leading-relaxed">
+        <p className="text-muted-foreground text-base sm:text-lg leading-relaxed">
           {description}
         </p>
       )}
