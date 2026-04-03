@@ -9,8 +9,8 @@ const navLinks = [
   { label: "Services", path: "/services" },
   { label: "Technology", path: "/technology" },
   { label: "Case Studies", path: "/case-studies" },
+  { label: "Pricing", path: "/pricing" },
   { label: "Blog", path: "/blog" },
-  { label: "Contact", path: "/contact" },
 ];
 
 const Navbar = () => {
@@ -27,6 +27,12 @@ const Navbar = () => {
   useEffect(() => {
     setIsOpen(false);
   }, [location.pathname]);
+
+  // Lock body scroll when mobile menu is open
+  useEffect(() => {
+    document.body.style.overflow = isOpen ? "hidden" : "";
+    return () => { document.body.style.overflow = ""; };
+  }, [isOpen]);
 
   return (
     <nav
@@ -47,7 +53,7 @@ const Navbar = () => {
             </span>
           </Link>
 
-          <div className="hidden lg:flex items-center gap-1">
+          <div className="hidden xl:flex items-center gap-1">
             {navLinks.map((link) => (
               <Link
                 key={link.path}
@@ -63,14 +69,14 @@ const Navbar = () => {
             ))}
           </div>
 
-          <div className="hidden lg:block">
+          <div className="hidden xl:block">
             <Button variant="hero" size="sm" asChild>
               <Link to="/contact">Get Started</Link>
             </Button>
           </div>
 
           <button
-            className="lg:hidden text-foreground p-2"
+            className="xl:hidden text-foreground p-2"
             onClick={() => setIsOpen(!isOpen)}
             aria-expanded={isOpen}
             aria-label={isOpen ? "Close menu" : "Open menu"}
@@ -81,7 +87,7 @@ const Navbar = () => {
       </div>
 
       {isOpen && (
-        <div className="lg:hidden glass border-t border-border/50" role="menu">
+        <div className="xl:hidden glass border-t border-border/50 max-h-[calc(100vh-4rem)] overflow-y-auto" role="menu">
           <div className="px-4 py-4 space-y-1">
             {navLinks.map((link) => (
               <Link

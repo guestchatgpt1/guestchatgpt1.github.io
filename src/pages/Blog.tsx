@@ -1,4 +1,5 @@
 import SectionHeading from "@/components/SectionHeading";
+import AnimatedSection from "@/components/AnimatedSection";
 import { ArrowRight, Calendar } from "lucide-react";
 
 const posts = [
@@ -51,32 +52,36 @@ const Blog = () => {
     <div className="pt-16">
       <section className="section-padding">
         <div className="container-max">
-          <SectionHeading
-            label="Blog & Insights"
-            title="Perspectives from the Frontier"
-            description="Expert analysis on quantum computing, AI breakthroughs, and their industry impact."
-          />
+          <AnimatedSection>
+            <SectionHeading
+              label="Blog & Insights"
+              title="Perspectives from the Frontier"
+              description="Expert analysis on quantum computing, AI breakthroughs, and their industry impact."
+            />
+          </AnimatedSection>
 
           <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-6">
-            {posts.map((p) => (
-              <article key={p.title} className="glass-hover rounded-xl p-6 group cursor-pointer">
-                <div className="flex items-center justify-between mb-4">
-                  <span className={`text-xs font-medium px-2.5 py-1 rounded-full ${categoryColor[p.category]}`}>
-                    {p.category}
+            {posts.map((p, i) => (
+              <AnimatedSection key={p.title} delay={i * 0.08}>
+                <article className="glass-hover rounded-xl p-6 group cursor-pointer h-full flex flex-col">
+                  <div className="flex items-center justify-between mb-4">
+                    <span className={`text-xs font-medium px-2.5 py-1 rounded-full ${categoryColor[p.category]}`}>
+                      {p.category}
+                    </span>
+                    <time className="flex items-center gap-1 text-xs text-muted-foreground">
+                      <Calendar size={12} aria-hidden="true" />
+                      {p.date}
+                    </time>
+                  </div>
+                  <h3 className="font-display text-sm font-semibold text-foreground mb-3 group-hover:text-primary transition-colors leading-tight">
+                    {p.title}
+                  </h3>
+                  <p className="text-muted-foreground text-sm leading-relaxed mb-4 flex-1">{p.excerpt}</p>
+                  <span className="inline-flex items-center gap-1 text-sm text-primary font-medium group-hover:gap-2 transition-all">
+                    Read More <ArrowRight size={14} />
                   </span>
-                  <time className="flex items-center gap-1 text-xs text-muted-foreground">
-                    <Calendar size={12} aria-hidden="true" />
-                    {p.date}
-                  </time>
-                </div>
-                <h3 className="font-display text-sm font-semibold text-foreground mb-3 group-hover:text-primary transition-colors leading-tight">
-                  {p.title}
-                </h3>
-                <p className="text-muted-foreground text-sm leading-relaxed mb-4">{p.excerpt}</p>
-                <span className="inline-flex items-center gap-1 text-sm text-primary font-medium group-hover:gap-2 transition-all">
-                  Read More <ArrowRight size={14} />
-                </span>
-              </article>
+                </article>
+              </AnimatedSection>
             ))}
           </div>
         </div>

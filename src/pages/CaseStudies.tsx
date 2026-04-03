@@ -1,4 +1,5 @@
 import SectionHeading from "@/components/SectionHeading";
+import AnimatedSection from "@/components/AnimatedSection";
 import { Button } from "@/components/ui/button";
 import { Link } from "react-router-dom";
 import { ArrowRight, FlaskConical, TrendingUp, Truck } from "lucide-react";
@@ -47,55 +48,61 @@ const CaseStudies = () => {
     <div className="pt-16">
       <section className="section-padding">
         <div className="container-max">
-          <SectionHeading
-            label="Case Studies"
-            title="Real-World Quantum Impact"
-            description="How QuantumNest AI is delivering measurable results across industries."
-          />
+          <AnimatedSection>
+            <SectionHeading
+              label="Case Studies"
+              title="Real-World Quantum Impact"
+              description="How QuantumNest AI is delivering measurable results across industries."
+            />
+          </AnimatedSection>
 
           <div className="space-y-12">
-            {cases.map((c) => (
-              <article key={c.title} className="glass rounded-xl overflow-hidden">
-                <div className="p-8 md:p-10">
-                  <div className="flex items-center gap-4 mb-6">
-                    <div className="w-12 h-12 rounded-lg bg-primary/10 flex items-center justify-center shrink-0">
-                      <c.icon size={24} className="text-primary" />
-                    </div>
-                    <div>
-                      <h3 className="font-display text-base font-bold text-foreground">{c.title}</h3>
-                      <p className="text-sm text-muted-foreground">{c.client}</p>
-                    </div>
-                  </div>
-
-                  <div className="grid md:grid-cols-2 gap-6 mb-8">
-                    <div>
-                      <h4 className="font-display text-xs tracking-wider text-primary uppercase mb-2">Challenge</h4>
-                      <p className="text-muted-foreground text-sm leading-relaxed">{c.challenge}</p>
-                    </div>
-                    <div>
-                      <h4 className="font-display text-xs tracking-wider text-secondary uppercase mb-2">Solution</h4>
-                      <p className="text-muted-foreground text-sm leading-relaxed">{c.solution}</p>
-                    </div>
-                  </div>
-
-                  <div className="grid grid-cols-3 gap-4 p-6 bg-muted/50 rounded-lg">
-                    {c.results.map((r) => (
-                      <div key={r.label} className="text-center">
-                        <div className="font-display text-xl sm:text-2xl font-bold gradient-text">{r.metric}</div>
-                        <div className="text-xs text-muted-foreground mt-1">{r.label}</div>
+            {cases.map((c, i) => (
+              <AnimatedSection key={c.title} delay={i * 0.1}>
+                <article className="glass rounded-xl overflow-hidden">
+                  <div className="p-8 md:p-10">
+                    <div className="flex items-center gap-4 mb-6">
+                      <div className="w-12 h-12 rounded-lg bg-primary/10 flex items-center justify-center shrink-0">
+                        <c.icon size={24} className="text-primary" />
                       </div>
-                    ))}
+                      <div>
+                        <h3 className="font-display text-base font-bold text-foreground">{c.title}</h3>
+                        <p className="text-sm text-muted-foreground">{c.client}</p>
+                      </div>
+                    </div>
+
+                    <div className="grid md:grid-cols-2 gap-6 mb-8">
+                      <div>
+                        <h4 className="font-display text-xs tracking-wider text-primary uppercase mb-2">Challenge</h4>
+                        <p className="text-muted-foreground text-sm leading-relaxed">{c.challenge}</p>
+                      </div>
+                      <div>
+                        <h4 className="font-display text-xs tracking-wider text-secondary uppercase mb-2">Solution</h4>
+                        <p className="text-muted-foreground text-sm leading-relaxed">{c.solution}</p>
+                      </div>
+                    </div>
+
+                    <div className="grid grid-cols-3 gap-4 p-6 bg-muted/50 rounded-lg">
+                      {c.results.map((r) => (
+                        <div key={r.label} className="text-center">
+                          <div className="font-display text-xl sm:text-2xl font-bold gradient-text">{r.metric}</div>
+                          <div className="text-xs text-muted-foreground mt-1">{r.label}</div>
+                        </div>
+                      ))}
+                    </div>
                   </div>
-                </div>
-              </article>
+                </article>
+              </AnimatedSection>
             ))}
           </div>
 
-          <div className="text-center mt-16">
-            <Button variant="hero" size="lg" asChild>
-              <Link to="/contact">Start Your Project <ArrowRight size={18} /></Link>
-            </Button>
-          </div>
+          <AnimatedSection>
+            <div className="text-center mt-16">
+              <Button variant="hero" size="lg" asChild>
+                <Link to="/contact">Start Your Project <ArrowRight size={18} /></Link>
+              </Button>
+            </div>
+          </AnimatedSection>
         </div>
       </section>
     </div>
