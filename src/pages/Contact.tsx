@@ -1,5 +1,6 @@
 import { useState } from "react";
 import SectionHeading from "@/components/SectionHeading";
+import AnimatedSection from "@/components/AnimatedSection";
 import { Button } from "@/components/ui/button";
 import { Mail, MapPin, Phone, Send, Loader2 } from "lucide-react";
 import { useToast } from "@/hooks/use-toast";
@@ -37,7 +38,6 @@ const Contact = () => {
     }
 
     setSubmitting(true);
-    // Simulate network request
     await new Promise((r) => setTimeout(r, 800));
     setSubmitting(false);
 
@@ -59,14 +59,16 @@ const Contact = () => {
     <div className="pt-16">
       <section className="section-padding">
         <div className="container-max">
-          <SectionHeading
-            label="Contact"
-            title="Let's Build the Future Together"
-            description="Ready to explore how quantum computing and AI can transform your organization? We'd love to hear from you."
-          />
+          <AnimatedSection>
+            <SectionHeading
+              label="Contact"
+              title="Let's Build the Future Together"
+              description="Ready to explore how quantum computing and AI can transform your organization? We'd love to hear from you."
+            />
+          </AnimatedSection>
 
           <div className="grid lg:grid-cols-5 gap-12">
-            <div className="lg:col-span-3">
+            <AnimatedSection className="lg:col-span-3">
               <form onSubmit={handleSubmit} className="glass rounded-xl p-8 space-y-6" noValidate>
                 <div className="grid sm:grid-cols-2 gap-4">
                   <div>
@@ -79,8 +81,9 @@ const Contact = () => {
                       onChange={(e) => update("name", e.target.value)}
                       className={inputClass("name")}
                       maxLength={100}
+                      autoComplete="name"
                     />
-                    {errors.name && <p className="text-destructive text-xs mt-1">{errors.name}</p>}
+                    {errors.name && <p className="text-destructive text-xs mt-1" role="alert">{errors.name}</p>}
                   </div>
                   <div>
                     <label htmlFor="contact-email" className="sr-only">Email Address</label>
@@ -92,8 +95,9 @@ const Contact = () => {
                       onChange={(e) => update("email", e.target.value)}
                       className={inputClass("email")}
                       maxLength={255}
+                      autoComplete="email"
                     />
-                    {errors.email && <p className="text-destructive text-xs mt-1">{errors.email}</p>}
+                    {errors.email && <p className="text-destructive text-xs mt-1" role="alert">{errors.email}</p>}
                   </div>
                 </div>
                 <div>
@@ -106,6 +110,7 @@ const Contact = () => {
                     onChange={(e) => update("company", e.target.value)}
                     className={inputClass("company")}
                     maxLength={100}
+                    autoComplete="organization"
                   />
                 </div>
                 <div>
@@ -121,50 +126,52 @@ const Contact = () => {
                       errors.message ? "border-destructive" : "border-border"
                     }`}
                   />
-                  {errors.message && <p className="text-destructive text-xs mt-1">{errors.message}</p>}
+                  {errors.message && <p className="text-destructive text-xs mt-1" role="alert">{errors.message}</p>}
                 </div>
                 <Button variant="hero" size="lg" type="submit" className="w-full sm:w-auto" disabled={submitting}>
                   {submitting ? <><Loader2 size={16} className="animate-spin" /> Sending...</> : <>Send Message <Send size={16} /></>}
                 </Button>
               </form>
-            </div>
+            </AnimatedSection>
 
-            <div className="lg:col-span-2 space-y-6">
-              <div className="glass rounded-xl p-8">
-                <h3 className="font-display text-sm font-semibold text-foreground mb-6 uppercase tracking-wider">Get in Touch</h3>
-                <div className="space-y-5">
-                  {[
-                    { icon: Mail, label: "Email", value: "hello@quantumnest.ai" },
-                    { icon: Phone, label: "Phone", value: "+1 (555) 0-QUANTUM" },
-                    { icon: MapPin, label: "Headquarters", value: "123 Innovation Drive\nSan Francisco, CA 94105" },
-                  ].map((item) => (
-                    <div key={item.label} className="flex items-start gap-4">
-                      <div className="w-10 h-10 rounded-lg bg-primary/10 flex items-center justify-center shrink-0">
-                        <item.icon size={18} className="text-primary" />
+            <AnimatedSection className="lg:col-span-2" delay={0.15}>
+              <div className="space-y-6">
+                <div className="glass rounded-xl p-8">
+                  <h3 className="font-display text-sm font-semibold text-foreground mb-6 uppercase tracking-wider">Get in Touch</h3>
+                  <div className="space-y-5">
+                    {[
+                      { icon: Mail, label: "Email", value: "hello@quantumnest.ai" },
+                      { icon: Phone, label: "Phone", value: "+1 (555) 0-QUANTUM" },
+                      { icon: MapPin, label: "Headquarters", value: "123 Innovation Drive\nSan Francisco, CA 94105" },
+                    ].map((item) => (
+                      <div key={item.label} className="flex items-start gap-4">
+                        <div className="w-10 h-10 rounded-lg bg-primary/10 flex items-center justify-center shrink-0">
+                          <item.icon size={18} className="text-primary" />
+                        </div>
+                        <div>
+                          <p className="text-sm font-medium text-foreground">{item.label}</p>
+                          <p className="text-sm text-muted-foreground whitespace-pre-line">{item.value}</p>
+                        </div>
                       </div>
-                      <div>
-                        <p className="text-sm font-medium text-foreground">{item.label}</p>
-                        <p className="text-sm text-muted-foreground whitespace-pre-line">{item.value}</p>
-                      </div>
+                    ))}
+                  </div>
+                </div>
+
+                <div className="glass rounded-xl p-8">
+                  <h3 className="font-display text-sm font-semibold text-foreground mb-3 uppercase tracking-wider">Office Hours</h3>
+                  <div className="space-y-2 text-sm text-muted-foreground">
+                    <div className="flex justify-between">
+                      <span>Monday – Friday</span>
+                      <span className="text-foreground">9:00 – 18:00 PST</span>
                     </div>
-                  ))}
-                </div>
-              </div>
-
-              <div className="glass rounded-xl p-8">
-                <h3 className="font-display text-sm font-semibold text-foreground mb-3 uppercase tracking-wider">Office Hours</h3>
-                <div className="space-y-2 text-sm text-muted-foreground">
-                  <div className="flex justify-between">
-                    <span>Monday – Friday</span>
-                    <span className="text-foreground">9:00 – 18:00 PST</span>
-                  </div>
-                  <div className="flex justify-between">
-                    <span>Saturday – Sunday</span>
-                    <span className="text-foreground">Closed</span>
+                    <div className="flex justify-between">
+                      <span>Saturday – Sunday</span>
+                      <span className="text-foreground">Closed</span>
+                    </div>
                   </div>
                 </div>
               </div>
-            </div>
+            </AnimatedSection>
           </div>
         </div>
       </section>
