@@ -151,7 +151,7 @@ const Index = () => {
       </section>
 
       {/* Values */}
-      <section className="section-padding bg-card/30" aria-labelledby="values-heading">
+      <section className="section-padding bg-card/30" aria-labelledby="values-heading" id="values">
         <div className="container-max">
           <AnimatedSection>
             <SectionHeading label="Why QuantumNest" title="Built on Core Principles" />
