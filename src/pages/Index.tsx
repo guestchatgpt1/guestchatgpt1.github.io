@@ -181,7 +181,7 @@ const Index = () => {
       <section className="section-padding" aria-labelledby="testimonials-heading" id="testimonials">
         <div className="container-max">
           <AnimatedSection>
-            <SectionHeading label="Testimonials" title="Trusted by Industry Leaders" />
+            <SectionHeading id="testimonials-heading" label="Testimonials" title="Trusted by Industry Leaders" />
           </AnimatedSection>
           <div className="grid md:grid-cols-3 gap-6">
             {testimonials.map((t, i) => (
