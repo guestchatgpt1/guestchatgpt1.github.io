@@ -3,6 +3,7 @@ import AnimatedSection from "@/components/AnimatedSection";
 import { Button } from "@/components/ui/button";
 import { Link } from "react-router-dom";
 import { Check, ArrowRight, Zap, Building2, Rocket } from "lucide-react";
+import { usePageTitle } from "@/hooks/usePageTitle";
 
 const plans = [
   {
