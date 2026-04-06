@@ -178,7 +178,7 @@ const Index = () => {
       </section>
 
       {/* Testimonials */}
-      <section className="section-padding" aria-labelledby="testimonials-heading">
+      <section className="section-padding" aria-labelledby="testimonials-heading" id="testimonials">
         <div className="container-max">
           <AnimatedSection>
             <SectionHeading label="Testimonials" title="Trusted by Industry Leaders" />
