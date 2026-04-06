@@ -1,6 +1,7 @@
 import SectionHeading from "@/components/SectionHeading";
 import AnimatedSection from "@/components/AnimatedSection";
 import { ArrowRight, Calendar } from "lucide-react";
+import { usePageTitle } from "@/hooks/usePageTitle";
 
 const posts = [
   {
@@ -48,6 +49,7 @@ const categoryColor: Record<string, string> = {
 };
 
 const Blog = () => {
+  usePageTitle("Blog & Insights");
   return (
     <div className="pt-16">
       <section className="section-padding">

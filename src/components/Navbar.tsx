@@ -1,5 +1,5 @@
 import { useState, useEffect } from "react";
-import { Link, useLocation } from "react-router-dom";
+import { NavLink, Link, useLocation } from "react-router-dom";
 import { Menu, X } from "lucide-react";
 import { Button } from "@/components/ui/button";
 
@@ -28,11 +28,24 @@ const Navbar = () => {
     setIsOpen(false);
   }, [location.pathname]);
 
-  // Lock body scroll when mobile menu is open
   useEffect(() => {
     document.body.style.overflow = isOpen ? "hidden" : "";
     return () => { document.body.style.overflow = ""; };
   }, [isOpen]);
+
+  const linkClass = ({ isActive }: { isActive: boolean }) =>
+    `px-3 py-2 text-sm rounded-md transition-all duration-300 ${
+      isActive
+        ? "text-primary bg-primary/10"
+        : "text-muted-foreground hover:text-foreground hover:bg-muted"
+    }`;
+
+  const mobileLinkClass = ({ isActive }: { isActive: boolean }) =>
+    `block px-3 py-2 rounded-md text-sm transition-colors ${
+      isActive
+        ? "text-primary bg-primary/10"
+        : "text-muted-foreground hover:text-foreground"
+    }`;
 
   return (
     <nav
@@ -55,17 +68,9 @@ const Navbar = () => {
 
           <div className="hidden xl:flex items-center gap-1">
             {navLinks.map((link) => (
-              <Link
-                key={link.path}
-                to={link.path}
-                className={`px-3 py-2 text-sm rounded-md transition-all duration-300 ${
-                  location.pathname === link.path
-                    ? "text-primary bg-primary/10"
-                    : "text-muted-foreground hover:text-foreground hover:bg-muted"
-                }`}
-              >
+              <NavLink key={link.path} to={link.path} className={linkClass} end={link.path === "/"}>
                 {link.label}
-              </Link>
+              </NavLink>
             ))}
           </div>
 
@@ -90,18 +95,9 @@ const Navbar = () => {
         <div className="xl:hidden glass border-t border-border/50 max-h-[calc(100vh-4rem)] overflow-y-auto" role="menu">
           <div className="px-4 py-4 space-y-1">
             {navLinks.map((link) => (
-              <Link
-                key={link.path}
-                to={link.path}
-                role="menuitem"
-                className={`block px-3 py-2 rounded-md text-sm transition-colors ${
-                  location.pathname === link.path
-                    ? "text-primary bg-primary/10"
-                    : "text-muted-foreground hover:text-foreground"
-                }`}
-              >
+              <NavLink key={link.path} to={link.path} className={mobileLinkClass} role="menuitem" end={link.path === "/"}>
                 {link.label}
-              </Link>
+              </NavLink>
             ))}
             <Button variant="hero" size="sm" className="w-full mt-3" asChild>
               <Link to="/contact">Get Started</Link>

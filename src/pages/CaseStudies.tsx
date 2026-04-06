@@ -3,6 +3,7 @@ import AnimatedSection from "@/components/AnimatedSection";
 import { Button } from "@/components/ui/button";
 import { Link } from "react-router-dom";
 import { ArrowRight, FlaskConical, TrendingUp, Truck } from "lucide-react";
+import { usePageTitle } from "@/hooks/usePageTitle";
 
 const cases = [
   {
@@ -44,6 +45,7 @@ const cases = [
 ];
 
 const CaseStudies = () => {
+  usePageTitle("Case Studies");
   return (
     <div className="pt-16">
       <section className="section-padding">

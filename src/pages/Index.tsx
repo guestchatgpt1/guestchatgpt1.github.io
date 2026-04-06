@@ -7,6 +7,10 @@ import { ArrowRight, Brain, Cpu, Network, Shield, Zap, Users, TrendingUp, Quote,
 import { useState } from "react";
 import { toast } from "sonner";
 import { motion } from "framer-motion";
+import { usePageTitle } from "@/hooks/usePageTitle";
+import { z } from "zod";
+
+const emailSchema = z.string().trim().email("Please enter a valid email").max(255);
 
 const services = [
   { icon: Cpu, title: "Quantum Computing", desc: "Leveraging quantum processors to solve optimization problems exponentially faster than classical computers." },
@@ -28,12 +32,17 @@ const testimonials = [
 ];
 
 const Index = () => {
+  usePageTitle();
   const [email, setEmail] = useState("");
   const [subscribing, setSubscribing] = useState(false);
 
   const handleSubscribe = async (e: React.FormEvent) => {
     e.preventDefault();
-    if (!email.trim()) return;
+    const result = emailSchema.safeParse(email);
+    if (!result.success) {
+      toast.error("Invalid email", { description: result.error.issues[0].message });
+      return;
+    }
     setSubscribing(true);
     await new Promise((r) => setTimeout(r, 600));
     setSubscribing(false);
@@ -94,7 +103,7 @@ const Index = () => {
       </section>
 
       {/* Stats */}
-      <section className="section-padding border-y border-border/30" aria-label="Key metrics">
+      <section className="section-padding border-y border-border/30" aria-label="Key metrics" id="stats">
         <div className="container-max grid grid-cols-2 md:grid-cols-4 gap-8">
           {stats.map((s, i) => (
             <AnimatedSection key={s.label} delay={i * 0.1}>
@@ -108,10 +117,11 @@ const Index = () => {
       </section>
 
       {/* Services Preview */}
-      <section className="section-padding" aria-labelledby="solutions-heading">
+      <section className="section-padding" aria-labelledby="solutions-heading" id="solutions">
         <div className="container-max">
           <AnimatedSection>
             <SectionHeading
+              id="solutions-heading"
               label="Our Solutions"
               title="Quantum-Powered Innovation"
               description="We build cutting-edge systems at the intersection of quantum computing and artificial intelligence."
@@ -141,10 +151,10 @@ const Index = () => {
       </section>
 
       {/* Values */}
-      <section className="section-padding bg-card/30" aria-labelledby="values-heading">
+      <section className="section-padding bg-card/30" aria-labelledby="values-heading" id="values">
         <div className="container-max">
           <AnimatedSection>
-            <SectionHeading label="Why QuantumNest" title="Built on Core Principles" />
+            <SectionHeading id="values-heading" label="Why QuantumNest" title="Built on Core Principles" />
           </AnimatedSection>
           <div className="grid sm:grid-cols-2 lg:grid-cols-4 gap-6">
             {[
@@ -168,10 +178,10 @@ const Index = () => {
       </section>
 
       {/* Testimonials */}
-      <section className="section-padding" aria-labelledby="testimonials-heading">
+      <section className="section-padding" aria-labelledby="testimonials-heading" id="testimonials">
         <div className="container-max">
           <AnimatedSection>
-            <SectionHeading label="Testimonials" title="Trusted by Industry Leaders" />
+            <SectionHeading id="testimonials-heading" label="Testimonials" title="Trusted by Industry Leaders" />
           </AnimatedSection>
           <div className="grid md:grid-cols-3 gap-6">
             {testimonials.map((t, i) => (
@@ -191,10 +201,11 @@ const Index = () => {
       </section>
 
       {/* Newsletter */}
-      <section className="section-padding bg-gradient-to-r from-primary/5 via-secondary/5 to-primary/5" aria-labelledby="newsletter-heading">
+      <section className="section-padding bg-gradient-to-r from-primary/5 via-secondary/5 to-primary/5" aria-labelledby="newsletter-heading" id="newsletter">
         <div className="max-w-2xl mx-auto text-center">
           <AnimatedSection>
             <SectionHeading
+              id="newsletter-heading"
               label="Stay Updated"
               title="Join the Quantum Future"
               description="Get the latest insights on quantum computing and AI delivered to your inbox."

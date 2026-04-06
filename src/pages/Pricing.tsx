@@ -3,6 +3,7 @@ import AnimatedSection from "@/components/AnimatedSection";
 import { Button } from "@/components/ui/button";
 import { Link } from "react-router-dom";
 import { Check, ArrowRight, Zap, Building2, Rocket } from "lucide-react";
+import { usePageTitle } from "@/hooks/usePageTitle";
 
 const plans = [
   {
@@ -80,6 +81,7 @@ const faqs = [
 ];
 
 const Pricing = () => {
+  usePageTitle("Pricing");
   return (
     <div className="pt-16">
       <section className="section-padding">

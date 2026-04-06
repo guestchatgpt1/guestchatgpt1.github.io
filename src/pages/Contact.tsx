@@ -5,6 +5,7 @@ import { Button } from "@/components/ui/button";
 import { Mail, MapPin, Phone, Send, Loader2 } from "lucide-react";
 import { useToast } from "@/hooks/use-toast";
 import { z } from "zod";
+import { usePageTitle } from "@/hooks/usePageTitle";
 
 const contactSchema = z.object({
   name: z.string().trim().min(1, "Name is required").max(100, "Name is too long"),
@@ -17,6 +18,7 @@ type FormData = z.infer<typeof contactSchema>;
 type FormErrors = Partial<Record<keyof FormData, string>>;
 
 const Contact = () => {
+  usePageTitle("Contact");
   const { toast } = useToast();
   const [form, setForm] = useState<FormData>({ name: "", email: "", company: "", message: "" });
   const [errors, setErrors] = useState<FormErrors>({});

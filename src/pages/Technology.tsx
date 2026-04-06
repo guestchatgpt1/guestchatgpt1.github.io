@@ -1,6 +1,7 @@
 import SectionHeading from "@/components/SectionHeading";
 import AnimatedSection from "@/components/AnimatedSection";
 import { Atom, BrainCircuit, Gauge, Workflow } from "lucide-react";
+import { usePageTitle } from "@/hooks/usePageTitle";
 
 const technologies = [
   {
@@ -30,6 +31,7 @@ const technologies = [
 ];
 
 const Technology = () => {
+  usePageTitle("Technology");
   return (
     <div className="pt-16">
       <section className="section-padding">

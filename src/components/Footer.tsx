@@ -44,11 +44,11 @@ const Footer = () => {
           <div>
             <h4 className="font-display text-xs font-semibold mb-4 text-foreground tracking-wider uppercase">Services</h4>
             <div className="space-y-2 text-sm text-muted-foreground">
-              <p>Quantum Computing</p>
-              <p>AI & Machine Learning</p>
-              <p>Hybrid Systems</p>
-              <p>Research & Consulting</p>
-              <p>Enterprise Solutions</p>
+              <Link to="/services" className="block hover:text-primary transition-colors">Quantum Computing</Link>
+              <Link to="/services" className="block hover:text-primary transition-colors">AI & Machine Learning</Link>
+              <Link to="/services" className="block hover:text-primary transition-colors">Hybrid Systems</Link>
+              <Link to="/services" className="block hover:text-primary transition-colors">Research & Consulting</Link>
+              <Link to="/services" className="block hover:text-primary transition-colors">Enterprise Solutions</Link>
             </div>
           </div>
 
@@ -75,6 +75,14 @@ const Footer = () => {
           <p className="text-xs text-muted-foreground">
             © {new Date().getFullYear()} QuantumNest AI. All rights reserved.
           </p>
+          <div className="flex items-center gap-4">
+            <Link to="/privacy" className="text-xs text-muted-foreground hover:text-primary transition-colors">
+              Privacy Policy
+            </Link>
+            <Link to="/terms" className="text-xs text-muted-foreground hover:text-primary transition-colors">
+              Terms of Service
+            </Link>
+          </div>
           <p className="text-xs text-muted-foreground font-display tracking-widest">
             Where Intelligence Meets Infinity
           </p>
