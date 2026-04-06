@@ -103,7 +103,7 @@ const Index = () => {
       </section>
 
       {/* Stats */}
-      <section className="section-padding border-y border-border/30" aria-label="Key metrics">
+      <section className="section-padding border-y border-border/30" aria-label="Key metrics" id="stats">
         <div className="container-max grid grid-cols-2 md:grid-cols-4 gap-8">
           {stats.map((s, i) => (
             <AnimatedSection key={s.label} delay={i * 0.1}>
