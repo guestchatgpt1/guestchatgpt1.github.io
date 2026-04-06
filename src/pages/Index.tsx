@@ -7,6 +7,10 @@ import { ArrowRight, Brain, Cpu, Network, Shield, Zap, Users, TrendingUp, Quote,
 import { useState } from "react";
 import { toast } from "sonner";
 import { motion } from "framer-motion";
+import { usePageTitle } from "@/hooks/usePageTitle";
+import { z } from "zod";
+
+const emailSchema = z.string().trim().email("Please enter a valid email").max(255);
 
 const services = [
   { icon: Cpu, title: "Quantum Computing", desc: "Leveraging quantum processors to solve optimization problems exponentially faster than classical computers." },
