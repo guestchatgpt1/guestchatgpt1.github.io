@@ -121,6 +121,7 @@ const Index = () => {
         <div className="container-max">
           <AnimatedSection>
             <SectionHeading
+              id="solutions-heading"
               label="Our Solutions"
               title="Quantum-Powered Innovation"
               description="We build cutting-edge systems at the intersection of quantum computing and artificial intelligence."
