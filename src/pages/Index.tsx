@@ -205,6 +205,7 @@ const Index = () => {
         <div className="max-w-2xl mx-auto text-center">
           <AnimatedSection>
             <SectionHeading
+              id="newsletter-heading"
               label="Stay Updated"
               title="Join the Quantum Future"
               description="Get the latest insights on quantum computing and AI delivered to your inbox."
