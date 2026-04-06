@@ -117,7 +117,7 @@ const Index = () => {
       </section>
 
       {/* Services Preview */}
-      <section className="section-padding" aria-labelledby="solutions-heading">
+      <section className="section-padding" aria-labelledby="solutions-heading" id="solutions">
         <div className="container-max">
           <AnimatedSection>
             <SectionHeading
