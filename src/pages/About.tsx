@@ -25,6 +25,7 @@ const team = [
 ];
 
 const About = () => {
+  usePageTitle("About Us");
   return (
     <div className="pt-16">
       <section className="section-padding">

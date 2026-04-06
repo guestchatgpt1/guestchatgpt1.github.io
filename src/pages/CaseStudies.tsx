@@ -45,6 +45,7 @@ const cases = [
 ];
 
 const CaseStudies = () => {
+  usePageTitle("Case Studies");
   return (
     <div className="pt-16">
       <section className="section-padding">

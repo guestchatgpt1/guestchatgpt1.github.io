@@ -18,6 +18,7 @@ type FormData = z.infer<typeof contactSchema>;
 type FormErrors = Partial<Record<keyof FormData, string>>;
 
 const Contact = () => {
+  usePageTitle("Contact");
   const { toast } = useToast();
   const [form, setForm] = useState<FormData>({ name: "", email: "", company: "", message: "" });
   const [errors, setErrors] = useState<FormErrors>({});

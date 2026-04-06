@@ -31,6 +31,7 @@ const technologies = [
 ];
 
 const Technology = () => {
+  usePageTitle("Technology");
   return (
     <div className="pt-16">
       <section className="section-padding">

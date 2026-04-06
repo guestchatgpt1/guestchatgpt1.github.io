@@ -81,6 +81,7 @@ const faqs = [
 ];
 
 const Pricing = () => {
+  usePageTitle("Pricing");
   return (
     <div className="pt-16">
       <section className="section-padding">

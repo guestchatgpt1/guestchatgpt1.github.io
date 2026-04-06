@@ -49,6 +49,7 @@ const categoryColor: Record<string, string> = {
 };
 
 const Blog = () => {
+  usePageTitle("Blog & Insights");
   return (
     <div className="pt-16">
       <section className="section-padding">

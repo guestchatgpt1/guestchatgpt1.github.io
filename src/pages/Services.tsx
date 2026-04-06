@@ -39,6 +39,7 @@ const services = [
 ];
 
 const Services = () => {
+  usePageTitle("Services");
   return (
     <div className="pt-16">
       <section className="section-padding">
