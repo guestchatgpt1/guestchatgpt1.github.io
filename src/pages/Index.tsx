@@ -32,12 +32,17 @@ const testimonials = [
 ];
 
 const Index = () => {
+  usePageTitle();
   const [email, setEmail] = useState("");
   const [subscribing, setSubscribing] = useState(false);
 
   const handleSubscribe = async (e: React.FormEvent) => {
     e.preventDefault();
-    if (!email.trim()) return;
+    const result = emailSchema.safeParse(email);
+    if (!result.success) {
+      toast.error("Invalid email", { description: result.error.issues[0].message });
+      return;
+    }
     setSubscribing(true);
     await new Promise((r) => setTimeout(r, 600));
     setSubscribing(false);
