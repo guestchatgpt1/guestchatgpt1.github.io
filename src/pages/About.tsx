@@ -1,6 +1,7 @@
 import SectionHeading from "@/components/SectionHeading";
 import AnimatedSection from "@/components/AnimatedSection";
 import { Target, Eye, Lightbulb, Shield, TrendingUp, Users } from "lucide-react";
+import { usePageTitle } from "@/hooks/usePageTitle";
 
 const values = [
   { icon: Lightbulb, title: "Innovation", desc: "We relentlessly pursue breakthroughs at the frontier of quantum and AI." },
