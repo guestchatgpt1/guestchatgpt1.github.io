@@ -3,6 +3,7 @@ import AnimatedSection from "@/components/AnimatedSection";
 import { Button } from "@/components/ui/button";
 import { Link } from "react-router-dom";
 import { Cpu, Brain, Network, FlaskConical, Building2, ArrowRight } from "lucide-react";
+import { usePageTitle } from "@/hooks/usePageTitle";
 
 const services = [
   {
