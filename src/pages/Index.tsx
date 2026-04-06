@@ -201,7 +201,7 @@ const Index = () => {
       </section>
 
       {/* Newsletter */}
-      <section className="section-padding bg-gradient-to-r from-primary/5 via-secondary/5 to-primary/5" aria-labelledby="newsletter-heading">
+      <section className="section-padding bg-gradient-to-r from-primary/5 via-secondary/5 to-primary/5" aria-labelledby="newsletter-heading" id="newsletter">
         <div className="max-w-2xl mx-auto text-center">
           <AnimatedSection>
             <SectionHeading
