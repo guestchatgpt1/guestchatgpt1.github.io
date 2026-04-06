@@ -1,11 +1,12 @@
 interface SectionHeadingProps {
+  id?: string;
   label?: string;
   title: string;
   description?: string;
   className?: string;
 }
 
-const SectionHeading = ({ label, title, description, className = "" }: SectionHeadingProps) => {
+const SectionHeading = ({ id, label, title, description, className = "" }: SectionHeadingProps) => {
   return (
     <div className={`text-center max-w-3xl mx-auto mb-16 ${className}`}>
       {label && (
@@ -13,7 +14,10 @@ const SectionHeading = ({ label, title, description, className = "" }: SectionHe
           {label}
         </span>
       )}
-      <h2 className="font-display text-2xl sm:text-3xl lg:text-4xl font-bold mb-4 gradient-text leading-tight">
+      <h2
+        id={id}
+        className="font-display text-2xl sm:text-3xl lg:text-4xl font-bold mb-4 gradient-text leading-tight"
+      >
         {title}
       </h2>
       {description && (

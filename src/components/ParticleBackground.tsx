@@ -11,15 +11,16 @@ interface Particle {
 }
 
 const COLORS = [
-  "rgba(218, 165, 32, ",   // amber/gold
-  "rgba(72, 187, 160, ",   // teal
-  "rgba(210, 100, 110, ",  // rose
+  "rgba(218, 165, 32, ",
+  "rgba(72, 187, 160, ",
+  "rgba(210, 100, 110, ",
 ];
 
 const ParticleBackground = () => {
   const canvasRef = useRef<HTMLCanvasElement>(null);
   const particlesRef = useRef<Particle[]>([]);
   const animationRef = useRef<number>(0);
+  const resizeTimerRef = useRef<number>(0);
 
   const init = useCallback(() => {
     const canvas = canvasRef.current;
@@ -47,8 +48,11 @@ const ParticleBackground = () => {
 
     init();
 
-    const onResize = () => init();
-    window.addEventListener("resize", onResize);
+    const onResize = () => {
+      clearTimeout(resizeTimerRef.current);
+      resizeTimerRef.current = window.setTimeout(init, 200);
+    };
+    window.addEventListener("resize", onResize, { passive: true });
 
     const draw = () => {
       ctx.clearRect(0, 0, canvas.width, canvas.height);
@@ -70,7 +74,7 @@ const ParticleBackground = () => {
           const dx = p.x - particles[j].x;
           const dy = p.y - particles[j].y;
           const dist = dx * dx + dy * dy;
-          if (dist < 22500) { // 150^2
+          if (dist < 22500) {
             ctx.beginPath();
             ctx.moveTo(p.x, p.y);
             ctx.lineTo(particles[j].x, particles[j].y);
@@ -87,6 +91,7 @@ const ParticleBackground = () => {
 
     return () => {
       cancelAnimationFrame(animationRef.current);
+      clearTimeout(resizeTimerRef.current);
       window.removeEventListener("resize", onResize);
     };
   }, [init]);
