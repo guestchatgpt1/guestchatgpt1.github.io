@@ -1,5 +1,6 @@
 import { Link } from "react-router-dom";
 import { Mail, MapPin, Phone } from "lucide-react";
+import logo from "@/assets/logo.jpg";
 
 const quickLinks = [
   { label: "About", path: "/about" },
@@ -17,12 +18,10 @@ const Footer = () => {
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-16">
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-10">
           <div>
-            <Link to="/" className="flex items-center gap-2 mb-4" aria-label="QuantumNest AI Home">
-              <div className="w-8 h-8 rounded-lg bg-gradient-to-br from-primary to-secondary flex items-center justify-center">
-                <span className="font-display text-xs font-bold text-primary-foreground">Q</span>
-              </div>
+            <Link to="/" className="flex items-center gap-2 mb-4" aria-label="Quantum AI Lab Home">
+              <img src={logo} alt="Quantum AI Lab" className="w-8 h-8 rounded-lg object-cover" width={32} height={32} />
               <span className="font-display text-sm font-bold text-foreground">
-                QuantumNest<span className="text-primary">.ai</span>
+                Quantum <span className="text-primary">AI Lab</span>
               </span>
             </Link>
             <p className="text-muted-foreground text-sm leading-relaxed">
@@ -57,15 +56,15 @@ const Footer = () => {
             <address className="space-y-3 text-sm text-muted-foreground not-italic">
               <div className="flex items-center gap-2">
                 <Mail size={14} className="text-primary" aria-hidden="true" />
-                <span>hello@quantumnest.ai</span>
+                <span>support@quantumailab.in</span>
               </div>
               <div className="flex items-center gap-2">
                 <Phone size={14} className="text-primary" aria-hidden="true" />
-                <span>+1 (555) 0-QUANTUM</span>
+                <span>+91-8652074439</span>
               </div>
               <div className="flex items-center gap-2">
                 <MapPin size={14} className="text-primary" aria-hidden="true" />
-                <span>San Francisco, CA</span>
+                <span>Mumbai, India</span>
               </div>
             </address>
           </div>
@@ -73,7 +72,7 @@ const Footer = () => {
 
         <div className="mt-12 pt-8 border-t border-border/30 flex flex-col sm:flex-row justify-between items-center gap-4">
           <p className="text-xs text-muted-foreground">
-            © {new Date().getFullYear()} QuantumNest AI. All rights reserved.
+            © {new Date().getFullYear()} Quantum AI Lab. All rights reserved.
           </p>
           <div className="flex items-center gap-4">
             <Link to="/privacy" className="text-xs text-muted-foreground hover:text-primary transition-colors">

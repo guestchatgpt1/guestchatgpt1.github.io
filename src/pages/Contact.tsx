@@ -142,9 +142,9 @@ const Contact = () => {
                   <h3 className="font-display text-sm font-semibold text-foreground mb-6 uppercase tracking-wider">Get in Touch</h3>
                   <div className="space-y-5">
                     {[
-                      { icon: Mail, label: "Email", value: "hello@quantumnest.ai" },
-                      { icon: Phone, label: "Phone", value: "+1 (555) 0-QUANTUM" },
-                      { icon: MapPin, label: "Headquarters", value: "123 Innovation Drive\nSan Francisco, CA 94105" },
+                      { icon: Mail, label: "Email", value: "support@quantumailab.in" },
+                      { icon: Phone, label: "Phone", value: "+91-8652074439" },
+                      { icon: MapPin, label: "Headquarters", value: "Mumbai, India-421204" },
                     ].map((item) => (
                       <div key={item.label} className="flex items-start gap-4">
                         <div className="w-10 h-10 rounded-lg bg-primary/10 flex items-center justify-center shrink-0">
@@ -164,7 +164,7 @@ const Contact = () => {
                   <div className="space-y-2 text-sm text-muted-foreground">
                     <div className="flex justify-between">
                       <span>Monday – Friday</span>
-                      <span className="text-foreground">9:00 – 18:00 PST</span>
+                      <span className="text-foreground">9:00 – 18:00 IST</span>
                     </div>
                     <div className="flex justify-between">
                       <span>Saturday – Sunday</span>

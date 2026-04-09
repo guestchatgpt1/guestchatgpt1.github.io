@@ -1,6 +1,6 @@
 import { useEffect } from "react";
 
-const BASE = "QuantumNest AI";
+const BASE = "Quantum AI Lab";
 
 export function usePageTitle(title?: string) {
   useEffect(() => {

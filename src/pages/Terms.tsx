@@ -18,22 +18,22 @@ const Terms = () => {
 
               <div>
                 <h3 className="font-display text-sm font-semibold text-foreground mb-2">1. Acceptance of Terms</h3>
-                <p>By accessing and using the QuantumNest AI website and services, you agree to be bound by these Terms of Service and all applicable laws and regulations.</p>
+                <p>By accessing and using the Quantum AI Lab website and services, you agree to be bound by these Terms of Service and all applicable laws and regulations.</p>
               </div>
 
               <div>
                 <h3 className="font-display text-sm font-semibold text-foreground mb-2">2. Services</h3>
-                <p>QuantumNest AI provides quantum computing and artificial intelligence solutions. Specific service terms, deliverables, and pricing are defined in individual service agreements.</p>
+                <p>Quantum AI Lab provides quantum computing and artificial intelligence solutions. Specific service terms, deliverables, and pricing are defined in individual service agreements.</p>
               </div>
 
               <div>
                 <h3 className="font-display text-sm font-semibold text-foreground mb-2">3. Intellectual Property</h3>
-                <p>All content, code, algorithms, and materials on this website are the intellectual property of QuantumNest AI unless otherwise stated. Unauthorized reproduction is prohibited.</p>
+                <p>All content, code, algorithms, and materials on this website are the intellectual property of Quantum AI Lab unless otherwise stated. Unauthorized reproduction is prohibited.</p>
               </div>
 
               <div>
                 <h3 className="font-display text-sm font-semibold text-foreground mb-2">4. Limitation of Liability</h3>
-                <p>QuantumNest AI shall not be liable for any indirect, incidental, or consequential damages arising from the use of our services or website.</p>
+                <p>Quantum AI Lab shall not be liable for any indirect, incidental, or consequential damages arising from the use of our services or website.</p>
               </div>
 
               <div>
@@ -43,7 +43,7 @@ const Terms = () => {
 
               <div>
                 <h3 className="font-display text-sm font-semibold text-foreground mb-2">6. Contact</h3>
-                <p>For questions about these terms, please contact us at hello@quantumnest.ai.</p>
+                <p>For questions about these terms, please contact us at support@quantumailab.in.</p>
               </div>
             </div>
           </AnimatedSection>

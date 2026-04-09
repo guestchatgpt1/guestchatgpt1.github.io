@@ -38,12 +38,12 @@ const Privacy = () => {
 
               <div>
                 <h3 className="font-display text-sm font-semibold text-foreground mb-2">5. Your Rights</h3>
-                <p>You may request access to, correction of, or deletion of your personal data at any time by contacting us at hello@quantumnest.ai.</p>
+                <p>You may request access to, correction of, or deletion of your personal data at any time by contacting us at support@quantumailab.in.</p>
               </div>
 
               <div>
                 <h3 className="font-display text-sm font-semibold text-foreground mb-2">6. Contact</h3>
-                <p>For questions about this privacy policy, please contact us at hello@quantumnest.ai.</p>
+                <p>For questions about this privacy policy, please contact us at support@quantumailab.in.</p>
               </div>
             </div>
           </AnimatedSection>
