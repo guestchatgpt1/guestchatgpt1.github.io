@@ -2,6 +2,7 @@ import { useState, useEffect } from "react";
 import { NavLink, Link, useLocation } from "react-router-dom";
 import { Menu, X } from "lucide-react";
 import { Button } from "@/components/ui/button";
+import logo from "@/assets/logo.jpg";
 
 const navLinks = [
   { label: "Home", path: "/" },
@@ -57,12 +58,10 @@ const Navbar = () => {
     >
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div className="flex items-center justify-between h-16">
-          <Link to="/" className="flex items-center gap-2" aria-label="QuantumNest AI Home">
-            <div className="w-8 h-8 rounded-lg bg-gradient-to-br from-primary to-secondary flex items-center justify-center">
-              <span className="font-display text-xs font-bold text-primary-foreground">Q</span>
-            </div>
+          <Link to="/" className="flex items-center gap-2" aria-label="Quantum AI Lab Home">
+            <img src={logo} alt="Quantum AI Lab" className="w-8 h-8 rounded-lg object-cover" width={32} height={32} />
             <span className="font-display text-sm font-bold tracking-wider text-foreground">
-              QuantumNest<span className="text-primary">.ai</span>
+              Quantum <span className="text-primary">AI Lab</span>
             </span>
           </Link>
 

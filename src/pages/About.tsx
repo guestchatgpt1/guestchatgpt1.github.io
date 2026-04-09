@@ -11,7 +11,7 @@ const values = [
 ];
 
 const timeline = [
-  { year: "2021", title: "Founded", desc: "QuantumNest AI was born from a shared vision between quantum physicists and AI researchers." },
+  { year: "2021", title: "Founded", desc: "Quantum AI Lab was born from a shared vision between quantum physicists and AI researchers." },
   { year: "2022", title: "First Quantum-AI Hybrid", desc: "Launched our first hybrid quantum-classical system for pharmaceutical research." },
   { year: "2023", title: "Enterprise Expansion", desc: "Scaled to 50+ enterprise clients across finance, healthcare, and logistics." },
   { year: "2024", title: "Research Breakthrough", desc: "Published groundbreaking research on quantum error correction for ML workloads." },
@@ -19,7 +19,7 @@ const timeline = [
 ];
 
 const team = [
-  { name: "Dr. Elena Vasquez", role: "CEO & Co-Founder", initials: "EV" },
+  { name: "Mr. Sateesh Singh (M.Sc.-Maths, MCA)", role: "CEO & Co-Founder", initials: "SS" },
   { name: "Dr. James Nakamura", role: "CTO & Co-Founder", initials: "JN" },
   { name: "Dr. Priya Sharma", role: "Head of Research", initials: "PS" },
 ];
@@ -118,7 +118,7 @@ const About = () => {
       <section className="section-padding">
         <div className="container-max">
           <AnimatedSection>
-            <SectionHeading label="Leadership" title="Meet the Minds Behind QuantumNest" />
+            <SectionHeading label="Leadership" title="Meet the Minds Behind Quantum AI Lab" />
           </AnimatedSection>
           <div className="grid sm:grid-cols-2 lg:grid-cols-3 gap-6">
             {team.map((m, i) => (
