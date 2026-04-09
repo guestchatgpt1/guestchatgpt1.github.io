@@ -18,8 +18,8 @@ const Footer = () => {
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-16">
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-10">
           <div>
-            <Link to="/" className="flex items-center gap-2 mb-4" aria-label="Quantum AI Lab Home">
-              <img src={logo} alt="Quantum AI Lab" className="w-8 h-8 rounded-lg object-cover" width={32} height={32} />
+            <Link to="/" className="flex items-center gap-2 mb-4" aria-label="QuantumAI Lab Home">
+              <img src={logo} alt="QuantumAI Lab" className="w-8 h-8 rounded-lg object-cover" width={32} height={32} />
               <span className="font-display text-sm font-bold text-foreground">
                 Quantum <span className="text-primary">AI Lab</span>
               </span>
@@ -72,7 +72,7 @@ const Footer = () => {
 
         <div className="mt-12 pt-8 border-t border-border/30 flex flex-col sm:flex-row justify-between items-center gap-4">
           <p className="text-xs text-muted-foreground">
-            © {new Date().getFullYear()} Quantum AI Lab. All rights reserved.
+            © {new Date().getFullYear()} QuantumAI Lab. All rights reserved.
           </p>
           <div className="flex items-center gap-4">
             <Link to="/privacy" className="text-xs text-muted-foreground hover:text-primary transition-colors">
