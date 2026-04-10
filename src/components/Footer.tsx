@@ -18,7 +18,7 @@ const Footer = () => {
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-16">
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-10">
           <div>
-            <Link to="/" className="flex items-center gap-2 mb-4" <Link to="/" className="flex items-center gap-2 mb-4" aria-label="QuantumAI Lab Home">>
+            <Link to="/" className="flex items-center gap-2 mb-4" aria-label="QuantumAI Lab Home">
               <img src={logo} alt="QuantumAI Lab" className="w-8 h-8 rounded-lg object-cover" width={32} height={32} />
               <span className="font-display text-sm font-bold text-foreground">
                 Quantum<span className="text-primary">AI Lab</span>
