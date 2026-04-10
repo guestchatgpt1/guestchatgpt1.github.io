@@ -58,10 +58,10 @@ const Navbar = () => {
     >
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div className="flex items-center justify-between h-16">
-          <Link to="/" className="flex items-center gap-2" aria-label="QuantumAI Lab Home">
+          <Link to="/" className="flex items-center gap-2" <Link to="/" className="flex items-center gap-2" aria-label="QuantumAI Lab Home">>
             <img src={logo} alt="QuantumAI Lab" className="w-8 h-8 rounded-lg object-cover" width={32} height={32} />
             <span className="font-display text-sm font-bold tracking-wider text-foreground">
-              Quantum <span className="text-primary">AI Lab</span>
+              Quantum<span className="text-primary">AI Lab</span>
             </span>
           </Link>
 

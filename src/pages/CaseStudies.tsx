@@ -54,7 +54,7 @@ const CaseStudies = () => {
             <SectionHeading
               label="Case Studies"
               title="Real-World Quantum Impact"
-              description="How Quantum AI Lab is delivering measurable results across industries."
+              description="How QuantumAI Lab is delivering measurable results across industries."
             />
           </AnimatedSection>
 
