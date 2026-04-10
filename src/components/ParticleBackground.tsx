@@ -22,23 +22,30 @@ const ParticleBackground = () => {
   const animationRef = useRef<number>(0);
   const resizeTimerRef = useRef<number>(0);
 
+  const prefersReducedMotion =
+    typeof window !== "undefined" &&
+    window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+
   const init = useCallback(() => {
     const canvas = canvasRef.current;
     if (!canvas) return;
     canvas.width = window.innerWidth;
     canvas.height = window.innerHeight;
 
-    const count = Math.min(60, Math.floor((canvas.width * canvas.height) / 25000));
+    const count = prefersReducedMotion
+      ? Math.min(20, Math.floor((canvas.width * canvas.height) / 60000))
+      : Math.min(60, Math.floor((canvas.width * canvas.height) / 25000));
+
     particlesRef.current = Array.from({ length: count }, () => ({
       x: Math.random() * canvas.width,
       y: Math.random() * canvas.height,
-      vx: (Math.random() - 0.5) * 0.3,
-      vy: (Math.random() - 0.5) * 0.3,
+      vx: prefersReducedMotion ? 0 : (Math.random() - 0.5) * 0.3,
+      vy: prefersReducedMotion ? 0 : (Math.random() - 0.5) * 0.3,
       size: Math.random() * 2 + 0.5,
       opacity: Math.random() * 0.4 + 0.1,
       color: COLORS[Math.floor(Math.random() * COLORS.length)],
     }));
-  }, []);
+  }, [prefersReducedMotion]);
 
   useEffect(() => {
     const canvas = canvasRef.current;
@@ -53,6 +60,21 @@ const ParticleBackground = () => {
       resizeTimerRef.current = window.setTimeout(init, 200);
     };
     window.addEventListener("resize", onResize, { passive: true });
+
+    if (prefersReducedMotion) {
+      // Draw once, no animation loop
+      ctx.clearRect(0, 0, canvas.width, canvas.height);
+      for (const p of particlesRef.current) {
+        ctx.beginPath();
+        ctx.arc(p.x, p.y, p.size, 0, Math.PI * 2);
+        ctx.fillStyle = `${p.color}${p.opacity})`;
+        ctx.fill();
+      }
+      return () => {
+        clearTimeout(resizeTimerRef.current);
+        window.removeEventListener("resize", onResize);
+      };
+    }
 
     const draw = () => {
       ctx.clearRect(0, 0, canvas.width, canvas.height);
@@ -94,7 +116,7 @@ const ParticleBackground = () => {
       clearTimeout(resizeTimerRef.current);
       window.removeEventListener("resize", onResize);
     };
-  }, [init]);
+  }, [init, prefersReducedMotion]);
 
   return (
     <canvas

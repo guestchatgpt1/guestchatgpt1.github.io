@@ -54,17 +54,17 @@ const Footer = () => {
           <div>
             <h4 className="font-display text-xs font-semibold mb-4 text-foreground tracking-wider uppercase">Contact</h4>
             <address className="space-y-3 text-sm text-muted-foreground not-italic">
-              <div className="flex items-center gap-2">
-                <Mail size={14} className="text-primary" aria-hidden="true" />
+              <a href="mailto:support@quantumailab.in" className="flex items-center gap-2 hover:text-primary transition-colors">
+                <Mail size={14} className="text-primary shrink-0" aria-hidden="true" />
                 <span>support@quantumailab.in</span>
-              </div>
-              <div className="flex items-center gap-2">
-                <Phone size={14} className="text-primary" aria-hidden="true" />
+              </a>
+              <a href="tel:+918652074439" className="flex items-center gap-2 hover:text-primary transition-colors">
+                <Phone size={14} className="text-primary shrink-0" aria-hidden="true" />
                 <span>+91-8652074439</span>
-              </div>
+              </a>
               <div className="flex items-center gap-2">
-                <MapPin size={14} className="text-primary" aria-hidden="true" />
-                <span>Mumbai, India</span>
+                <MapPin size={14} className="text-primary shrink-0" aria-hidden="true" />
+                <span>Mumbai, India-421204</span>
               </div>
             </address>
           </div>

@@ -141,21 +141,33 @@ const Contact = () => {
                 <div className="glass rounded-xl p-8">
                   <h3 className="font-display text-sm font-semibold text-foreground mb-6 uppercase tracking-wider">Get in Touch</h3>
                   <div className="space-y-5">
-                    {[
-                      { icon: Mail, label: "Email", value: "support@quantumailab.in" },
-                      { icon: Phone, label: "Phone", value: "+91-8652074439" },
-                      { icon: MapPin, label: "Headquarters", value: "Mumbai, India-421204" },
-                    ].map((item) => (
-                      <div key={item.label} className="flex items-start gap-4">
-                        <div className="w-10 h-10 rounded-lg bg-primary/10 flex items-center justify-center shrink-0">
-                          <item.icon size={18} className="text-primary" />
-                        </div>
-                        <div>
-                          <p className="text-sm font-medium text-foreground">{item.label}</p>
-                          <p className="text-sm text-muted-foreground whitespace-pre-line">{item.value}</p>
-                        </div>
+                    <a href="mailto:support@quantumailab.in" className="flex items-start gap-4 group">
+                      <div className="w-10 h-10 rounded-lg bg-primary/10 flex items-center justify-center shrink-0">
+                        <Mail size={18} className="text-primary" />
                       </div>
-                    ))}
+                      <div>
+                        <p className="text-sm font-medium text-foreground">Email</p>
+                        <p className="text-sm text-muted-foreground group-hover:text-primary transition-colors">support@quantumailab.in</p>
+                      </div>
+                    </a>
+                    <a href="tel:+918652074439" className="flex items-start gap-4 group">
+                      <div className="w-10 h-10 rounded-lg bg-primary/10 flex items-center justify-center shrink-0">
+                        <Phone size={18} className="text-primary" />
+                      </div>
+                      <div>
+                        <p className="text-sm font-medium text-foreground">Phone</p>
+                        <p className="text-sm text-muted-foreground group-hover:text-primary transition-colors">+91-8652074439</p>
+                      </div>
+                    </a>
+                    <div className="flex items-start gap-4">
+                      <div className="w-10 h-10 rounded-lg bg-primary/10 flex items-center justify-center shrink-0">
+                        <MapPin size={18} className="text-primary" />
+                      </div>
+                      <div>
+                        <p className="text-sm font-medium text-foreground">Headquarters</p>
+                        <p className="text-sm text-muted-foreground">Mumbai, India-421204</p>
+                      </div>
+                    </div>
                   </div>
                 </div>
 
