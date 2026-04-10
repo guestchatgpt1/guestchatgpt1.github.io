@@ -26,7 +26,7 @@ const stats = [
 ];
 
 const testimonials = [
-  { name: "Sarah Chen", role: "CTO, BioGenix", quote: "Quantum AI Lab's hybrid system reduced our drug discovery timeline from years to months. Revolutionary." },
+  { name: "Sarah Chen", role: "CTO, BioGenix", quote: "QuantumAI Lab's hybrid system reduced our drug discovery timeline from years to months. Revolutionary." },
   { name: "Marcus Rivera", role: "VP Engineering, FinScale", quote: "Their quantum-enhanced models gave us a decisive edge in risk assessment. Truly next-generation technology." },
   { name: "Dr. Anika Patel", role: "Director of Research, NovaTech", quote: "The team's deep expertise in both quantum computing and AI is unmatched. They delivered beyond our expectations." },
 ];
@@ -154,7 +154,7 @@ const Index = () => {
       <section className="section-padding bg-card/30" aria-labelledby="values-heading" id="values">
         <div className="container-max">
           <AnimatedSection>
-            <SectionHeading id="values-heading" label="Why Quantum AI Lab" title="Built on Core Principles" />
+            <SectionHeading id="values-heading" label="Why QuantumAI Lab" title="Built on Core Principles" />
           </AnimatedSection>
           <div className="grid sm:grid-cols-2 lg:grid-cols-4 gap-6">
             {[

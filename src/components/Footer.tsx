@@ -21,7 +21,7 @@ const Footer = () => {
             <Link to="/" className="flex items-center gap-2 mb-4" aria-label="QuantumAI Lab Home">
               <img src={logo} alt="QuantumAI Lab" className="w-8 h-8 rounded-lg object-cover" width={32} height={32} />
               <span className="font-display text-sm font-bold text-foreground">
-                Quantum <span className="text-primary">AI Lab</span>
+                Quantum<span className="text-primary">AI Lab</span>
               </span>
             </Link>
             <p className="text-muted-foreground text-sm leading-relaxed">

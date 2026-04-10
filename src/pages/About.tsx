@@ -11,7 +11,7 @@ const values = [
 ];
 
 const timeline = [
-  { year: "2021", title: "Founded", desc: "Quantum AI Lab was born from a shared vision between quantum physicists and AI researchers." },
+  { year: "2021", title: "Founded", desc: "QuantumAI Lab was born from a shared vision between quantum physicists and AI researchers." },
   { year: "2022", title: "First Quantum-AI Hybrid", desc: "Launched our first hybrid quantum-classical system for pharmaceutical research." },
   { year: "2023", title: "Enterprise Expansion", desc: "Scaled to 50+ enterprise clients across finance, healthcare, and logistics." },
   { year: "2024", title: "Research Breakthrough", desc: "Published groundbreaking research on quantum error correction for ML workloads." },
@@ -118,7 +118,7 @@ const About = () => {
       <section className="section-padding">
         <div className="container-max">
           <AnimatedSection>
-            <SectionHeading label="Leadership" title="Meet the Minds Behind Quantum AI Lab" />
+            <SectionHeading label="Leadership" title="Meet the Minds Behind QuantumAI Lab" />
           </AnimatedSection>
           <div className="grid sm:grid-cols-2 lg:grid-cols-3 gap-6">
             {team.map((m, i) => (

@@ -18,22 +18,22 @@ const Terms = () => {
 
               <div>
                 <h3 className="font-display text-sm font-semibold text-foreground mb-2">1. Acceptance of Terms</h3>
-                <p>By accessing and using the Quantum AI Lab website and services, you agree to be bound by these Terms of Service and all applicable laws and regulations.</p>
+                <p>By accessing and using the QuantumAI Lab website and services, you agree to be bound by these Terms of Service and all applicable laws and regulations.</p>
               </div>
 
               <div>
                 <h3 className="font-display text-sm font-semibold text-foreground mb-2">2. Services</h3>
-                <p>Quantum AI Lab provides quantum computing and artificial intelligence solutions. Specific service terms, deliverables, and pricing are defined in individual service agreements.</p>
+                <p>QuantumAI Lab provides quantum computing and artificial intelligence solutions. Specific service terms, deliverables, and pricing are defined in individual service agreements.</p>
               </div>
 
               <div>
                 <h3 className="font-display text-sm font-semibold text-foreground mb-2">3. Intellectual Property</h3>
-                <p>All content, code, algorithms, and materials on this website are the intellectual property of Quantum AI Lab unless otherwise stated. Unauthorized reproduction is prohibited.</p>
+                <p>All content, code, algorithms, and materials on this website are the intellectual property of QuantumAI Lab unless otherwise stated. Unauthorized reproduction is prohibited.</p>
               </div>
 
               <div>
                 <h3 className="font-display text-sm font-semibold text-foreground mb-2">4. Limitation of Liability</h3>
-                <p>Quantum AI Lab shall not be liable for any indirect, incidental, or consequential damages arising from the use of our services or website.</p>
+                <p>QuantumAI Lab shall not be liable for any indirect, incidental, or consequential damages arising from the use of our services or website.</p>
               </div>
 
               <div>
