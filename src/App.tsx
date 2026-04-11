@@ -8,6 +8,7 @@ import Navbar from "@/components/Navbar";
 import Footer from "@/components/Footer";
 import ParticleBackground from "@/components/ParticleBackground";
 import ScrollToTop from "@/components/ScrollToTop";
+import BackToTop from "@/components/BackToTop";
 import ErrorBoundary from "@/components/ErrorBoundary";
 
 const Index = lazy(() => import("./pages/Index"));
@@ -20,6 +21,7 @@ const Contact = lazy(() => import("./pages/Contact"));
 const Pricing = lazy(() => import("./pages/Pricing"));
 const Privacy = lazy(() => import("./pages/Privacy"));
 const Terms = lazy(() => import("./pages/Terms"));
+const FAQ = lazy(() => import("./pages/FAQ"));
 const NotFound = lazy(() => import("./pages/NotFound"));
 
 const queryClient = new QueryClient();
@@ -45,6 +47,7 @@ const App = () => (
             Skip to main content
           </a>
           <ParticleBackground />
+          <BackToTop />
           <Navbar />
           <main id="main-content" className="relative z-10">
             <Suspense fallback={<PageLoader />}>
@@ -57,6 +60,7 @@ const App = () => (
                 <Route path="/blog" element={<Blog />} />
                 <Route path="/pricing" element={<Pricing />} />
                 <Route path="/contact" element={<Contact />} />
+                <Route path="/faq" element={<FAQ />} />
                 <Route path="/privacy" element={<Privacy />} />
                 <Route path="/terms" element={<Terms />} />
                 <Route path="*" element={<NotFound />} />
