@@ -61,24 +61,6 @@ const plans = [
   },
 ];
 
-const faqs = [
-  {
-    q: "What's included in the free trial?",
-    a: "The Professional plan includes a 14-day free trial with full access to hybrid quantum-AI pipelines. No credit card required to start.",
-  },
-  {
-    q: "Can I switch plans later?",
-    a: "Yes. You can upgrade or downgrade at any time. Changes take effect at the start of your next billing cycle.",
-  },
-  {
-    q: "Do you offer academic or nonprofit pricing?",
-    a: "We offer special pricing for academic institutions and nonprofit organizations. Contact our sales team for details.",
-  },
-  {
-    q: "What kind of support is included?",
-    a: "All plans include email support. Professional plans get priority response times, and Enterprise clients receive 24/7 dedicated support.",
-  },
-];
 
 const Pricing = () => {
   usePageTitle("Pricing");
@@ -152,27 +134,16 @@ const Pricing = () => {
         </div>
       </section>
 
-      {/* FAQ */}
-      <section className="section-padding bg-card/30" aria-labelledby="faq-heading">
-        <div className="max-w-3xl mx-auto">
+      {/* FAQ Link */}
+      <section className="section-padding bg-card/30" aria-labelledby="faq-link-heading">
+        <div className="text-center">
           <AnimatedSection>
-            <SectionHeading label="FAQ" title="Frequently Asked Questions" />
+            <h2 id="faq-link-heading" className="font-display text-2xl font-bold gradient-text mb-4">Have Questions?</h2>
+            <p className="text-muted-foreground mb-6">Check out our comprehensive FAQ for answers.</p>
+            <Button variant="outline" asChild>
+              <Link to="/faq">View FAQ <ArrowRight size={16} /></Link>
+            </Button>
           </AnimatedSection>
-          <div className="space-y-4">
-            {faqs.map((faq, i) => (
-              <AnimatedSection key={i} delay={i * 0.05}>
-                <details className="glass rounded-xl group" name="faq">
-                  <summary className="p-6 cursor-pointer font-display text-sm font-semibold text-foreground hover:text-primary transition-colors list-none flex justify-between items-center">
-                    {faq.q}
-                    <span className="text-primary ml-4 shrink-0 transition-transform group-open:rotate-45 text-lg">+</span>
-                  </summary>
-                  <div className="px-6 pb-6 text-sm text-muted-foreground leading-relaxed">
-                    {faq.a}
-                  </div>
-                </details>
-              </AnimatedSection>
-            ))}
-          </div>
         </div>
       </section>
 
