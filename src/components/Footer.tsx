@@ -9,6 +9,7 @@ const quickLinks = [
   { label: "Case Studies", path: "/case-studies" },
   { label: "Pricing", path: "/pricing" },
   { label: "Blog", path: "/blog" },
+  { label: "FAQ", path: "/faq" },
   { label: "Contact", path: "/contact" },
 ];
 
