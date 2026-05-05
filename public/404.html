@@ -1,0 +1,21 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <title>QuantumAI Lab</title>
+    <script>
+      // GitHub Pages SPA redirect: preserve the requested path + query + hash
+      // and forward to index.html so React Router can handle it.
+      (function () {
+        var l = window.location;
+        var redirect =
+          l.pathname.replace(/\/$/, "") +
+          (l.search ? l.search : "") +
+          l.hash;
+        sessionStorage.setItem("spa-redirect", redirect || "/");
+        l.replace(l.origin + "/?spa-redirect=1");
+      })();
+    </script>
+  </head>
+  <body></body>
+</html>

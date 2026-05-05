@@ -40,6 +40,20 @@
 </head>
 
   <body>
+    <script>
+      // Restore deep-link path saved by 404.html on GitHub Pages SPA fallback
+      (function () {
+        try {
+          var redirect = sessionStorage.getItem("spa-redirect");
+          if (redirect && redirect !== "/") {
+            sessionStorage.removeItem("spa-redirect");
+            history.replaceState(null, "", redirect);
+          } else if (window.location.search.indexOf("spa-redirect=1") !== -1) {
+            history.replaceState(null, "", "/");
+          }
+        } catch (e) {}
+      })();
+    </script>
     <div id="root"></div>
     <script type="module" src="/src/main.tsx"></script>
   </body>
