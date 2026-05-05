@@ -1,6 +1,7 @@
 import { Link } from "react-router-dom";
 import { Mail, MapPin, Phone } from "lucide-react";
 import logo from "@/assets/logo.jpg";
+import NewsletterForm from "@/components/NewsletterForm";
 
 const quickLinks = [
   { label: "About", path: "/about" },
