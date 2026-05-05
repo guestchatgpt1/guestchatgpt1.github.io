@@ -28,16 +28,12 @@ const NewsletterForm = ({ className = "", compact = false }: NewsletterFormProps
     }
     setSubmitting(true);
     try {
-      const res = await fetch(NEWSLETTER_WEBHOOK, {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({
-          email: parsed.data,
-          action: "subscribe",
-          source: "quantumailab.website",
-          submittedAt: new Date().toISOString(),
-        }),
-      });
+      const url = new URL(NEWSLETTER_WEBHOOK);
+      url.searchParams.set("email", parsed.data);
+      url.searchParams.set("action", "subscribe");
+      url.searchParams.set("source", "quantumailab.website");
+      url.searchParams.set("submittedAt", new Date().toISOString());
+      const res = await fetch(url.toString(), { method: "GET" });
       if (!res.ok) throw new Error(`Request failed (${res.status})`);
       toast({ title: "Subscribed!", description: "You're on the list. Thanks for joining us." });
       setEmail("");
