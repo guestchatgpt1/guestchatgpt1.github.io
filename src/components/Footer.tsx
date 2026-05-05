@@ -1,6 +1,7 @@
 import { Link } from "react-router-dom";
 import { Mail, MapPin, Phone } from "lucide-react";
 import logo from "@/assets/logo.jpg";
+import NewsletterForm from "@/components/NewsletterForm";
 
 const quickLinks = [
   { label: "About", path: "/about" },
@@ -17,6 +18,18 @@ const Footer = () => {
   return (
     <footer className="border-t border-border/50 bg-card/30" role="contentinfo">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-16">
+        <div className="mb-12 pb-12 border-b border-border/30 grid gap-6 lg:grid-cols-2 lg:items-center">
+          <div>
+            <h3 className="font-display text-lg font-semibold text-foreground mb-2">
+              Stay ahead of the quantum curve
+            </h3>
+            <p className="text-sm text-muted-foreground">
+              Monthly insights on quantum computing, AI breakthroughs, and case studies — straight to your inbox.
+            </p>
+          </div>
+          <NewsletterForm />
+        </div>
+
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-10">
           <div>
             <Link to="/" className="flex items-center gap-2 mb-4" aria-label="QuantumAI Lab Home">
@@ -81,6 +94,9 @@ const Footer = () => {
             </Link>
             <Link to="/terms" className="text-xs text-muted-foreground hover:text-primary transition-colors">
               Terms of Service
+            </Link>
+            <Link to="/unsubscribe" className="text-xs text-muted-foreground hover:text-primary transition-colors">
+              Unsubscribe
             </Link>
           </div>
           <p className="text-xs text-muted-foreground font-display tracking-widest">

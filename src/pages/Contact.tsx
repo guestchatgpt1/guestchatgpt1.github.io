@@ -40,11 +40,28 @@ const Contact = () => {
     }
 
     setSubmitting(true);
-    await new Promise((r) => setTimeout(r, 800));
-    setSubmitting(false);
-
-    toast({ title: "Message sent!", description: "We'll get back to you within 24 hours." });
-    setForm({ name: "", email: "", company: "", message: "" });
+    try {
+      const res = await fetch("https://lenoyi.app.n8n.cloud/webhook/QuantumAILab-contact-us", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          ...result.data,
+          source: "quantumailab.website",
+          submittedAt: new Date().toISOString(),
+        }),
+      });
+      if (!res.ok) throw new Error(`Request failed (${res.status})`);
+      toast({ title: "Message sent!", description: "We'll get back to you within 24 hours." });
+      setForm({ name: "", email: "", company: "", message: "" });
+    } catch (err) {
+      toast({
+        title: "Could not send message",
+        description: "Please try again or email support@quantumailab.in directly.",
+        variant: "destructive",
+      });
+    } finally {
+      setSubmitting(false);
+    }
   };
 
   const update = (field: keyof FormData, value: string) => {
