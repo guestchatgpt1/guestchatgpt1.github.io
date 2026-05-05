@@ -95,6 +95,9 @@ const Footer = () => {
             <Link to="/terms" className="text-xs text-muted-foreground hover:text-primary transition-colors">
               Terms of Service
             </Link>
+            <Link to="/unsubscribe" className="text-xs text-muted-foreground hover:text-primary transition-colors">
+              Unsubscribe
+            </Link>
           </div>
           <p className="text-xs text-muted-foreground font-display tracking-widest">
             Where Intelligence Meets Infinity
