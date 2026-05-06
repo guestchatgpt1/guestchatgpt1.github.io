@@ -3,14 +3,9 @@ import { Button } from "@/components/ui/button";
 import SectionHeading from "@/components/SectionHeading";
 import AnimatedSection from "@/components/AnimatedSection";
 import heroImage from "@/assets/hero-quantum.jpg";
-import { ArrowRight, Brain, Cpu, Network, Shield, Zap, Users, TrendingUp, Quote, Send } from "lucide-react";
-import { useState } from "react";
-import { toast } from "sonner";
+import { ArrowRight, Brain, Cpu, Network, Shield, Zap, Users, TrendingUp, Quote } from "lucide-react";
 import { motion } from "framer-motion";
 import { usePageTitle } from "@/hooks/usePageTitle";
-import { z } from "zod";
-
-const emailSchema = z.string().trim().email("Please enter a valid email").max(255);
 
 const services = [
   { icon: Cpu, title: "Quantum Computing", desc: "Leveraging quantum processors to solve optimization problems exponentially faster than classical computers." },
