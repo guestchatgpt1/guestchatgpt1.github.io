@@ -17,7 +17,7 @@ import logo from "@/assets/logo.jpg";
  */
 const CHAT_WEBHOOK =
   (import.meta.env.VITE_CHAT_WEBHOOK_URL as string | undefined) ??
-  "https://lenoyi.app.n8n.cloud/webhook/QuantumAILab-chat";
+  "https://lenoyi.app.n8n.cloud/webhook/chat-assistant";
 
 type Role = "user" | "assistant";
 type ChatMessage = { id: string; role: Role; content: string };
