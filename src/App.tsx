@@ -9,6 +9,7 @@ import Footer from "@/components/Footer";
 import ParticleBackground from "@/components/ParticleBackground";
 import ScrollToTop from "@/components/ScrollToTop";
 import BackToTop from "@/components/BackToTop";
+import ChatBot from "@/components/ChatBot";
 import ErrorBoundary from "@/components/ErrorBoundary";
 
 const Index = lazy(() => import("./pages/Index"));
@@ -49,6 +50,7 @@ const App = () => (
           </a>
           <ParticleBackground />
           <BackToTop />
+          <ChatBot />
           <Navbar />
           <main id="main-content" className="relative z-10">
             <Suspense fallback={<PageLoader />}>
