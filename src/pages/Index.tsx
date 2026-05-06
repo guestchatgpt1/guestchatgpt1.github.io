@@ -179,35 +179,6 @@ const Index = () => {
         </div>
       </section>
 
-      {/* Newsletter */}
-      <section className="section-padding bg-gradient-to-r from-primary/5 via-secondary/5 to-primary/5" aria-labelledby="newsletter-heading" id="newsletter">
-        <div className="max-w-2xl mx-auto text-center">
-          <AnimatedSection>
-            <SectionHeading
-              id="newsletter-heading"
-              label="Stay Updated"
-              title="Join the Quantum Future"
-              description="Get the latest insights on quantum computing and AI delivered to your inbox."
-            />
-            <form onSubmit={handleSubscribe} className="flex flex-col sm:flex-row gap-3 max-w-md mx-auto">
-              <label htmlFor="newsletter-email" className="sr-only">Email address</label>
-              <input
-                id="newsletter-email"
-                type="email"
-                required
-                value={email}
-                onChange={(e) => setEmail(e.target.value)}
-                placeholder="Enter your email"
-                maxLength={255}
-                className="flex-1 h-12 px-4 rounded-lg bg-muted border border-border text-foreground placeholder:text-muted-foreground focus:outline-none focus:ring-2 focus:ring-primary/50 text-sm"
-              />
-              <Button variant="hero" size="lg" type="submit" disabled={subscribing}>
-                {subscribing ? "Subscribing..." : <>Subscribe <Send size={16} /></>}
-              </Button>
-            </form>
-          </AnimatedSection>
-        </div>
-      </section>
     </div>
   );
 };
