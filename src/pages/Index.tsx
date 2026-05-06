@@ -3,14 +3,9 @@ import { Button } from "@/components/ui/button";
 import SectionHeading from "@/components/SectionHeading";
 import AnimatedSection from "@/components/AnimatedSection";
 import heroImage from "@/assets/hero-quantum.jpg";
-import { ArrowRight, Brain, Cpu, Network, Shield, Zap, Users, TrendingUp, Quote, Send } from "lucide-react";
-import { useState } from "react";
-import { toast } from "sonner";
+import { ArrowRight, Brain, Cpu, Network, Shield, Zap, Users, TrendingUp, Quote } from "lucide-react";
 import { motion } from "framer-motion";
 import { usePageTitle } from "@/hooks/usePageTitle";
-import { z } from "zod";
-
-const emailSchema = z.string().trim().email("Please enter a valid email").max(255);
 
 const services = [
   { icon: Cpu, title: "Quantum Computing", desc: "Leveraging quantum processors to solve optimization problems exponentially faster than classical computers." },
@@ -33,22 +28,6 @@ const testimonials = [
 
 const Index = () => {
   usePageTitle();
-  const [email, setEmail] = useState("");
-  const [subscribing, setSubscribing] = useState(false);
-
-  const handleSubscribe = async (e: React.FormEvent) => {
-    e.preventDefault();
-    const result = emailSchema.safeParse(email);
-    if (!result.success) {
-      toast.error("Invalid email", { description: result.error.issues[0].message });
-      return;
-    }
-    setSubscribing(true);
-    await new Promise((r) => setTimeout(r, 600));
-    setSubscribing(false);
-    toast.success("Subscribed!", { description: "You'll receive our latest insights." });
-    setEmail("");
-  };
 
   return (
     <div className="relative">
@@ -200,35 +179,6 @@ const Index = () => {
         </div>
       </section>
 
-      {/* Newsletter */}
-      <section className="section-padding bg-gradient-to-r from-primary/5 via-secondary/5 to-primary/5" aria-labelledby="newsletter-heading" id="newsletter">
-        <div className="max-w-2xl mx-auto text-center">
-          <AnimatedSection>
-            <SectionHeading
-              id="newsletter-heading"
-              label="Stay Updated"
-              title="Join the Quantum Future"
-              description="Get the latest insights on quantum computing and AI delivered to your inbox."
-            />
-            <form onSubmit={handleSubscribe} className="flex flex-col sm:flex-row gap-3 max-w-md mx-auto">
-              <label htmlFor="newsletter-email" className="sr-only">Email address</label>
-              <input
-                id="newsletter-email"
-                type="email"
-                required
-                value={email}
-                onChange={(e) => setEmail(e.target.value)}
-                placeholder="Enter your email"
-                maxLength={255}
-                className="flex-1 h-12 px-4 rounded-lg bg-muted border border-border text-foreground placeholder:text-muted-foreground focus:outline-none focus:ring-2 focus:ring-primary/50 text-sm"
-              />
-              <Button variant="hero" size="lg" type="submit" disabled={subscribing}>
-                {subscribing ? "Subscribing..." : <>Subscribe <Send size={16} /></>}
-              </Button>
-            </form>
-          </AnimatedSection>
-        </div>
-      </section>
     </div>
   );
 };

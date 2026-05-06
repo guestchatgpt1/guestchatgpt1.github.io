@@ -98,17 +98,28 @@ const ChatBot = () => {
     const timeout = setTimeout(() => controller.abort(), 30_000);
 
     try {
-      const res = await fetch(CHAT_WEBHOOK, {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        signal: controller.signal,
-        body: JSON.stringify({
-          message: userMessage.content,
-          history: history.map((m) => ({ role: m.role, content: m.content })),
-          source: "quantumailab.website",
-          submittedAt: new Date().toISOString(),
-        }),
-      });
+      const url = new URL(CHAT_WEBHOOK);
+      url.searchParams.set("message", userMessage.content);
+      url.searchParams.set("history", JSON.stringify(history.map((m) => ({ role: m.role, content: m.content }))));
+      url.searchParams.set("source", "quantumailab.website");
+      url.searchParams.set("submittedAt", new Date().toISOString());
+
+      let res = await fetch(url.toString(), { method: "GET", signal: controller.signal });
+
+      // Fallback to POST if GET isn't allowed by the webhook
+      if (!res.ok && (res.status === 404 || res.status === 405)) {
+        res = await fetch(CHAT_WEBHOOK, {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          signal: controller.signal,
+          body: JSON.stringify({
+            message: userMessage.content,
+            history: history.map((m) => ({ role: m.role, content: m.content })),
+            source: "quantumailab.website",
+            submittedAt: new Date().toISOString(),
+          }),
+        });
+      }
 
       if (!res.ok) throw new Error(`Request failed (${res.status})`);
 
