@@ -41,7 +41,7 @@ const Contact = () => {
 
     setSubmitting(true);
     try {
-      const res = await fetch("https://lenoyi.app.n8n.cloud/webhook/QuantumAILab-contact-us", {
+      const res = await fetch("https://woveh.app.n8n.cloud/webhook/QuantumAILab-contact-us", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({

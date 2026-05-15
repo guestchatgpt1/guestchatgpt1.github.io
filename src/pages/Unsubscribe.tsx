@@ -7,7 +7,7 @@ import SectionHeading from "@/components/SectionHeading";
 import AnimatedSection from "@/components/AnimatedSection";
 import { usePageTitle } from "@/hooks/usePageTitle";
 
-const NEWSLETTER_WEBHOOK = "https://lenoyi.app.n8n.cloud/webhook/QuantumAILabNewsletter";
+const NEWSLETTER_WEBHOOK = "https://woveh.app.n8n.cloud/webhook/QuantumAILabNewsletter";
 const emailSchema = z.string().trim().email("Please enter a valid email").max(255);
 
 type Status = "idle" | "submitting" | "success" | "error";
