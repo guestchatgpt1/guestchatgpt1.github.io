@@ -59,17 +59,22 @@ const Contact = () => {
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({
           ...result.data,
+          departmentLabel: DEPARTMENTS[result.data.department].label,
+          routeTo: DEPARTMENTS[result.data.department].email,
           source: "quantumailab.website",
           submittedAt: new Date().toISOString(),
         }),
       });
       if (!res.ok) throw new Error(`Request failed (${res.status})`);
-      toast({ title: "Message sent!", description: "We'll get back to you within 24 hours." });
-      setForm({ name: "", email: "", company: "", message: "" });
+      toast({
+        title: "Message sent!",
+        description: `Your enquiry has been routed to ${DEPARTMENTS[result.data.department].email}. We'll reply within 24 hours.`,
+      });
+      setForm({ name: "", email: "", company: "", department: "general", message: "" });
     } catch (err) {
       toast({
         title: "Could not send message",
-        description: "Please try again or email support@quantumailab.in directly.",
+        description: `Please try again or email ${DEPARTMENTS[form.department].email} directly.`,
         variant: "destructive",
       });
     } finally {
