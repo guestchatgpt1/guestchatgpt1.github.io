@@ -18,6 +18,7 @@ const Services = lazy(() => import("./pages/Services"));
 const Technology = lazy(() => import("./pages/Technology"));
 const CaseStudies = lazy(() => import("./pages/CaseStudies"));
 const Blog = lazy(() => import("./pages/Blog"));
+const BlogPost = lazy(() => import("./pages/BlogPost"));
 const Contact = lazy(() => import("./pages/Contact"));
 const Pricing = lazy(() => import("./pages/Pricing"));
 const Privacy = lazy(() => import("./pages/Privacy"));
