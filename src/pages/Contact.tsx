@@ -33,7 +33,7 @@ type FormErrors = Partial<Record<keyof FormData, string>>;
 const Contact = () => {
   usePageTitle("Contact");
   const { toast } = useToast();
-  const [form, setForm] = useState<FormData>({ name: "", email: "", company: "", message: "" });
+  const [form, setForm] = useState<FormData>({ name: "", email: "", company: "", department: "general", message: "" });
   const [errors, setErrors] = useState<FormErrors>({});
   const [submitting, setSubmitting] = useState(false);
 
