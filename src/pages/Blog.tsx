@@ -1,46 +1,9 @@
+import { Link } from "react-router-dom";
 import SectionHeading from "@/components/SectionHeading";
 import AnimatedSection from "@/components/AnimatedSection";
-import { ArrowRight, Calendar } from "lucide-react";
+import { ArrowRight, Calendar, Clock } from "lucide-react";
 import { usePageTitle } from "@/hooks/usePageTitle";
-
-const posts = [
-  {
-    category: "Quantum Computing",
-    date: "Mar 15, 2026",
-    title: "The Road to Fault-Tolerant Quantum Computing: Where Are We Now?",
-    excerpt: "An in-depth look at the latest advances in quantum error correction and what they mean for practical quantum advantage.",
-  },
-  {
-    category: "AI Research",
-    date: "Mar 8, 2026",
-    title: "Beyond Transformers: The Next Architecture for AGI",
-    excerpt: "Exploring emerging neural network architectures that could surpass transformer models in reasoning and generalization.",
-  },
-  {
-    category: "Industry Insights",
-    date: "Feb 28, 2026",
-    title: "Quantum Computing in Finance: A 2026 Market Analysis",
-    excerpt: "How financial institutions are deploying quantum algorithms for portfolio optimization, risk modeling, and fraud detection.",
-  },
-  {
-    category: "Quantum Computing",
-    date: "Feb 20, 2026",
-    title: "Hybrid Quantum-Classical Systems: A Practical Guide",
-    excerpt: "Best practices for designing systems that leverage both quantum and classical computing for real-world applications.",
-  },
-  {
-    category: "AI Research",
-    date: "Feb 12, 2026",
-    title: "Quantum Machine Learning: Separating Hype from Reality",
-    excerpt: "A critical analysis of where quantum ML delivers genuine speedups and where classical methods still reign supreme.",
-  },
-  {
-    category: "Industry Insights",
-    date: "Feb 5, 2026",
-    title: "The Quantum Talent Gap: Building the Workforce of Tomorrow",
-    excerpt: "Strategies for organizations looking to build quantum computing capabilities and attract top-tier talent.",
-  },
-];
+import { blogPosts } from "@/data/blogPosts";
 
 const categoryColor: Record<string, string> = {
   "Quantum Computing": "text-primary bg-primary/10",
@@ -63,9 +26,13 @@ const Blog = () => {
           </AnimatedSection>
 
           <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-6">
-            {posts.map((p, i) => (
-              <AnimatedSection key={p.title} delay={i * 0.08}>
-                <article className="glass-hover rounded-xl p-6 group cursor-pointer h-full flex flex-col">
+            {blogPosts.map((p, i) => (
+              <AnimatedSection key={p.slug} delay={i * 0.08}>
+                <Link
+                  to={`/blog/${p.slug}`}
+                  className="glass-hover rounded-xl p-6 group h-full flex flex-col focus:outline-none focus:ring-2 focus:ring-primary/50 focus:ring-offset-2 focus:ring-offset-background"
+                  aria-label={`Read article: ${p.title}`}
+                >
                   <div className="flex items-center justify-between mb-4">
                     <span className={`text-xs font-medium px-2.5 py-1 rounded-full ${categoryColor[p.category]}`}>
                       {p.category}
@@ -79,10 +46,16 @@ const Blog = () => {
                     {p.title}
                   </h3>
                   <p className="text-muted-foreground text-sm leading-relaxed mb-4 flex-1">{p.excerpt}</p>
-                  <span className="inline-flex items-center gap-1 text-sm text-primary font-medium group-hover:gap-2 transition-all">
-                    Read More <ArrowRight size={14} />
-                  </span>
-                </article>
+                  <div className="flex items-center justify-between">
+                    <span className="inline-flex items-center gap-1 text-sm text-primary font-medium group-hover:gap-2 transition-all">
+                      Read More <ArrowRight size={14} />
+                    </span>
+                    <span className="inline-flex items-center gap-1 text-xs text-muted-foreground">
+                      <Clock size={12} aria-hidden="true" />
+                      {p.readTime}
+                    </span>
+                  </div>
+                </Link>
               </AnimatedSection>
             ))}
           </div>

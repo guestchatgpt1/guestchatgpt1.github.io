@@ -68,9 +68,9 @@ const Footer = () => {
           <div>
             <h4 className="font-display text-xs font-semibold mb-4 text-foreground tracking-wider uppercase">Contact</h4>
             <address className="space-y-3 text-sm text-muted-foreground not-italic">
-              <a href="mailto:support@quantumailab.in" className="flex items-center gap-2 hover:text-primary transition-colors">
+              <a href="mailto:info@quantumailab.in" className="flex items-center gap-2 hover:text-primary transition-colors">
                 <Mail size={14} className="text-primary shrink-0" aria-hidden="true" />
-                <span>support@quantumailab.in</span>
+                <span>info@quantumailab.in</span>
               </a>
               <a href="tel:+918652074439" className="flex items-center gap-2 hover:text-primary transition-colors">
                 <Phone size={14} className="text-primary shrink-0" aria-hidden="true" />
