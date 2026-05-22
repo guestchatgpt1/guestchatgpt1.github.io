@@ -164,6 +164,7 @@ const Contact = () => {
                       </option>
                     ))}
                   </select>
+                </div>
                 <div>
                   <label htmlFor="contact-message" className="sr-only">Message</label>
                   <textarea
