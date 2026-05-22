@@ -189,17 +189,30 @@ const Contact = () => {
             <AnimatedSection className="lg:col-span-2" delay={0.15}>
               <div className="space-y-6">
                 <div className="glass rounded-xl p-8">
-                  <h3 className="font-display text-sm font-semibold text-foreground mb-6 uppercase tracking-wider">Get in Touch</h3>
+                  <h3 className="font-display text-sm font-semibold text-foreground mb-6 uppercase tracking-wider">Direct Contacts</h3>
+                  <ul className="space-y-3">
+                    {(Object.keys(DEPARTMENTS) as Department[]).map((k) => (
+                      <li key={k}>
+                        <a
+                          href={`mailto:${DEPARTMENTS[k].email}`}
+                          className="flex items-start gap-3 group rounded-lg p-2 -mx-2 hover:bg-muted/40 transition-colors"
+                        >
+                          <Mail size={14} className="text-primary mt-1 shrink-0" aria-hidden="true" />
+                          <div className="min-w-0">
+                            <p className="text-xs font-medium text-foreground">{DEPARTMENTS[k].label}</p>
+                            <p className="text-xs text-muted-foreground group-hover:text-primary transition-colors truncate">
+                              {DEPARTMENTS[k].email}
+                            </p>
+                          </div>
+                        </a>
+                      </li>
+                    ))}
+                  </ul>
+                </div>
+
+                <div className="glass rounded-xl p-8">
+                  <h3 className="font-display text-sm font-semibold text-foreground mb-6 uppercase tracking-wider">Phone & Location</h3>
                   <div className="space-y-5">
-                    <a href="mailto:support@quantumailab.in" className="flex items-start gap-4 group">
-                      <div className="w-10 h-10 rounded-lg bg-primary/10 flex items-center justify-center shrink-0">
-                        <Mail size={18} className="text-primary" />
-                      </div>
-                      <div>
-                        <p className="text-sm font-medium text-foreground">Email</p>
-                        <p className="text-sm text-muted-foreground group-hover:text-primary transition-colors">support@quantumailab.in</p>
-                      </div>
-                    </a>
                     <a href="tel:+918652074439" className="flex items-start gap-4 group">
                       <div className="w-10 h-10 rounded-lg bg-primary/10 flex items-center justify-center shrink-0">
                         <Phone size={18} className="text-primary" />
