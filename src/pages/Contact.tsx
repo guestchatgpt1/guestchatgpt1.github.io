@@ -151,6 +151,20 @@ const Contact = () => {
                   />
                 </div>
                 <div>
+                  <label htmlFor="contact-department" className="sr-only">Department</label>
+                  <select
+                    id="contact-department"
+                    value={form.department}
+                    onChange={(e) => update("department", e.target.value)}
+                    className={inputClass("department")}
+                  >
+                    {(Object.keys(DEPARTMENTS) as Department[]).map((k) => (
+                      <option key={k} value={k}>
+                        {DEPARTMENTS[k].label} — {DEPARTMENTS[k].email}
+                      </option>
+                    ))}
+                  </select>
+                <div>
                   <label htmlFor="contact-message" className="sr-only">Message</label>
                   <textarea
                     id="contact-message"
