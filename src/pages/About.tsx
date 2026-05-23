@@ -19,7 +19,7 @@ const timeline = [
 ];
 
 const team = [
-  { name: "Sateesh Singh (M.Sc., MCA)", role: "CEO & Co-Founder", initials: "SS" },
+  { name: "Mr. Sateesh Singh (M.Sc., MCA)", role: "CEO & Co-Founder", initials: "SS" },
   { name: "Dr. James Nakamura", role: "CTO & Co-Founder", initials: "JN" },
   { name: "Dr. Priya Sharma", role: "Head of Research", initials: "PS" },
 ];
