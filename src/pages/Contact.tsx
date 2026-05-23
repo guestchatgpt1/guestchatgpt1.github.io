@@ -14,7 +14,6 @@ const DEPARTMENTS = {
   partnerships: { label: "Partnerships / Alliances", email: "partnerships@quantumailab.in" },
   marketing: { label: "Marketing / Media", email: "marketing@quantumailab.in" },
   careers: { label: "Careers / HR", email: "hr@quantumailab.in" },
-  leadership: { label: "Founder / Leadership", email: "sateesh.singh@quantumailab.in" },
 } as const;
 
 type Department = keyof typeof DEPARTMENTS;
@@ -23,7 +22,7 @@ const contactSchema = z.object({
   name: z.string().trim().min(1, "Name is required").max(100, "Name is too long"),
   email: z.string().trim().email("Please enter a valid email").max(255),
   company: z.string().trim().max(100).optional(),
-  department: z.enum(["general", "sales", "support", "partnerships", "marketing", "careers", "leadership"]),
+  department: z.enum(["general", "sales", "support", "partnerships", "marketing", "careers"]),
   message: z.string().trim().min(1, "Message is required").max(2000, "Message is too long"),
 });
 

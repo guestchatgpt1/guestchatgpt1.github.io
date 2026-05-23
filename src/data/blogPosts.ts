@@ -92,7 +92,7 @@ export const blogPosts: BlogPost[] = [
     readTime: "9 min read",
     title: "Hybrid Quantum-Classical Systems: A Practical Guide",
     excerpt: "Best practices for designing systems that leverage both quantum and classical computing for real-world applications.",
-    author: { name: "Sateesh Singh", role: "Founder & CEO" },
+    author: { name: "Mr. Sateesh Singh (M.Sc., MCA)", role: "CEO & Co-Founder" },
     cover:
       "https://images.unsplash.com/photo-1518770660439-4636190af475?auto=format&fit=crop&w=1600&q=70",
     content: [
