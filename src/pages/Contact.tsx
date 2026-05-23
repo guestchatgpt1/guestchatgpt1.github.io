@@ -14,7 +14,6 @@ const DEPARTMENTS = {
   partnerships: { label: "Partnerships / Alliances", email: "partnerships@quantumailab.in" },
   marketing: { label: "Marketing / Media", email: "marketing@quantumailab.in" },
   careers: { label: "Careers / HR", email: "hr@quantumailab.in" },
-  leadership: { label: "Founder / Leadership", email: "sateesh.singh@quantumailab.in" },
 } as const;
 
 type Department = keyof typeof DEPARTMENTS;
