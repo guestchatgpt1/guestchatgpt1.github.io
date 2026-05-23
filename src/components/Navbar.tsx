@@ -66,7 +66,7 @@ const Navbar = () => {
             </span>
           </Link>
 
-          <div className="hidden xl:flex items-center gap-1">
+          <div className="hidden lg:flex items-center gap-1">
             {navLinks.map((link) => (
               <NavLink key={link.path} to={link.path} className={linkClass} end={link.path === "/"}>
                 {link.label}
@@ -74,14 +74,14 @@ const Navbar = () => {
             ))}
           </div>
 
-          <div className="hidden xl:block">
+          <div className="hidden lg:block">
             <Button variant="hero" size="sm" asChild>
               <Link to="/contact">Get Started</Link>
             </Button>
           </div>
 
           <button
-            className="xl:hidden text-foreground p-2"
+            className="lg:hidden text-foreground p-2"
             onClick={() => setIsOpen(!isOpen)}
             aria-expanded={isOpen}
             aria-label={isOpen ? "Close menu" : "Open menu"}
@@ -92,7 +92,7 @@ const Navbar = () => {
       </div>
 
       {isOpen && (
-        <div className="xl:hidden glass border-t border-border/50 max-h-[calc(100vh-4rem)] overflow-y-auto" role="menu">
+        <div className="lg:hidden glass border-t border-border/50 max-h-[calc(100vh-4rem)] overflow-y-auto" role="menu">
           <div className="px-4 py-4 space-y-1">
             {navLinks.map((link) => (
               <NavLink key={link.path} to={link.path} className={mobileLinkClass} role="menuitem" end={link.path === "/"}>
