@@ -121,14 +121,30 @@ const Unsubscribe = () => {
                     {emailError && <p className="text-destructive text-xs mt-1" role="alert">{emailError}</p>}
                   </div>
 
-                  {status === "error" && (
-                    <div className="flex items-start gap-3 p-4 rounded-lg bg-destructive/10 border border-destructive/30" role="alert">
-                      <AlertCircle size={18} className="text-destructive shrink-0 mt-0.5" aria-hidden="true" />
-                      <div className="text-sm text-destructive">
-                        Could not process unsubscribe. {errorMessage} Please try again or email support@quantumailab.in.
+                  {/* Honeypot field — hidden from humans + screen readers */}
+                  <div aria-hidden="true" className="absolute -left-[10000px] w-px h-px overflow-hidden">
+                    <label htmlFor={`un-${HONEYPOT_FIELD}`}>Leave this field empty</label>
+                    <input
+                      id={`un-${HONEYPOT_FIELD}`}
+                      type="text"
+                      tabIndex={-1}
+                      autoComplete="off"
+                      value={honeypot}
+                      onChange={(e) => setHoneypot(e.target.value)}
+                    />
+                  </div>
+
+                  <div aria-live="polite" aria-atomic="true">
+                    {status === "error" && (
+                      <div className="flex items-start gap-3 p-4 rounded-lg bg-destructive/10 border border-destructive/30" role="alert">
+                        <AlertCircle size={18} className="text-destructive shrink-0 mt-0.5" aria-hidden="true" />
+                        <div className="text-sm text-destructive">
+                          Could not process unsubscribe. {errorMessage} Please try again or email support@quantumailab.in.
+                        </div>
                       </div>
-                    </div>
-                  )}
+                    )}
+                  </div>
+
 
                   <div className="flex flex-col sm:flex-row gap-3">
                     <Button
