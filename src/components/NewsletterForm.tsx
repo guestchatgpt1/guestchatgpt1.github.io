@@ -4,7 +4,7 @@ import { Loader2, Mail } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { useToast } from "@/hooks/use-toast";
 
-const NEWSLETTER_WEBHOOK = "https://defiye.app.n8n.cloud/webhook/QuantumAILabNewsletter";
+const NEWSLETTER_WEBHOOK = "https://yahesaf.app.n8n.cloud/webhook/QuantumAILabNewsletter";
 const emailSchema = z.string().trim().email("Please enter a valid email").max(255);
 
 interface NewsletterFormProps {
