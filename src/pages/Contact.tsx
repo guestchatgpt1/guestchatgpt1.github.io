@@ -216,11 +216,41 @@ const Contact = () => {
                   />
                   {errors.message && <p className="text-destructive text-xs mt-1" role="alert">{errors.message}</p>}
                 </div>
+
+                {/* Honeypot — hidden from real users + screen readers */}
+                <div aria-hidden="true" className="absolute -left-[10000px] w-px h-px overflow-hidden">
+                  <label htmlFor={`contact-${HONEYPOT_FIELD}`}>Leave this field empty</label>
+                  <input
+                    id={`contact-${HONEYPOT_FIELD}`}
+                    type="text"
+                    tabIndex={-1}
+                    autoComplete="off"
+                    value={honeypot}
+                    onChange={(e) => setHoneypot(e.target.value)}
+                  />
+                </div>
+
+                <div aria-live="polite" aria-atomic="true">
+                  {status === "error" && (
+                    <div className="flex items-start gap-3 p-4 rounded-lg bg-destructive/10 border border-destructive/30" role="alert">
+                      <AlertCircle size={18} className="text-destructive shrink-0 mt-0.5" aria-hidden="true" />
+                      <div className="flex-1 text-sm text-destructive">
+                        <p className="font-medium">We couldn't send your message.</p>
+                        <p className="text-destructive/80">{lastError ?? "Network error"} — please try again, or email {DEPARTMENTS[form.department].email}.</p>
+                      </div>
+                      <Button type="button" variant="outline" size="sm" onClick={handleRetry} disabled={submitting}>
+                        Retry
+                      </Button>
+                    </div>
+                  )}
+                </div>
+
                 <Button variant="hero" size="lg" type="submit" className="w-full sm:w-auto" disabled={submitting}>
-                  {submitting ? <><Loader2 size={16} className="animate-spin" /> Sending...</> : <>Send Message <Send size={16} /></>}
+                  {submitting ? <><Loader2 size={16} className="animate-spin" aria-hidden="true" /> Sending...</> : <>Send Message <Send size={16} aria-hidden="true" /></>}
                 </Button>
               </form>
             </AnimatedSection>
+
 
             <AnimatedSection className="lg:col-span-2" delay={0.15}>
               <div className="space-y-6">
