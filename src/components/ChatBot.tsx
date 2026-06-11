@@ -93,59 +93,58 @@ const ChatBot = () => {
     setInput("");
     setSending(true);
 
-    const controller = new AbortController();
-    const timeout = setTimeout(() => controller.abort(), 30_000);
+    const payload = {
+      message: userMessage.content,
+      history: history.map((m) => ({ role: m.role, content: m.content })),
+      source: "quantumailab.website",
+      submittedAt: new Date().toISOString(),
+    };
 
-    try {
-      const url = new URL(CHAT_WEBHOOK);
-      url.searchParams.set("message", userMessage.content);
-      url.searchParams.set("history", JSON.stringify(history.map((m) => ({ role: m.role, content: m.content }))));
-      url.searchParams.set("source", "quantumailab.website");
-      url.searchParams.set("submittedAt", new Date().toISOString());
+    // Try GET first (n8n is often configured for GET), fall back to POST.
+    let response = await callWebhook({
+      name: "chat.message",
+      url: CHAT_WEBHOOK,
+      method: "GET",
+      timeoutMs: 30_000,
+      query: {
+        message: payload.message,
+        history: JSON.stringify(payload.history),
+        source: payload.source,
+        submittedAt: payload.submittedAt,
+      },
+    });
 
-      let res = await fetch(url.toString(), { method: "GET", signal: controller.signal });
+    if (!response.ok && (response.status === 404 || response.status === 405)) {
+      response = await callWebhook({
+        name: "chat.message",
+        url: CHAT_WEBHOOK,
+        method: "POST",
+        timeoutMs: 30_000,
+        body: payload,
+      });
+    }
 
-      // Fallback to POST if GET isn't allowed by the webhook
-      if (!res.ok && (res.status === 404 || res.status === 405)) {
-        res = await fetch(CHAT_WEBHOOK, {
-          method: "POST",
-          headers: { "Content-Type": "application/json" },
-          signal: controller.signal,
-          body: JSON.stringify({
-            message: userMessage.content,
-            history: history.map((m) => ({ role: m.role, content: m.content })),
-            source: "quantumailab.website",
-            submittedAt: new Date().toISOString(),
-          }),
-        });
-      }
-
-      if (!res.ok) throw new Error(`Request failed (${res.status})`);
-
-      const contentType = res.headers.get("content-type") ?? "";
-      const data: unknown = contentType.includes("application/json") ? await res.json() : await res.text();
+    if (response.ok) {
       const reply =
-        extractReply(data) ??
+        extractReply(response.data) ??
         "Thanks! I've passed that along — our team will follow up shortly. In the meantime, feel free to explore our Services page.";
-
       setMessages((prev) => [...prev, { id: newId(), role: "assistant", content: reply }]);
-    } catch (err) {
-      const aborted = err instanceof DOMException && err.name === "AbortError";
+    } else {
+      const timedOut = response.error === "Request timed out";
       setMessages((prev) => [
         ...prev,
         {
           id: newId(),
           role: "assistant",
-          content: aborted
+          content: timedOut
             ? "That took longer than expected. Please try again, or email support@quantumailab.in."
             : "I couldn't reach the assistant right now. Please try again in a moment, or email support@quantumailab.in.",
         },
       ]);
-    } finally {
-      clearTimeout(timeout);
-      setSending(false);
     }
+    setSending(false);
   };
+
 
   const onKeyDown = (e: KeyboardEvent<HTMLTextAreaElement>) => {
     if (e.key === "Enter" && !e.shiftKey) {
