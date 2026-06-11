@@ -1,9 +1,11 @@
 import { useEffect, useRef, useState, type FormEvent, type KeyboardEvent } from "react";
 import { MessageCircle, Send, X, Loader2 } from "lucide-react";
-import { z } from "zod";
 import { Button } from "@/components/ui/button";
 import { toast } from "@/hooks/use-toast";
 import logo from "@/assets/logo.jpg";
+import { chatMessageSchema } from "@/lib/validation";
+import { callWebhook } from "@/lib/webhook";
+
 
 /**
  * Floating AI chat assistant.
