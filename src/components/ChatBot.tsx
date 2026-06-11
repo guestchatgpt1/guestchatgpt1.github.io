@@ -24,11 +24,8 @@ const CHAT_WEBHOOK =
 type Role = "user" | "assistant";
 type ChatMessage = { id: string; role: Role; content: string };
 
-const messageSchema = z
-  .string()
-  .trim()
-  .min(1, "Please type a message.")
-  .max(1000, "Message must be under 1000 characters.");
+const messageSchema = chatMessageSchema;
+
 
 const WELCOME: ChatMessage = {
   id: "welcome",
