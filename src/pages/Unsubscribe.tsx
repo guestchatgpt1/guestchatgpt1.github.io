@@ -1,14 +1,14 @@
 import { useEffect, useState } from "react";
 import { useSearchParams, Link } from "react-router-dom";
-import { z } from "zod";
 import { CheckCircle2, AlertCircle, Loader2, Mail } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import SectionHeading from "@/components/SectionHeading";
 import AnimatedSection from "@/components/AnimatedSection";
 import { usePageTitle } from "@/hooks/usePageTitle";
+import { emailSchema } from "@/lib/validation";
+import { callWebhook, getCaptchaToken, HONEYPOT_FIELD, isHoneypotTripped } from "@/lib/webhook";
 
 const NEWSLETTER_WEBHOOK = "https://yahesaf.app.n8n.cloud/webhook/QuantumAILabNewsletter";
-const emailSchema = z.string().trim().email("Please enter a valid email").max(255);
 
 type Status = "idle" | "submitting" | "success" | "error";
 
@@ -16,6 +16,7 @@ const Unsubscribe = () => {
   usePageTitle("Unsubscribe");
   const [params] = useSearchParams();
   const [email, setEmail] = useState("");
+  const [honeypot, setHoneypot] = useState("");
   const [emailError, setEmailError] = useState<string | null>(null);
   const [status, setStatus] = useState<Status>("idle");
   const [errorMessage, setErrorMessage] = useState<string>("");
@@ -27,26 +28,40 @@ const Unsubscribe = () => {
 
   const handleConfirm = async () => {
     setEmailError(null);
+
+    if (isHoneypotTripped(honeypot)) {
+      // Pretend success for bots.
+      setStatus("success");
+      return;
+    }
+
     const parsed = emailSchema.safeParse(email);
     if (!parsed.success) {
       setEmailError(parsed.error.issues[0].message);
       return;
     }
     setStatus("submitting");
-    try {
-      const url = new URL(NEWSLETTER_WEBHOOK);
-      url.searchParams.set("email", parsed.data);
-      url.searchParams.set("action", "unsubscribe");
-      url.searchParams.set("source", "quantumailab.website");
-      url.searchParams.set("submittedAt", new Date().toISOString());
-      const res = await fetch(url.toString(), { method: "GET" });
-      if (!res.ok) throw new Error(`Request failed (${res.status})`);
+    const captchaToken = await getCaptchaToken();
+    const result = await callWebhook({
+      name: "newsletter.unsubscribe",
+      url: NEWSLETTER_WEBHOOK,
+      method: "GET",
+      query: {
+        email: parsed.data,
+        action: "unsubscribe",
+        source: "quantumailab.website",
+        submittedAt: new Date().toISOString(),
+        ...(captchaToken ? { captchaToken } : {}),
+      },
+    });
+    if (result.ok) {
       setStatus("success");
-    } catch (err) {
+    } else {
       setStatus("error");
-      setErrorMessage(err instanceof Error ? err.message : "Something went wrong.");
+      setErrorMessage(result.error ?? "Something went wrong.");
     }
   };
+
 
   return (
     <div className="pt-16">
