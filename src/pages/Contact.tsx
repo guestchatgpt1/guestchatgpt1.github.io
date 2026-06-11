@@ -2,10 +2,13 @@ import { useState } from "react";
 import SectionHeading from "@/components/SectionHeading";
 import AnimatedSection from "@/components/AnimatedSection";
 import { Button } from "@/components/ui/button";
-import { Mail, MapPin, Phone, Send, Loader2 } from "lucide-react";
+import { Mail, MapPin, Phone, Send, Loader2, AlertCircle } from "lucide-react";
 import { useToast } from "@/hooks/use-toast";
-import { z } from "zod";
 import { usePageTitle } from "@/hooks/usePageTitle";
+import { contactSchema, type ContactInput } from "@/lib/validation";
+import { callWebhook, getCaptchaToken, HONEYPOT_FIELD, isHoneypotTripped } from "@/lib/webhook";
+
+const CONTACT_WEBHOOK = "https://yahesaf.app.n8n.cloud/webhook/QuantumAILab-contact-us";
 
 const DEPARTMENTS = {
   general: { label: "General Information", email: "info@quantumailab.in" },
@@ -17,28 +20,49 @@ const DEPARTMENTS = {
 } as const;
 
 type Department = keyof typeof DEPARTMENTS;
-
-const contactSchema = z.object({
-  name: z.string().trim().min(1, "Name is required").max(100, "Name is too long"),
-  email: z.string().trim().email("Please enter a valid email").max(255),
-  company: z.string().trim().max(100).optional(),
-  department: z.enum(["general", "sales", "support", "partnerships", "marketing", "careers"]),
-  message: z.string().trim().min(1, "Message is required").max(2000, "Message is too long"),
-});
-
-type FormData = z.infer<typeof contactSchema>;
+type FormData = ContactInput;
 type FormErrors = Partial<Record<keyof FormData, string>>;
+type SubmitStatus = "idle" | "submitting" | "success" | "error";
 
 const Contact = () => {
   usePageTitle("Contact");
   const { toast } = useToast();
   const [form, setForm] = useState<FormData>({ name: "", email: "", company: "", department: "general", message: "" });
+  const [honeypot, setHoneypot] = useState("");
   const [errors, setErrors] = useState<FormErrors>({});
-  const [submitting, setSubmitting] = useState(false);
+  const [status, setStatus] = useState<SubmitStatus>("idle");
+  const [lastError, setLastError] = useState<string | null>(null);
+
+  const submitting = status === "submitting";
+
+  const sendRequest = async (data: FormData) => {
+    const captchaToken = await getCaptchaToken();
+    return callWebhook({
+      name: "contact.submit",
+      url: CONTACT_WEBHOOK,
+      method: "POST",
+      body: {
+        ...data,
+        departmentLabel: DEPARTMENTS[data.department].label,
+        routeTo: DEPARTMENTS[data.department].email,
+        source: "quantumailab.website",
+        submittedAt: new Date().toISOString(),
+        ...(captchaToken ? { captchaToken } : {}),
+      },
+    });
+  };
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     setErrors({});
+    setLastError(null);
+
+    if (isHoneypotTripped(honeypot)) {
+      // Bot caught — silently "succeed".
+      setStatus("success");
+      setForm({ name: "", email: "", company: "", department: "general", message: "" });
+      return;
+    }
 
     const result = contactSchema.safeParse(form);
     if (!result.success) {
@@ -48,43 +72,56 @@ const Contact = () => {
         if (!fieldErrors[field]) fieldErrors[field] = issue.message;
       });
       setErrors(fieldErrors);
+      toast({
+        title: "Please fix the highlighted fields",
+        description: "A few entries need attention before we can send your message.",
+        variant: "destructive",
+      });
       return;
     }
 
-    setSubmitting(true);
-    try {
-      const res = await fetch("https://yahesaf.app.n8n.cloud/webhook/QuantumAILab-contact-us", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({
-          ...result.data,
-          departmentLabel: DEPARTMENTS[result.data.department].label,
-          routeTo: DEPARTMENTS[result.data.department].email,
-          source: "quantumailab.website",
-          submittedAt: new Date().toISOString(),
-        }),
-      });
-      if (!res.ok) throw new Error(`Request failed (${res.status})`);
+    setStatus("submitting");
+    const response = await sendRequest(result.data);
+    if (response.ok) {
+      setStatus("success");
       toast({
         title: "Message sent!",
         description: `Your enquiry has been routed to ${DEPARTMENTS[result.data.department].email}. We'll reply within 24 hours.`,
       });
       setForm({ name: "", email: "", company: "", department: "general", message: "" });
-    } catch (err) {
+    } else {
+      setStatus("error");
+      setLastError(response.error ?? "Network error");
       toast({
         title: "Could not send message",
         description: `Please try again or email ${DEPARTMENTS[form.department].email} directly.`,
         variant: "destructive",
       });
-    } finally {
-      setSubmitting(false);
+    }
+  };
+
+  const handleRetry = async () => {
+    const result = contactSchema.safeParse(form);
+    if (!result.success) return;
+    setStatus("submitting");
+    setLastError(null);
+    const response = await sendRequest(result.data);
+    if (response.ok) {
+      setStatus("success");
+      toast({ title: "Message sent!", description: "Thanks — we'll be in touch shortly." });
+      setForm({ name: "", email: "", company: "", department: "general", message: "" });
+    } else {
+      setStatus("error");
+      setLastError(response.error ?? "Network error");
     }
   };
 
   const update = (field: keyof FormData, value: string) => {
     setForm((prev) => ({ ...prev, [field]: value }));
+    if (status === "error" || status === "success") setStatus("idle");
     if (errors[field]) setErrors((prev) => ({ ...prev, [field]: undefined }));
   };
+
 
   const inputClass = (field: keyof FormData) =>
     `w-full h-12 px-4 rounded-lg bg-muted border text-foreground placeholder:text-muted-foreground focus:outline-none focus:ring-2 focus:ring-primary/50 text-sm transition-all ${
