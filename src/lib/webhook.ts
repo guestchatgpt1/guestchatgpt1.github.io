@@ -54,10 +54,10 @@ const pushTelemetry = (entry: Record<string, unknown>) => {
 };
 
 const log = (level: "info" | "warn" | "error", payload: Record<string, unknown>) => {
-  const entry = { ts: new Date().toISOString(), level, scope: "webhook", ...payload };
+  const entry: Record<string, unknown> = { ts: new Date().toISOString(), level, scope: "webhook", ...payload };
   // eslint-disable-next-line no-console
   const fn = level === "error" ? console.error : level === "warn" ? console.warn : console.info;
-  fn(`[webhook] ${entry.event ?? ""}`, entry);
+  fn(`[webhook] ${String(entry.event ?? "")}`, entry);
   pushTelemetry(entry);
 };
 
