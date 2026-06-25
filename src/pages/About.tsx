@@ -25,13 +25,17 @@ const team = [
 ];
 
 const About = () => {
-  usePageTitle("About Us");
   return (
     <div className="pt-16">
+      <Seo
+        title="About QuantumAI Lab"
+        description="Meet the team of quantum physicists, AI researchers, and engineers building hybrid quantum-AI systems for enterprise. Our mission, vision, and journey."
+      />
       <section className="section-padding">
         <div className="container-max">
           <AnimatedSection>
             <SectionHeading
+              as="h1"
               label="About Us"
               title="Bridging Quantum Computing & AI Innovation"
               description="We are a team of quantum physicists, AI researchers, and engineers united by a single mission: to unlock the full potential of quantum intelligence for real-world impact."
