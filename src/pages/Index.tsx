@@ -31,6 +31,10 @@ const Index = () => {
 
   return (
     <div className="relative">
+      <Seo
+        title="QuantumAI Lab — Quantum Computing & AI Solutions"
+        description="QuantumAI Lab harnesses quantum computing and artificial intelligence to solve complex enterprise problems with hybrid quantum-AI systems."
+      />
       {/* Hero */}
       <section className="relative min-h-screen flex items-center justify-center overflow-hidden">
         <div className="absolute inset-0">
