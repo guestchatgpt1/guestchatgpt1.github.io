@@ -27,7 +27,7 @@ const testimonials = [
 ];
 
 const Index = () => {
-  usePageTitle();
+  // Helmet-based SEO below
 
   return (
     <div className="relative">
