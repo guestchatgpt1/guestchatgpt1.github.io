@@ -19,7 +19,7 @@ import { callWebhook } from "@/lib/webhook";
  */
 const CHAT_WEBHOOK =
   (import.meta.env.VITE_CHAT_WEBHOOK_URL as string | undefined) ??
-  "https://yahesaf.app.n8n.cloud/webhook/chat-assistant";
+  "https://daliwat7.app.n8n.cloud/webhook/chat-assistant";
 
 type Role = "user" | "assistant";
 type ChatMessage = { id: string; role: Role; content: string };
@@ -95,20 +95,17 @@ const ChatBot = () => {
 
     const payload = {
       message: userMessage.content,
-      history: history.map((m) => ({ role: m.role, content: m.content })),
+      history: JSON.stringify(history.map((m) => ({ role: m.role, content: m.content }))),
       source: "quantumailab.website",
       submittedAt: new Date().toISOString(),
     };
 
-    // POST-only: chat messages and history must never appear in URL query
-    // params (they would leak into browser history, proxy/CDN access logs,
-    // and network monitoring tools).
     const response = await callWebhook({
       name: "chat.message",
       url: CHAT_WEBHOOK,
-      method: "POST",
+      method: "GET",
       timeoutMs: 30_000,
-      body: payload,
+      query: payload,
     });
 
     if (response.ok) {
