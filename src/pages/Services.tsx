@@ -3,7 +3,7 @@ import AnimatedSection from "@/components/AnimatedSection";
 import { Button } from "@/components/ui/button";
 import { Link } from "react-router-dom";
 import { Cpu, Brain, Network, FlaskConical, Building2, ArrowRight } from "lucide-react";
-import { usePageTitle } from "@/hooks/usePageTitle";
+import Seo from "@/components/Seo";
 
 const services = [
   {
@@ -39,13 +39,17 @@ const services = [
 ];
 
 const Services = () => {
-  usePageTitle("Services");
   return (
     <div className="pt-16">
+      <Seo
+        title="Quantum Computing & AI Services"
+        description="Custom quantum computing, AI/ML development, hybrid quantum-AI systems, research consulting, and enterprise solutions built for production scale."
+      />
       <section className="section-padding">
         <div className="container-max">
           <AnimatedSection>
             <SectionHeading
+              as="h1"
               label="Services"
               title="Solutions That Redefine Possible"
               description="From pure quantum computing to enterprise AI, we deliver technology that transforms industries."

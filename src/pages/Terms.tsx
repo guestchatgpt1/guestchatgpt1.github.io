@@ -1,16 +1,18 @@
 import AnimatedSection from "@/components/AnimatedSection";
 import SectionHeading from "@/components/SectionHeading";
-import { usePageTitle } from "@/hooks/usePageTitle";
+import Seo from "@/components/Seo";
 
 const Terms = () => {
-  usePageTitle("Terms of Service");
-
   return (
     <div className="pt-16">
+      <Seo
+        title="Terms of Service"
+        description="The terms and conditions governing your use of QuantumAI Lab's website, products, and services."
+      />
       <section className="section-padding">
         <div className="container-max">
           <AnimatedSection>
-            <SectionHeading label="Legal" title="Terms of Service" />
+            <SectionHeading as="h1" label="Legal" title="Terms of Service" />
           </AnimatedSection>
           <AnimatedSection>
             <div className="glass rounded-xl p-8 md:p-12 max-w-3xl mx-auto space-y-6 text-sm text-muted-foreground leading-relaxed">

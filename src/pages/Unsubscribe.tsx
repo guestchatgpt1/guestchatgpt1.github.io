@@ -4,7 +4,7 @@ import { CheckCircle2, AlertCircle, Loader2, Mail } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import SectionHeading from "@/components/SectionHeading";
 import AnimatedSection from "@/components/AnimatedSection";
-import { usePageTitle } from "@/hooks/usePageTitle";
+import Seo from "@/components/Seo";
 import { emailSchema } from "@/lib/validation";
 import { callWebhook, getCaptchaToken, HONEYPOT_FIELD, isHoneypotTripped } from "@/lib/webhook";
 
@@ -13,7 +13,6 @@ const NEWSLETTER_WEBHOOK = "https://daliwat7.app.n8n.cloud/webhook/QuantumAILabN
 type Status = "idle" | "submitting" | "success" | "error";
 
 const Unsubscribe = () => {
-  usePageTitle("Unsubscribe");
   const [params] = useSearchParams();
   const [email, setEmail] = useState("");
   const [honeypot, setHoneypot] = useState("");
@@ -65,10 +64,15 @@ const Unsubscribe = () => {
 
   return (
     <div className="pt-16">
+      <Seo
+        title="Unsubscribe from Newsletter"
+        description="Unsubscribe your email address from the QuantumAI Lab newsletter. Confirm below to stop receiving updates."
+      />
       <section className="section-padding">
         <div className="container-max max-w-2xl">
           <AnimatedSection>
             <SectionHeading
+              as="h1"
               label="Newsletter"
               title="Unsubscribe"
               description="We're sorry to see you go. Confirm your email below to stop receiving QuantumAI Lab newsletters."

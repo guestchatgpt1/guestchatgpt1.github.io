@@ -1,7 +1,7 @@
 import { Link, useParams, Navigate } from "react-router-dom";
 import { ArrowLeft, ArrowRight, Calendar, Clock, User } from "lucide-react";
 import AnimatedSection from "@/components/AnimatedSection";
-import { usePageTitle } from "@/hooks/usePageTitle";
+import Seo from "@/components/Seo";
 import { blogPosts, getPostBySlug } from "@/data/blogPosts";
 
 const categoryColor: Record<string, string> = {
@@ -13,14 +13,40 @@ const categoryColor: Record<string, string> = {
 const BlogPost = () => {
   const { slug = "" } = useParams();
   const post = getPostBySlug(slug);
-  usePageTitle(post?.title ?? "Article");
 
   if (!post) return <Navigate to="/blog" replace />;
 
   const related = blogPosts.filter((p) => p.slug !== post.slug).slice(0, 3);
 
+  const articleJsonLd = {
+    "@context": "https://schema.org",
+    "@type": "Article",
+    headline: post.title,
+    description: post.excerpt,
+    datePublished: post.date,
+    image: post.cover,
+    author: {
+      "@type": "Person",
+      name: post.author.name,
+      jobTitle: post.author.role,
+    },
+    publisher: {
+      "@type": "Organization",
+      name: "QuantumAI Lab",
+    },
+    articleSection: post.category,
+  };
+
   return (
     <article className="pt-16">
+      <Seo
+        title={post.title}
+        description={post.excerpt}
+        path={`/blog/${post.slug}`}
+        ogType="article"
+        image={post.cover}
+        jsonLd={articleJsonLd}
+      />
       <section className="section-padding pb-0">
         <div className="container-max max-w-4xl">
           <AnimatedSection>

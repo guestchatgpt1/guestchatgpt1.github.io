@@ -1,7 +1,7 @@
 import SectionHeading from "@/components/SectionHeading";
 import AnimatedSection from "@/components/AnimatedSection";
 import { Atom, BrainCircuit, Gauge, Workflow } from "lucide-react";
-import { usePageTitle } from "@/hooks/usePageTitle";
+import Seo from "@/components/Seo";
 
 const technologies = [
   {
@@ -31,13 +31,17 @@ const technologies = [
 ];
 
 const Technology = () => {
-  usePageTitle("Technology");
   return (
     <div className="pt-16">
+      <Seo
+        title="Our Technology Stack"
+        description="Quantum algorithms (VQE, QAOA), advanced neural networks, optimization systems, and hybrid quantum-classical pipelines that power our solutions."
+      />
       <section className="section-padding">
         <div className="container-max">
           <AnimatedSection>
             <SectionHeading
+              as="h1"
               label="Technology"
               title="The Science Behind Our Solutions"
               description="Deep expertise in quantum computing, AI, and the hybrid systems that connect them."
