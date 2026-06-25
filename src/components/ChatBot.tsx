@@ -100,29 +100,16 @@ const ChatBot = () => {
       submittedAt: new Date().toISOString(),
     };
 
-    // Try GET first (n8n is often configured for GET), fall back to POST.
-    let response = await callWebhook({
+    // POST-only: chat messages and history must never appear in URL query
+    // params (they would leak into browser history, proxy/CDN access logs,
+    // and network monitoring tools).
+    const response = await callWebhook({
       name: "chat.message",
       url: CHAT_WEBHOOK,
-      method: "GET",
+      method: "POST",
       timeoutMs: 30_000,
-      query: {
-        message: payload.message,
-        history: JSON.stringify(payload.history),
-        source: payload.source,
-        submittedAt: payload.submittedAt,
-      },
+      body: payload,
     });
-
-    if (!response.ok && (response.status === 404 || response.status === 405)) {
-      response = await callWebhook({
-        name: "chat.message",
-        url: CHAT_WEBHOOK,
-        method: "POST",
-        timeoutMs: 30_000,
-        body: payload,
-      });
-    }
 
     if (response.ok) {
       const reply =
