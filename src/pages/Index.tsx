@@ -5,7 +5,7 @@ import AnimatedSection from "@/components/AnimatedSection";
 import heroImage from "@/assets/hero-quantum.jpg";
 import { ArrowRight, Brain, Cpu, Network, Shield, Zap, Users, TrendingUp, Quote } from "lucide-react";
 import { motion } from "framer-motion";
-import { usePageTitle } from "@/hooks/usePageTitle";
+import Seo from "@/components/Seo";
 
 const services = [
   { icon: Cpu, title: "Quantum Computing", desc: "Leveraging quantum processors to solve optimization problems exponentially faster than classical computers." },
