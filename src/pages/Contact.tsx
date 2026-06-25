@@ -129,10 +129,15 @@ const Contact = () => {
 
   return (
     <div className="pt-16">
+      <Seo
+        title="Contact QuantumAI Lab"
+        description="Get in touch with QuantumAI Lab for sales, support, partnerships, and careers. Reach our Mumbai office or message us by department."
+      />
       <section className="section-padding">
         <div className="container-max">
           <AnimatedSection>
             <SectionHeading
+              as="h1"
               label="Contact"
               title="Let's Build the Future Together"
               description="Ready to explore how quantum computing and AI can transform your organization? We'd love to hear from you."
