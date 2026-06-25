@@ -153,18 +153,24 @@ describe("contact webhook (POST)", () => {
   });
 });
 
-describe("chat webhook (GET, POST fallback)", () => {
-  it("succeeds via GET when n8n accepts it", async () => {
+describe("chat webhook (POST only)", () => {
+  it("POSTs message + history as JSON body (never as query params)", async () => {
     fetchMock.mockReturnValueOnce(mockResponse({ body: { reply: "hi there" } }));
     const res = await callWebhook({
       name: "chat.message",
       url: "https://yahesaf.app.n8n.cloud/webhook/chat-assistant",
-      method: "GET",
-      query: { message: "hello", history: "[]" },
+      method: "POST",
+      body: { message: "hello", history: [{ role: "user", content: "hello" }] },
     });
     expect(res.ok).toBe(true);
     expect((res.data as { reply: string }).reply).toBe("hi there");
-    expect(fetchMock.mock.calls[0][1].method).toBe("GET");
+    const [calledUrl, init] = fetchMock.mock.calls[0];
+    expect(init.method).toBe("POST");
+    const url = new URL(calledUrl as string);
+    expect(url.searchParams.get("message")).toBeNull();
+    expect(url.searchParams.get("history")).toBeNull();
+    const body = JSON.parse(init.body as string);
+    expect(body.message).toBe("hello");
   });
 
   it("treats network failure as ok:false (no throw)", async () => {
