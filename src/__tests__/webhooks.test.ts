@@ -153,24 +153,23 @@ describe("contact webhook (POST)", () => {
   });
 });
 
-describe("chat webhook (POST only)", () => {
-  it("POSTs message + history as JSON body (never as query params)", async () => {
+describe("chat webhook (GET)", () => {
+  it("sends message + history as query params", async () => {
     fetchMock.mockReturnValueOnce(mockResponse({ body: { reply: "hi there" } }));
     const res = await callWebhook({
       name: "chat.message",
       url: "https://daliwat7.app.n8n.cloud/webhook/chat-assistant",
-      method: "POST",
-      body: { message: "hello", history: [{ role: "user", content: "hello" }] },
+      method: "GET",
+      query: { message: "hello", history: JSON.stringify([{ role: "user", content: "hello" }]), source: "quantumailab.website" },
     });
     expect(res.ok).toBe(true);
     expect((res.data as { reply: string }).reply).toBe("hi there");
     const [calledUrl, init] = fetchMock.mock.calls[0];
-    expect(init.method).toBe("POST");
+    expect(init.method).toBe("GET");
+    expect(init.body).toBeUndefined();
     const url = new URL(calledUrl as string);
-    expect(url.searchParams.get("message")).toBeNull();
-    expect(url.searchParams.get("history")).toBeNull();
-    const body = JSON.parse(init.body as string);
-    expect(body.message).toBe("hello");
+    expect(url.searchParams.get("message")).toBe("hello");
+    expect(url.searchParams.get("history")).toBe(JSON.stringify([{ role: "user", content: "hello" }]));
   });
 
   it("treats network failure as ok:false (no throw)", async () => {
@@ -178,8 +177,8 @@ describe("chat webhook (POST only)", () => {
     const res = await callWebhook({
       name: "chat.message",
       url: "https://daliwat7.app.n8n.cloud/webhook/chat-assistant",
-      method: "POST",
-      body: { message: "hi" },
+      method: "GET",
+      query: { message: "hi", source: "quantumailab.website" },
     });
     expect(res.ok).toBe(false);
     expect(res.status).toBe(0);
