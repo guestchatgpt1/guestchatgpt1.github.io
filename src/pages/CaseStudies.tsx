@@ -45,13 +45,17 @@ const cases = [
 ];
 
 const CaseStudies = () => {
-  usePageTitle("Case Studies");
   return (
     <div className="pt-16">
+      <Seo
+        title="Case Studies"
+        description="Real-world quantum-AI deployments in pharma drug discovery, financial risk modeling, and logistics optimization with measurable outcomes."
+      />
       <section className="section-padding">
         <div className="container-max">
           <AnimatedSection>
             <SectionHeading
+              as="h1"
               label="Case Studies"
               title="Real-World Quantum Impact"
               description="How QuantumAI Lab is delivering measurable results across industries."
