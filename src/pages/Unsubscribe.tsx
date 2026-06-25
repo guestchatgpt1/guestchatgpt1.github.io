@@ -13,7 +13,6 @@ const NEWSLETTER_WEBHOOK = "https://daliwat7.app.n8n.cloud/webhook/QuantumAILabN
 type Status = "idle" | "submitting" | "success" | "error";
 
 const Unsubscribe = () => {
-  usePageTitle("Unsubscribe");
   const [params] = useSearchParams();
   const [email, setEmail] = useState("");
   const [honeypot, setHoneypot] = useState("");
