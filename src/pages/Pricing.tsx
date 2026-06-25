@@ -63,13 +63,17 @@ const plans = [
 
 
 const Pricing = () => {
-  usePageTitle("Pricing");
   return (
     <div className="pt-16">
+      <Seo
+        title="Pricing Plans"
+        description="Transparent pricing for QuantumAI Lab: Starter, Professional, and Enterprise plans for teams adopting quantum-AI from PoC to production."
+      />
       <section className="section-padding">
         <div className="container-max">
           <AnimatedSection>
             <SectionHeading
+              as="h1"
               label="Pricing"
               title="Plans Built for Every Stage"
               description="From early exploration to enterprise-scale deployment, choose the plan that fits your quantum-AI journey."
