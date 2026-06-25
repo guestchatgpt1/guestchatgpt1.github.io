@@ -41,13 +41,29 @@ const faqs = [
 ];
 
 const FAQ = () => {
-  usePageTitle("FAQ");
+  const faqJsonLd = {
+    "@context": "https://schema.org",
+    "@type": "FAQPage",
+    mainEntity: faqs.flatMap((group) =>
+      group.items.map((item) => ({
+        "@type": "Question",
+        name: item.q,
+        acceptedAnswer: { "@type": "Answer", text: item.a },
+      }))
+    ),
+  };
   return (
     <div className="pt-16">
+      <Seo
+        title="Frequently Asked Questions"
+        description="Answers about QuantumAI Lab services, pricing plans, quantum hardware, data security, and customer support."
+        jsonLd={faqJsonLd}
+      />
       <section className="section-padding">
         <div className="container-max">
           <AnimatedSection>
             <SectionHeading
+              as="h1"
               label="FAQ"
               title="Frequently Asked Questions"
               description="Find answers to common questions about our services, technology, and pricing."
