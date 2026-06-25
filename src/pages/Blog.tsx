@@ -12,13 +12,17 @@ const categoryColor: Record<string, string> = {
 };
 
 const Blog = () => {
-  usePageTitle("Blog & Insights");
   return (
     <div className="pt-16">
+      <Seo
+        title="Blog & Insights"
+        description="Expert analysis on quantum computing, AI breakthroughs, fault-tolerant qubits, and their real-world industry impact from QuantumAI Lab researchers."
+      />
       <section className="section-padding">
         <div className="container-max">
           <AnimatedSection>
             <SectionHeading
+              as="h1"
               label="Blog & Insights"
               title="Perspectives from the Frontier"
               description="Expert analysis on quantum computing, AI breakthroughs, and their industry impact."
