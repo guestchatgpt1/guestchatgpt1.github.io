@@ -25,7 +25,6 @@ type FormErrors = Partial<Record<keyof FormData, string>>;
 type SubmitStatus = "idle" | "submitting" | "success" | "error";
 
 const Contact = () => {
-  usePageTitle("Contact");
   const { toast } = useToast();
   const [form, setForm] = useState<FormData>({ name: "", email: "", company: "", department: "general", message: "" });
   const [honeypot, setHoneypot] = useState("");
