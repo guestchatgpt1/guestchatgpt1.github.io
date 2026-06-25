@@ -89,6 +89,14 @@ export async function callWebhook<T = unknown>(opts: WebhookCallOptions): Promis
   const onExternalAbort = () => controller.abort();
   if (opts.signal) opts.signal.addEventListener("abort", onExternalAbort);
 
+  // Optional shared webhook secret. When `VITE_N8N_WEBHOOK_KEY` is set at
+  // build time the client sends it as `X-Webhook-Key`; the n8n workflow
+  // must verify it server-side and reject requests that don't match. This
+  // raises the bar for casually scripted abuse against publicly listed
+  // webhook URLs (true rate-limiting / CAPTCHA verification still has to
+  // live inside the workflow).
+  const sharedKey = (import.meta as unknown as { env?: Record<string, string | undefined> }).env?.VITE_N8N_WEBHOOK_KEY;
+
   log("info", {
     event: "request",
     name: opts.name,
@@ -103,6 +111,7 @@ export async function callWebhook<T = unknown>(opts: WebhookCallOptions): Promis
       signal: controller.signal,
       headers: {
         "X-Request-Id": requestId,
+        ...(sharedKey ? { "X-Webhook-Key": sharedKey } : {}),
         ...(opts.method === "POST" ? { "Content-Type": "application/json" } : {}),
         ...(opts.headers ?? {}),
       },
