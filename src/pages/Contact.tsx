@@ -4,7 +4,7 @@ import AnimatedSection from "@/components/AnimatedSection";
 import { Button } from "@/components/ui/button";
 import { Mail, MapPin, Phone, Send, Loader2, AlertCircle } from "lucide-react";
 import { useToast } from "@/hooks/use-toast";
-import { usePageTitle } from "@/hooks/usePageTitle";
+import Seo from "@/components/Seo";
 import { contactSchema, type ContactInput } from "@/lib/validation";
 import { callWebhook, getCaptchaToken, HONEYPOT_FIELD, isHoneypotTripped } from "@/lib/webhook";
 
