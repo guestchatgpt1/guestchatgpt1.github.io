@@ -64,10 +64,15 @@ const Unsubscribe = () => {
 
   return (
     <div className="pt-16">
+      <Seo
+        title="Unsubscribe from Newsletter"
+        description="Unsubscribe your email address from the QuantumAI Lab newsletter. Confirm below to stop receiving updates."
+      />
       <section className="section-padding">
         <div className="container-max max-w-2xl">
           <AnimatedSection>
             <SectionHeading
+              as="h1"
               label="Newsletter"
               title="Unsubscribe"
               description="We're sorry to see you go. Confirm your email below to stop receiving QuantumAI Lab newsletters."
