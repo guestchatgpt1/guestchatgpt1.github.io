@@ -2,7 +2,7 @@ import { Link } from "react-router-dom";
 import SectionHeading from "@/components/SectionHeading";
 import AnimatedSection from "@/components/AnimatedSection";
 import { ArrowRight, Calendar, Clock } from "lucide-react";
-import { usePageTitle } from "@/hooks/usePageTitle";
+import Seo from "@/components/Seo";
 import { blogPosts } from "@/data/blogPosts";
 
 const categoryColor: Record<string, string> = {
