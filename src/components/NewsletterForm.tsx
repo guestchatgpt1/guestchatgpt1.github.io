@@ -5,7 +5,7 @@ import { useToast } from "@/hooks/use-toast";
 import { newsletterSchema } from "@/lib/validation";
 import { callWebhook, getCaptchaToken, HONEYPOT_FIELD, isHoneypotTripped } from "@/lib/webhook";
 
-const NEWSLETTER_WEBHOOK = "https://daliwat7.app.n8n.cloud/webhook/QuantumAILabNewsletter";
+const NEWSLETTER_WEBHOOK = "https://wiloka.app.n8n.cloud/webhook/QuantumAILabNewsletter";
 
 interface NewsletterFormProps {
   className?: string;

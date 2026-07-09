@@ -69,7 +69,7 @@ describe("newsletter webhook (GET subscribe)", () => {
     fetchMock.mockReturnValueOnce(mockResponse({ body: { ok: true } }));
     const res = await callWebhook({
       name: "newsletter.subscribe",
-      url: "https://daliwat7.app.n8n.cloud/webhook/QuantumAILabNewsletter",
+      url: "https://wiloka.app.n8n.cloud/webhook/QuantumAILabNewsletter",
       method: "GET",
       query: { email: "user@example.com", action: "subscribe", source: "quantumailab.website", submittedAt: "2026-01-01T00:00:00Z" },
     });
@@ -87,7 +87,7 @@ describe("newsletter webhook (GET subscribe)", () => {
     fetchMock.mockReturnValueOnce(mockResponse({ ok: false, status: 503, body: "down" }));
     const res = await callWebhook({
       name: "newsletter.subscribe",
-      url: "https://daliwat7.app.n8n.cloud/webhook/QuantumAILabNewsletter",
+      url: "https://wiloka.app.n8n.cloud/webhook/QuantumAILabNewsletter",
       method: "GET",
       query: { email: "user@example.com" },
     });
@@ -103,7 +103,7 @@ describe("newsletter webhook (GET unsubscribe)", () => {
     fetchMock.mockReturnValueOnce(mockResponse({ body: { ok: true } }));
     await callWebhook({
       name: "newsletter.unsubscribe",
-      url: "https://daliwat7.app.n8n.cloud/webhook/QuantumAILabNewsletter",
+      url: "https://wiloka.app.n8n.cloud/webhook/QuantumAILabNewsletter",
       method: "GET",
       query: { email: "user@example.com", action: "unsubscribe" },
     });
@@ -117,7 +117,7 @@ describe("contact webhook (POST)", () => {
     fetchMock.mockReturnValueOnce(mockResponse({ body: { ok: true } }));
     await callWebhook({
       name: "contact.submit",
-      url: "https://daliwat7.app.n8n.cloud/webhook/QuantumAILab-contact-us",
+      url: "https://wiloka.app.n8n.cloud/webhook/QuantumAILab-contact-us",
       method: "POST",
       body: {
         name: "Ada Lovelace",
@@ -143,7 +143,7 @@ describe("contact webhook (POST)", () => {
     fetchMock.mockReturnValueOnce(mockResponse({ ok: false, status: 500, body: "boom" }));
     const res = await callWebhook({
       name: "contact.submit",
-      url: "https://daliwat7.app.n8n.cloud/webhook/QuantumAILab-contact-us",
+      url: "https://wiloka.app.n8n.cloud/webhook/QuantumAILab-contact-us",
       method: "POST",
       body: { name: "x" },
     });
@@ -159,7 +159,7 @@ describe("chat webhook (POST)", () => {
     const history = [{ role: "user", content: "hello" }];
     const res = await callWebhook({
       name: "chat.message",
-      url: "https://daliwat7.app.n8n.cloud/webhook/chat-assistant",
+      url: "https://wiloka.app.n8n.cloud/webhook/chat-assistant",
       method: "POST",
       body: { message: "hello", history, source: "quantumailab.website" },
     });
@@ -179,7 +179,7 @@ describe("chat webhook (POST)", () => {
     fetchMock.mockRejectedValueOnce(new TypeError("Failed to fetch"));
     const res = await callWebhook({
       name: "chat.message",
-      url: "https://daliwat7.app.n8n.cloud/webhook/chat-assistant",
+      url: "https://wiloka.app.n8n.cloud/webhook/chat-assistant",
       method: "POST",
       body: { message: "hi", source: "quantumailab.website" },
     });
@@ -194,7 +194,7 @@ describe("telemetry buffer", () => {
     fetchMock.mockReturnValueOnce(mockResponse({ body: { ok: true } }));
     await callWebhook({
       name: "newsletter.subscribe",
-      url: "https://daliwat7.app.n8n.cloud/webhook/QuantumAILabNewsletter",
+      url: "https://wiloka.app.n8n.cloud/webhook/QuantumAILabNewsletter",
       method: "GET",
       query: { email: "u@example.com" },
     });

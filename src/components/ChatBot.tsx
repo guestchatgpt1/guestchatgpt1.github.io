@@ -19,7 +19,7 @@ import { callWebhook } from "@/lib/webhook";
  */
 const CHAT_WEBHOOK =
   (import.meta.env.VITE_CHAT_WEBHOOK_URL as string | undefined) ??
-  "https://daliwat7.app.n8n.cloud/webhook/chat-assistant";
+  "https://wiloka.app.n8n.cloud/webhook/chat-assistant";
 
 type Role = "user" | "assistant";
 type ChatMessage = { id: string; role: Role; content: string };
