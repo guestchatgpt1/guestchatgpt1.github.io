@@ -1,4 +1,4 @@
 User-agent: *
 Allow: /
 
-Sitemap: https://ai-quantum-nexus.lovable.app/sitemap.xml
+Sitemap: https://quantumailab.lovable.app/sitemap.xml
