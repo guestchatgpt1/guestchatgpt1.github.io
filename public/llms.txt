@@ -1,0 +1,20 @@
+# QuantumAI Lab
+
+> QuantumAI Lab builds quantum-enhanced AI systems for enterprise — combining quantum computing with modern machine learning for finance, healthcare, and logistics.
+
+## Pages
+
+- [Home](/): Overview of QuantumAI Lab's quantum-AI platform and services.
+- [About](/about): Company mission, team, and research focus.
+- [Services](/services): Consulting, model development, and quantum-AI integration offerings.
+- [Technology](/technology): Our quantum-classical hybrid stack and research areas.
+- [Case Studies](/case-studies): Real-world quantum-AI deployments and outcomes.
+- [Pricing](/pricing): Plans and engagement models.
+- [Blog](/blog): Articles on quantum computing, AI research, and industry applications.
+- [FAQ](/faq): Answers to common questions about our platform and services.
+- [Contact](/contact): Get in touch with our team.
+
+## Optional
+
+- [Privacy Policy](/privacy): How we handle data.
+- [Terms of Service](/terms): Terms governing use of the site.
