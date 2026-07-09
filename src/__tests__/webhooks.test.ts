@@ -153,23 +153,26 @@ describe("contact webhook (POST)", () => {
   });
 });
 
-describe("chat webhook (GET)", () => {
-  it("sends message + history as query params", async () => {
+describe("chat webhook (POST)", () => {
+  it("sends message + history in JSON body, not the URL", async () => {
     fetchMock.mockReturnValueOnce(mockResponse({ body: { reply: "hi there" } }));
+    const history = [{ role: "user", content: "hello" }];
     const res = await callWebhook({
       name: "chat.message",
       url: "https://daliwat7.app.n8n.cloud/webhook/chat-assistant",
-      method: "GET",
-      query: { message: "hello", history: JSON.stringify([{ role: "user", content: "hello" }]), source: "quantumailab.website" },
+      method: "POST",
+      body: { message: "hello", history, source: "quantumailab.website" },
     });
     expect(res.ok).toBe(true);
     expect((res.data as { reply: string }).reply).toBe("hi there");
     const [calledUrl, init] = fetchMock.mock.calls[0];
-    expect(init.method).toBe("GET");
-    expect(init.body).toBeUndefined();
+    expect(init.method).toBe("POST");
     const url = new URL(calledUrl as string);
-    expect(url.searchParams.get("message")).toBe("hello");
-    expect(url.searchParams.get("history")).toBe(JSON.stringify([{ role: "user", content: "hello" }]));
+    expect(url.searchParams.get("message")).toBeNull();
+    expect(url.searchParams.get("history")).toBeNull();
+    const parsed = JSON.parse(init.body as string);
+    expect(parsed.message).toBe("hello");
+    expect(parsed.history).toEqual(history);
   });
 
   it("treats network failure as ok:false (no throw)", async () => {
@@ -177,8 +180,8 @@ describe("chat webhook (GET)", () => {
     const res = await callWebhook({
       name: "chat.message",
       url: "https://daliwat7.app.n8n.cloud/webhook/chat-assistant",
-      method: "GET",
-      query: { message: "hi", source: "quantumailab.website" },
+      method: "POST",
+      body: { message: "hi", source: "quantumailab.website" },
     });
     expect(res.ok).toBe(false);
     expect(res.status).toBe(0);

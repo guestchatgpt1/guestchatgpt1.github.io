@@ -95,7 +95,7 @@ const ChatBot = () => {
 
     const payload = {
       message: userMessage.content,
-      history: JSON.stringify(history.map((m) => ({ role: m.role, content: m.content }))),
+      history: history.map((m) => ({ role: m.role, content: m.content })),
       source: "quantumailab.website",
       submittedAt: new Date().toISOString(),
     };
@@ -103,9 +103,9 @@ const ChatBot = () => {
     const response = await callWebhook({
       name: "chat.message",
       url: CHAT_WEBHOOK,
-      method: "GET",
+      method: "POST",
       timeoutMs: 30_000,
-      query: payload,
+      body: payload,
     });
 
     if (response.ok) {
