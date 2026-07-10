@@ -44,8 +44,8 @@ const Unsubscribe = () => {
     const result = await callWebhook({
       name: "newsletter.unsubscribe",
       url: NEWSLETTER_WEBHOOK,
-      method: "GET",
-      query: {
+      method: "POST",
+      body: {
         email: parsed.data,
         action: "unsubscribe",
         source: "quantumailab.website",
