@@ -153,26 +153,21 @@ describe("contact webhook (POST)", () => {
   });
 });
 
-describe("chat webhook (POST)", () => {
-  it("sends message + history in JSON body, not the URL", async () => {
+describe("chat webhook (GET)", () => {
+  it("sends message as query param", async () => {
     fetchMock.mockReturnValueOnce(mockResponse({ body: { reply: "hi there" } }));
-    const history = [{ role: "user", content: "hello" }];
     const res = await callWebhook({
       name: "chat.message",
       url: "https://wiloka.app.n8n.cloud/webhook/chat-assistant",
-      method: "POST",
-      body: { message: "hello", history, source: "quantumailab.website" },
+      method: "GET",
+      query: { message: "hello", source: "quantumailab.website" },
     });
     expect(res.ok).toBe(true);
     expect((res.data as { reply: string }).reply).toBe("hi there");
     const [calledUrl, init] = fetchMock.mock.calls[0];
-    expect(init.method).toBe("POST");
+    expect(init.method).toBe("GET");
     const url = new URL(calledUrl as string);
-    expect(url.searchParams.get("message")).toBeNull();
-    expect(url.searchParams.get("history")).toBeNull();
-    const parsed = JSON.parse(init.body as string);
-    expect(parsed.message).toBe("hello");
-    expect(parsed.history).toEqual(history);
+    expect(url.searchParams.get("message")).toBe("hello");
   });
 
   it("treats network failure as ok:false (no throw)", async () => {
@@ -180,8 +175,8 @@ describe("chat webhook (POST)", () => {
     const res = await callWebhook({
       name: "chat.message",
       url: "https://wiloka.app.n8n.cloud/webhook/chat-assistant",
-      method: "POST",
-      body: { message: "hi", source: "quantumailab.website" },
+      method: "GET",
+      query: { message: "hi" },
     });
     expect(res.ok).toBe(false);
     expect(res.status).toBe(0);

@@ -93,19 +93,16 @@ const ChatBot = () => {
     setInput("");
     setSending(true);
 
-    const payload = {
-      message: userMessage.content,
-      history: history.map((m) => ({ role: m.role, content: m.content })),
-      source: "quantumailab.website",
-      submittedAt: new Date().toISOString(),
-    };
-
     const response = await callWebhook({
       name: "chat.message",
       url: CHAT_WEBHOOK,
-      method: "POST",
+      method: "GET",
       timeoutMs: 30_000,
-      body: payload,
+      query: {
+        message: userMessage.content,
+        source: "quantumailab.website",
+        submittedAt: new Date().toISOString(),
+      },
     });
 
     if (response.ok) {
