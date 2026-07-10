@@ -45,8 +45,8 @@ const NewsletterForm = ({ className = "", compact = false }: NewsletterFormProps
     const result = await callWebhook({
       name: "newsletter.subscribe",
       url: NEWSLETTER_WEBHOOK,
-      method: "GET",
-      query: {
+      method: "POST",
+      body: {
         email: parsed.data.email,
         action: "subscribe",
         source: "quantumailab.website",

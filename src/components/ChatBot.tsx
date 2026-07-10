@@ -96,9 +96,9 @@ const ChatBot = () => {
     const response = await callWebhook({
       name: "chat.message",
       url: CHAT_WEBHOOK,
-      method: "GET",
+      method: "POST",
       timeoutMs: 30_000,
-      query: {
+      body: {
         message: userMessage.content,
         source: "quantumailab.website",
         submittedAt: new Date().toISOString(),
