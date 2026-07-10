@@ -64,22 +64,21 @@ describe("validation schemas", () => {
   });
 });
 
-describe("newsletter webhook (GET subscribe)", () => {
-  it("uses GET with action=subscribe and email in the query", async () => {
+describe("newsletter webhook (POST subscribe)", () => {
+  it("uses POST with action=subscribe and email in the body", async () => {
     fetchMock.mockReturnValueOnce(mockResponse({ body: { ok: true } }));
     const res = await callWebhook({
       name: "newsletter.subscribe",
       url: "https://wiloka.app.n8n.cloud/webhook/QuantumAILabNewsletter",
-      method: "GET",
-      query: { email: "user@example.com", action: "subscribe", source: "quantumailab.website", submittedAt: "2026-01-01T00:00:00Z" },
+      method: "POST",
+      body: { email: "user@example.com", action: "subscribe", source: "quantumailab.website", submittedAt: "2026-01-01T00:00:00Z" },
     });
     expect(res.ok).toBe(true);
-    const [calledUrl, init] = fetchMock.mock.calls[0];
-    expect(init.method).toBe("GET");
-    expect(init.body).toBeUndefined();
-    const url = new URL(calledUrl as string);
-    expect(url.searchParams.get("action")).toBe("subscribe");
-    expect(url.searchParams.get("email")).toBe("user@example.com");
+    const [, init] = fetchMock.mock.calls[0];
+    expect(init.method).toBe("POST");
+    const body = JSON.parse(init.body as string);
+    expect(body.action).toBe("subscribe");
+    expect(body.email).toBe("user@example.com");
     expect((init.headers as Record<string, string>)["X-Request-Id"]).toBeTruthy();
   });
 
@@ -88,8 +87,8 @@ describe("newsletter webhook (GET subscribe)", () => {
     const res = await callWebhook({
       name: "newsletter.subscribe",
       url: "https://wiloka.app.n8n.cloud/webhook/QuantumAILabNewsletter",
-      method: "GET",
-      query: { email: "user@example.com" },
+      method: "POST",
+      body: { email: "user@example.com" },
     });
     expect(res.ok).toBe(false);
     expect(res.status).toBe(503);
@@ -98,17 +97,17 @@ describe("newsletter webhook (GET subscribe)", () => {
   });
 });
 
-describe("newsletter webhook (GET unsubscribe)", () => {
+describe("newsletter webhook (POST unsubscribe)", () => {
   it("sends action=unsubscribe", async () => {
     fetchMock.mockReturnValueOnce(mockResponse({ body: { ok: true } }));
     await callWebhook({
       name: "newsletter.unsubscribe",
       url: "https://wiloka.app.n8n.cloud/webhook/QuantumAILabNewsletter",
-      method: "GET",
-      query: { email: "user@example.com", action: "unsubscribe" },
+      method: "POST",
+      body: { email: "user@example.com", action: "unsubscribe" },
     });
-    const url = new URL(fetchMock.mock.calls[0][0] as string);
-    expect(url.searchParams.get("action")).toBe("unsubscribe");
+    const body = JSON.parse(fetchMock.mock.calls[0][1].body as string);
+    expect(body.action).toBe("unsubscribe");
   });
 });
 
