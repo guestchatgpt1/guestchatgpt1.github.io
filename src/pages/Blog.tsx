@@ -52,7 +52,8 @@ const Blog = () => {
                   <p className="text-muted-foreground text-sm leading-relaxed mb-4 flex-1">{p.excerpt}</p>
                   <div className="flex items-center justify-between">
                     <span className="inline-flex items-center gap-1 text-sm text-primary font-medium group-hover:gap-2 transition-all">
-                      Read More <ArrowRight size={14} />
+                      <span className="sr-only">Read full article: {p.title}</span>
+                      <span aria-hidden="true">Read full article</span> <ArrowRight size={14} aria-hidden="true" />
                     </span>
                     <span className="inline-flex items-center gap-1 text-xs text-muted-foreground">
                       <Clock size={12} aria-hidden="true" />
