@@ -189,8 +189,8 @@ describe("telemetry buffer", () => {
     await callWebhook({
       name: "newsletter.subscribe",
       url: "https://wiloka.app.n8n.cloud/webhook/QuantumAILabNewsletter",
-      method: "GET",
-      query: { email: "u@example.com" },
+      method: "POST",
+      body: { email: "u@example.com" },
     });
     const telem = (window as unknown as { __webhookTelemetry__?: Array<Record<string, unknown>> }).__webhookTelemetry__;
     expect(telem && telem.length).toBeGreaterThan(0);
