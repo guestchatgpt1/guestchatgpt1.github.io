@@ -132,6 +132,29 @@ const Contact = () => {
       <Seo
         title="Contact QuantumAI Lab"
         description="Get in touch with QuantumAI Lab for sales, support, partnerships, and careers. Reach our Mumbai office or message us by department."
+        jsonLd={{
+          "@context": "https://schema.org",
+          "@type": "LocalBusiness",
+          name: "QuantumAI Lab",
+          image: "https://quantumailab.lovable.app/og-image.jpg",
+          url: "https://quantumailab.lovable.app/contact",
+          telephone: "+91-8652074439",
+          email: "support@quantumailab.in",
+          address: {
+            "@type": "PostalAddress",
+            addressLocality: "Mumbai",
+            postalCode: "421204",
+            addressCountry: "IN",
+          },
+          openingHoursSpecification: [
+            {
+              "@type": "OpeningHoursSpecification",
+              dayOfWeek: ["Monday", "Tuesday", "Wednesday", "Thursday", "Friday"],
+              opens: "09:00",
+              closes: "18:00",
+            },
+          ],
+        }}
       />
       <section className="section-padding">
         <div className="container-max">
