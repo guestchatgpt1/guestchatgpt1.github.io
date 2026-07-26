@@ -8,7 +8,7 @@ import Seo from "@/components/Seo";
 import { contactSchema, type ContactInput } from "@/lib/validation";
 import { callWebhook, getCaptchaToken, HONEYPOT_FIELD, isHoneypotTripped } from "@/lib/webhook";
 
-const CONTACT_WEBHOOK = "https://wiloka.app.n8n.cloud/webhook/QuantumAILab-contact-us";
+const CONTACT_WEBHOOK = "https://tevef.app.n8n.cloud/webhook/QuantumAILab-contact-us";
 
 const DEPARTMENTS = {
   general: { label: "General Information", email: "info@quantumailab.in" },
