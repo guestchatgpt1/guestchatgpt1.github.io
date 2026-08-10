@@ -43,9 +43,9 @@ const Unsubscribe = () => {
     const captchaToken = await getCaptchaToken();
     const result = await callWebhook({
       name: "newsletter.unsubscribe",
-      url: NEWSLETTER_WEBHOOK,
-      method: "POST",
-      body: {
+      url: WEBHOOKS.newsletter.url,
+      method: WEBHOOKS.newsletter.method,
+      query: {
         email: parsed.data,
         action: "unsubscribe",
         source: "quantumailab.website",

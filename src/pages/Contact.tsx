@@ -38,8 +38,9 @@ const Contact = () => {
     const captchaToken = await getCaptchaToken();
     return callWebhook({
       name: "contact.submit",
-      url: CONTACT_WEBHOOK,
-      method: "POST",
+      url: WEBHOOKS.contact.url,
+      method: WEBHOOKS.contact.method,
+      timeoutMs: 20_000,
       body: {
         ...data,
         departmentLabel: DEPARTMENTS[data.department].label,
