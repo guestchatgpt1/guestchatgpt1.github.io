@@ -7,8 +7,8 @@ import AnimatedSection from "@/components/AnimatedSection";
 import Seo from "@/components/Seo";
 import { emailSchema } from "@/lib/validation";
 import { callWebhook, getCaptchaToken, HONEYPOT_FIELD, isHoneypotTripped } from "@/lib/webhook";
+import { WEBHOOKS } from "@/lib/webhooks";
 
-const NEWSLETTER_WEBHOOK = "https://tevef.app.n8n.cloud/webhook/QuantumAILabNewsletter";
 
 type Status = "idle" | "submitting" | "success" | "error";
 
