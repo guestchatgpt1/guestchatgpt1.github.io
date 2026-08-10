@@ -4,8 +4,8 @@ import { Button } from "@/components/ui/button";
 import { useToast } from "@/hooks/use-toast";
 import { newsletterSchema } from "@/lib/validation";
 import { callWebhook, getCaptchaToken, HONEYPOT_FIELD, isHoneypotTripped } from "@/lib/webhook";
+import { WEBHOOKS } from "@/lib/webhooks";
 
-const NEWSLETTER_WEBHOOK = "https://tevef.app.n8n.cloud/webhook/QuantumAILabNewsletter";
 
 interface NewsletterFormProps {
   className?: string;
@@ -44,9 +44,9 @@ const NewsletterForm = ({ className = "", compact = false }: NewsletterFormProps
     const captchaToken = await getCaptchaToken();
     const result = await callWebhook({
       name: "newsletter.subscribe",
-      url: NEWSLETTER_WEBHOOK,
-      method: "POST",
-      body: {
+      url: WEBHOOKS.newsletter.url,
+      method: WEBHOOKS.newsletter.method,
+      query: {
         email: parsed.data.email,
         action: "subscribe",
         source: "quantumailab.website",

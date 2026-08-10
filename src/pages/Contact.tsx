@@ -7,8 +7,8 @@ import { useToast } from "@/hooks/use-toast";
 import Seo from "@/components/Seo";
 import { contactSchema, type ContactInput } from "@/lib/validation";
 import { callWebhook, getCaptchaToken, HONEYPOT_FIELD, isHoneypotTripped } from "@/lib/webhook";
+import { WEBHOOKS } from "@/lib/webhooks";
 
-const CONTACT_WEBHOOK = "https://tevef.app.n8n.cloud/webhook/QuantumAILab-contact-us";
 
 const DEPARTMENTS = {
   general: { label: "General Information", email: "info@quantumailab.in" },
@@ -38,8 +38,9 @@ const Contact = () => {
     const captchaToken = await getCaptchaToken();
     return callWebhook({
       name: "contact.submit",
-      url: CONTACT_WEBHOOK,
-      method: "POST",
+      url: WEBHOOKS.contact.url,
+      method: WEBHOOKS.contact.method,
+      timeoutMs: 20_000,
       body: {
         ...data,
         departmentLabel: DEPARTMENTS[data.department].label,
