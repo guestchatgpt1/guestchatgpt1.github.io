@@ -1,7 +1,9 @@
+import { useState } from "react";
 import { Link } from "react-router-dom";
 import { Mail, MapPin, Phone } from "lucide-react";
 import logo from "@/assets/logo.jpg";
 import NewsletterForm from "@/components/NewsletterForm";
+import FeedbackDialog from "@/components/FeedbackDialog";
 
 const quickLinks = [
   { label: "About", path: "/about" },
@@ -15,6 +17,8 @@ const quickLinks = [
 ];
 
 const Footer = () => {
+  const [feedbackOpen, setFeedbackOpen] = useState(false);
+
   return (
     <footer className="border-t border-border/50 bg-card/30" role="contentinfo">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-16">
