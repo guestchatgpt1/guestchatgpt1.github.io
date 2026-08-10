@@ -40,3 +40,26 @@ export const contactSchema = z.object({
 });
 
 export type ContactInput = z.infer<typeof contactSchema>;
+
+export const feedbackSchema = z.object({
+  name: z
+    .string()
+    .trim()
+    .min(2, "Please enter your full name")
+    .max(100, "Name must be under 100 characters")
+    .regex(/^[\p{L}\p{M}'.\- ]+$/u, "Name contains invalid characters"),
+  phone: z
+    .string()
+    .trim()
+    .min(7, "Please enter a valid phone number")
+    .max(20, "Phone number is too long")
+    .regex(/^[+]?[\d\s\-()]{7,20}$/, "Please enter a valid phone number"),
+  email: emailSchema,
+  feedback: z
+    .string()
+    .trim()
+    .min(10, "Please add a bit more detail (at least 10 characters)")
+    .max(2000, "Feedback must be under 2000 characters"),
+});
+
+export type FeedbackInput = z.infer<typeof feedbackSchema>;
