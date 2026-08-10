@@ -7,6 +7,7 @@
  */
 import { afterEach, beforeEach, describe, expect, it, vi } from "vitest";
 import { callWebhook } from "@/lib/webhook";
+import { WEBHOOKS } from "@/lib/webhooks";
 import { contactSchema, newsletterSchema, chatMessageSchema } from "@/lib/validation";
 
 type MockResponseInit = {
@@ -64,21 +65,23 @@ describe("validation schemas", () => {
   });
 });
 
-describe("newsletter webhook (POST subscribe)", () => {
-  it("uses POST with action=subscribe and email in the body", async () => {
+describe("newsletter webhook (GET subscribe)", () => {
+  it("uses GET with action=subscribe and email as query params", async () => {
     fetchMock.mockReturnValueOnce(mockResponse({ body: { ok: true } }));
     const res = await callWebhook({
       name: "newsletter.subscribe",
-      url: "https://tevef.app.n8n.cloud/webhook/QuantumAILabNewsletter",
-      method: "POST",
-      body: { email: "user@example.com", action: "subscribe", source: "quantumailab.website", submittedAt: "2026-01-01T00:00:00Z" },
+      url: WEBHOOKS.newsletter.url,
+      method: WEBHOOKS.newsletter.method,
+      query: { email: "user@example.com", action: "subscribe", source: "quantumailab.website" },
     });
     expect(res.ok).toBe(true);
-    const [, init] = fetchMock.mock.calls[0];
-    expect(init.method).toBe("POST");
-    const body = JSON.parse(init.body as string);
-    expect(body.action).toBe("subscribe");
-    expect(body.email).toBe("user@example.com");
+    const [calledUrl, init] = fetchMock.mock.calls[0];
+    expect(init.method).toBe("GET");
+    expect(init.body).toBeUndefined();
+    const url = new URL(calledUrl as string);
+    expect(url.origin + url.pathname).toBe("https://fopobiv.app.n8n.cloud/webhook/QuantumAILabNewsletter");
+    expect(url.searchParams.get("action")).toBe("subscribe");
+    expect(url.searchParams.get("email")).toBe("user@example.com");
     expect((init.headers as Record<string, string>)["X-Request-Id"]).toBeTruthy();
   });
 
@@ -86,9 +89,9 @@ describe("newsletter webhook (POST subscribe)", () => {
     fetchMock.mockReturnValueOnce(mockResponse({ ok: false, status: 503, body: "down" }));
     const res = await callWebhook({
       name: "newsletter.subscribe",
-      url: "https://tevef.app.n8n.cloud/webhook/QuantumAILabNewsletter",
-      method: "POST",
-      body: { email: "user@example.com" },
+      url: WEBHOOKS.newsletter.url,
+      method: WEBHOOKS.newsletter.method,
+      query: { email: "user@example.com" },
     });
     expect(res.ok).toBe(false);
     expect(res.status).toBe(503);
@@ -97,17 +100,17 @@ describe("newsletter webhook (POST subscribe)", () => {
   });
 });
 
-describe("newsletter webhook (POST unsubscribe)", () => {
+describe("newsletter webhook (GET unsubscribe)", () => {
   it("sends action=unsubscribe", async () => {
     fetchMock.mockReturnValueOnce(mockResponse({ body: { ok: true } }));
     await callWebhook({
       name: "newsletter.unsubscribe",
-      url: "https://tevef.app.n8n.cloud/webhook/QuantumAILabNewsletter",
-      method: "POST",
-      body: { email: "user@example.com", action: "unsubscribe" },
+      url: WEBHOOKS.newsletter.url,
+      method: WEBHOOKS.newsletter.method,
+      query: { email: "user@example.com", action: "unsubscribe" },
     });
-    const body = JSON.parse(fetchMock.mock.calls[0][1].body as string);
-    expect(body.action).toBe("unsubscribe");
+    const url = new URL(fetchMock.mock.calls[0][0] as string);
+    expect(url.searchParams.get("action")).toBe("unsubscribe");
   });
 });
 
@@ -116,7 +119,7 @@ describe("contact webhook (POST)", () => {
     fetchMock.mockReturnValueOnce(mockResponse({ body: { ok: true } }));
     await callWebhook({
       name: "contact.submit",
-      url: "https://tevef.app.n8n.cloud/webhook/QuantumAILab-contact-us",
+      url: WEBHOOKS.contact.url,
       method: "POST",
       body: {
         name: "Ada Lovelace",
@@ -142,7 +145,7 @@ describe("contact webhook (POST)", () => {
     fetchMock.mockReturnValueOnce(mockResponse({ ok: false, status: 500, body: "boom" }));
     const res = await callWebhook({
       name: "contact.submit",
-      url: "https://tevef.app.n8n.cloud/webhook/QuantumAILab-contact-us",
+      url: WEBHOOKS.contact.url,
       method: "POST",
       body: { name: "x" },
     });
@@ -152,34 +155,70 @@ describe("contact webhook (POST)", () => {
   });
 });
 
-describe("chat webhook (POST)", () => {
-  it("sends message in the JSON body", async () => {
+describe("chat webhook (GET)", () => {
+  it("sends the message as a query param and parses the reply", async () => {
     fetchMock.mockReturnValueOnce(mockResponse({ body: { reply: "hi there" } }));
     const res = await callWebhook({
       name: "chat.message",
-      url: "https://tevef.app.n8n.cloud/webhook/chat-assistant",
-      method: "POST",
-      body: { message: "hello", source: "quantumailab.website" },
+      url: WEBHOOKS.chat.url,
+      method: WEBHOOKS.chat.method,
+      query: { message: "hello", source: "quantumailab.website" },
     });
     expect(res.ok).toBe(true);
     expect((res.data as { reply: string }).reply).toBe("hi there");
-    const [, init] = fetchMock.mock.calls[0];
-    expect(init.method).toBe("POST");
-    const body = JSON.parse(init.body as string);
-    expect(body.message).toBe("hello");
+    const [calledUrl, init] = fetchMock.mock.calls[0];
+    expect(init.method).toBe("GET");
+    const url = new URL(calledUrl as string);
+    expect(url.origin + url.pathname).toBe("https://fopobiv.app.n8n.cloud/webhook/chat-assistant");
+    expect(url.searchParams.get("message")).toBe("hello");
   });
 
   it("treats network failure as ok:false (no throw)", async () => {
     fetchMock.mockRejectedValueOnce(new TypeError("Failed to fetch"));
     const res = await callWebhook({
       name: "chat.message",
-      url: "https://tevef.app.n8n.cloud/webhook/chat-assistant",
-      method: "POST",
-      body: { message: "hi" },
+      url: WEBHOOKS.chat.url,
+      method: WEBHOOKS.chat.method,
+      query: { message: "hi" },
     });
     expect(res.ok).toBe(false);
     expect(res.status).toBe(0);
     expect(res.error).toBeTruthy();
+  });
+});
+
+describe("feedback webhook (POST)", () => {
+  it("POSTs the full feedback payload as JSON", async () => {
+    fetchMock.mockReturnValueOnce(mockResponse({ body: { ok: true } }));
+    const res = await callWebhook({
+      name: "feedback.submit",
+      url: WEBHOOKS.feedback.url,
+      method: WEBHOOKS.feedback.method,
+      body: {
+        name: "Ada Lovelace",
+        phone: "+91 98765 43210",
+        email: "ada@example.com",
+        feedback: "Loved the quantum explainer articles.",
+      },
+    });
+    expect(res.ok).toBe(true);
+    const [calledUrl, init] = fetchMock.mock.calls[0];
+    expect(init.method).toBe("POST");
+    expect(calledUrl).toBe("https://jawepah.app.n8n.cloud/webhook/feedback");
+    const body = JSON.parse(init.body as string);
+    expect(body).toMatchObject({ name: "Ada Lovelace", email: "ada@example.com" });
+  });
+
+  it("keeps the failure recoverable on 500", async () => {
+    fetchMock.mockReturnValueOnce(mockResponse({ ok: false, status: 500, body: "boom" }));
+    const res = await callWebhook({
+      name: "feedback.submit",
+      url: WEBHOOKS.feedback.url,
+      method: WEBHOOKS.feedback.method,
+      body: { name: "x" },
+    });
+    expect(res.ok).toBe(false);
+    expect(res.status).toBe(500);
   });
 });
 
@@ -188,9 +227,9 @@ describe("telemetry buffer", () => {
     fetchMock.mockReturnValueOnce(mockResponse({ body: { ok: true } }));
     await callWebhook({
       name: "newsletter.subscribe",
-      url: "https://tevef.app.n8n.cloud/webhook/QuantumAILabNewsletter",
-      method: "POST",
-      body: { email: "u@example.com" },
+      url: WEBHOOKS.newsletter.url,
+      method: WEBHOOKS.newsletter.method,
+      query: { email: "u@example.com" },
     });
     const telem = (window as unknown as { __webhookTelemetry__?: Array<Record<string, unknown>> }).__webhookTelemetry__;
     expect(telem && telem.length).toBeGreaterThan(0);
