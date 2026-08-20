@@ -10,6 +10,7 @@ import ParticleBackground from "@/components/ParticleBackground";
 import ScrollToTop from "@/components/ScrollToTop";
 import BackToTop from "@/components/BackToTop";
 import ChatBot from "@/components/ChatBot";
+import FeedbackButton from "@/components/FeedbackButton";
 import ErrorBoundary from "@/components/ErrorBoundary";
 
 const Index = lazy(() => import("./pages/Index"));
