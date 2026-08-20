@@ -1,1 +1,7 @@
 project_id = "cctptwrisqcipzxpmipl"
+
+[functions.chat]
+verify_jwt = false
+
+[functions.articles]
+verify_jwt = false

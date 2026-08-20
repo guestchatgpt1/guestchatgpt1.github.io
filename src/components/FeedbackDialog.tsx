@@ -11,7 +11,7 @@ import {
 import { useToast } from "@/hooks/use-toast";
 import { feedbackSchema, type FeedbackInput } from "@/lib/validation";
 import { callWebhook, getCaptchaToken, HONEYPOT_FIELD, isHoneypotTripped } from "@/lib/webhook";
-import { WEBHOOKS } from "@/lib/webhooks";
+import { FEEDBACK_FALLBACK_FORM_URL, WEBHOOKS } from "@/lib/webhooks";
 
 interface FeedbackDialogProps {
   open: boolean;
@@ -80,18 +80,32 @@ const FeedbackDialog = ({ open, onOpenChange }: FeedbackDialogProps) => {
 
     setStatus("submitting");
     const captchaToken = await getCaptchaToken();
-    const result = await callWebhook({
+    const payload = {
+      ...parsed.data,
+      source: "quantumailab.website",
+      submittedAt: new Date().toISOString(),
+      ...(captchaToken ? { captchaToken } : {}),
+    };
+
+    // Primary: GET with query params (the configured n8n method).
+    let result = await callWebhook({
       name: "feedback.submit",
       url: WEBHOOKS.feedback.url,
       method: WEBHOOKS.feedback.method,
       timeoutMs: 20_000,
-      body: {
-        ...parsed.data,
-        source: "quantumailab.website",
-        submittedAt: new Date().toISOString(),
-        ...(captchaToken ? { captchaToken } : {}),
-      },
+      query: payload,
     });
+
+    // Fallback: some n8n workflows only register POST — retry once with JSON.
+    if (!result.ok && (result.status === 404 || result.status === 405)) {
+      result = await callWebhook({
+        name: "feedback.submit.post_fallback",
+        url: WEBHOOKS.feedback.url,
+        method: "POST",
+        timeoutMs: 20_000,
+        body: payload,
+      });
+    }
 
     if (result.ok) {
       setStatus("success");
@@ -101,7 +115,7 @@ const FeedbackDialog = ({ open, onOpenChange }: FeedbackDialogProps) => {
       setLastError(result.error ?? "Network error");
       toast({
         title: "Could not send feedback",
-        description: "Please try again in a moment.",
+        description: "Please try again, or use the backup feedback form.",
         variant: "destructive",
       });
     }
@@ -228,7 +242,16 @@ const FeedbackDialog = ({ open, onOpenChange }: FeedbackDialogProps) => {
             <div aria-live="polite" aria-atomic="true">
               {status === "error" && (
                 <p className="text-sm text-destructive" role="alert">
-                  We couldn't submit your feedback ({lastError}). Please try again.
+                  We couldn't submit your feedback ({lastError}). Please try again, or{" "}
+                  <a
+                    href={FEEDBACK_FALLBACK_FORM_URL}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="underline underline-offset-2 hover:text-foreground"
+                  >
+                    use our backup feedback form
+                  </a>
+                  .
                 </p>
               )}
             </div>

@@ -1,9 +1,15 @@
-import { useState } from "react";
 import { Link } from "react-router-dom";
-import { Mail, MapPin, Phone } from "lucide-react";
+import { Facebook, Linkedin, Mail, MapPin, MessageCircle, Phone, Twitter } from "lucide-react";
 import logo from "@/assets/logo.jpg";
 import NewsletterForm from "@/components/NewsletterForm";
-import FeedbackDialog from "@/components/FeedbackDialog";
+import { SOCIAL_LINKS } from "@/lib/webhooks";
+
+const socials = [
+  { label: "Facebook", href: SOCIAL_LINKS.facebook, Icon: Facebook },
+  { label: "LinkedIn", href: SOCIAL_LINKS.linkedin, Icon: Linkedin },
+  { label: "X (Twitter)", href: SOCIAL_LINKS.x, Icon: Twitter },
+  { label: "WhatsApp", href: SOCIAL_LINKS.whatsapp, Icon: MessageCircle },
+];
 
 const quickLinks = [
   { label: "About", path: "/about" },
@@ -17,7 +23,7 @@ const quickLinks = [
 ];
 
 const Footer = () => {
-  const [feedbackOpen, setFeedbackOpen] = useState(false);
+
 
   return (
     <footer className="border-t border-border/50 bg-card/30" role="contentinfo">
@@ -88,18 +94,27 @@ const Footer = () => {
           </div>
         </div>
 
+        <div className="mt-10 flex flex-wrap items-center gap-3">
+          {socials.map(({ label, href, Icon }) => (
+            <a
+              key={label}
+              href={href}
+              target="_blank"
+              rel="noopener noreferrer"
+              aria-label={label}
+              title={label}
+              className="w-9 h-9 rounded-full border border-border/60 bg-card/40 flex items-center justify-center text-muted-foreground hover:text-primary hover:border-primary/60 transition-colors"
+            >
+              <Icon size={16} aria-hidden="true" />
+            </a>
+          ))}
+        </div>
+
         <div className="mt-12 pt-8 border-t border-border/30 flex flex-col sm:flex-row justify-between items-center gap-4">
           <p className="text-xs text-muted-foreground">
             © {new Date().getFullYear()} QuantumAI Lab. All rights reserved.
           </p>
           <div className="flex flex-wrap items-center justify-center gap-4">
-            <button
-              type="button"
-              onClick={() => setFeedbackOpen(true)}
-              className="text-xs text-muted-foreground hover:text-primary transition-colors focus:outline-none focus:ring-2 focus:ring-primary/50 rounded"
-            >
-              Feedback
-            </button>
             <Link to="/privacy" className="text-xs text-muted-foreground hover:text-primary transition-colors">
               Privacy Policy
             </Link>
@@ -115,8 +130,6 @@ const Footer = () => {
           </p>
         </div>
       </div>
-
-      <FeedbackDialog open={feedbackOpen} onOpenChange={setFeedbackOpen} />
     </footer>
   );
 };
