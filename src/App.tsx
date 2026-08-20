@@ -53,6 +53,7 @@ const App = () => (
           <ParticleBackground />
           <BackToTop />
           <ChatBot />
+          <FeedbackButton />
           <Navbar />
           <main id="main-content" className="relative z-10">
             <Suspense fallback={<PageLoader />}>
