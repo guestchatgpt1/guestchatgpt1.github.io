@@ -23,7 +23,7 @@ const quickLinks = [
 ];
 
 const Footer = () => {
-  const [feedbackOpen, setFeedbackOpen] = useState(false);
+
 
   return (
     <footer className="border-t border-border/50 bg-card/30" role="contentinfo">
