@@ -33,9 +33,22 @@ export const WEBHOOKS = {
   },
   /** Feedback popup form. */
   feedback: {
-    url: env.VITE_FEEDBACK_WEBHOOK_URL ?? "https://jawepah.app.n8n.cloud/webhook/feedback",
-    method: "POST",
+    url: env.VITE_FEEDBACK_WEBHOOK_URL ?? "https://kayoge6.app.n8n.cloud/webhook/feedback",
+    method: "GET",
   },
 } satisfies Record<string, WebhookEndpoint>;
 
 export type WebhookName = keyof typeof WEBHOOKS;
+
+/** Hosted n8n form used as a fallback when the feedback webhook is unreachable. */
+export const FEEDBACK_FALLBACK_FORM_URL =
+  env.VITE_FEEDBACK_FALLBACK_FORM_URL ??
+  "https://kayoge6.app.n8n.cloud/form/3758fb17-b23a-4263-9d39-937774107fc0";
+
+/** Public social + contact profiles, used across the site. */
+export const SOCIAL_LINKS = {
+  facebook: "https://www.facebook.com/profile.php?id=61593230084208",
+  linkedin: "https://www.linkedin.com/in/quantumai-lab-08673542b/",
+  x: "https://x.com/QuantumAILab",
+  whatsapp: "https://wa.me/919920074439",
+} as const;
