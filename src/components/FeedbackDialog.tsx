@@ -80,18 +80,32 @@ const FeedbackDialog = ({ open, onOpenChange }: FeedbackDialogProps) => {
 
     setStatus("submitting");
     const captchaToken = await getCaptchaToken();
-    const result = await callWebhook({
+    const payload = {
+      ...parsed.data,
+      source: "quantumailab.website",
+      submittedAt: new Date().toISOString(),
+      ...(captchaToken ? { captchaToken } : {}),
+    };
+
+    // Primary: GET with query params (the configured n8n method).
+    let result = await callWebhook({
       name: "feedback.submit",
       url: WEBHOOKS.feedback.url,
       method: WEBHOOKS.feedback.method,
       timeoutMs: 20_000,
-      body: {
-        ...parsed.data,
-        source: "quantumailab.website",
-        submittedAt: new Date().toISOString(),
-        ...(captchaToken ? { captchaToken } : {}),
-      },
+      query: payload,
     });
+
+    // Fallback: some n8n workflows only register POST — retry once with JSON.
+    if (!result.ok && (result.status === 404 || result.status === 405)) {
+      result = await callWebhook({
+        name: "feedback.submit.post_fallback",
+        url: WEBHOOKS.feedback.url,
+        method: "POST",
+        timeoutMs: 20_000,
+        body: payload,
+      });
+    }
 
     if (result.ok) {
       setStatus("success");
@@ -101,7 +115,7 @@ const FeedbackDialog = ({ open, onOpenChange }: FeedbackDialogProps) => {
       setLastError(result.error ?? "Network error");
       toast({
         title: "Could not send feedback",
-        description: "Please try again in a moment.",
+        description: "Please try again, or use the backup feedback form.",
         variant: "destructive",
       });
     }
