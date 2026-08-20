@@ -1,9 +1,15 @@
-import { useState } from "react";
 import { Link } from "react-router-dom";
-import { Mail, MapPin, Phone } from "lucide-react";
+import { Facebook, Linkedin, Mail, MapPin, MessageCircle, Phone, Twitter } from "lucide-react";
 import logo from "@/assets/logo.jpg";
 import NewsletterForm from "@/components/NewsletterForm";
-import FeedbackDialog from "@/components/FeedbackDialog";
+import { SOCIAL_LINKS } from "@/lib/webhooks";
+
+const socials = [
+  { label: "Facebook", href: SOCIAL_LINKS.facebook, Icon: Facebook },
+  { label: "LinkedIn", href: SOCIAL_LINKS.linkedin, Icon: Linkedin },
+  { label: "X (Twitter)", href: SOCIAL_LINKS.x, Icon: Twitter },
+  { label: "WhatsApp", href: SOCIAL_LINKS.whatsapp, Icon: MessageCircle },
+];
 
 const quickLinks = [
   { label: "About", path: "/about" },
