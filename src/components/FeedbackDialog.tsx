@@ -242,7 +242,16 @@ const FeedbackDialog = ({ open, onOpenChange }: FeedbackDialogProps) => {
             <div aria-live="polite" aria-atomic="true">
               {status === "error" && (
                 <p className="text-sm text-destructive" role="alert">
-                  We couldn't submit your feedback ({lastError}). Please try again.
+                  We couldn't submit your feedback ({lastError}). Please try again, or{" "}
+                  <a
+                    href={FEEDBACK_FALLBACK_FORM_URL}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="underline underline-offset-2 hover:text-foreground"
+                  >
+                    use our backup feedback form
+                  </a>
+                  .
                 </p>
               )}
             </div>
