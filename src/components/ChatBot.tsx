@@ -49,11 +49,18 @@ const getRecognitionCtor = (): (new () => SpeechRecognitionLike) | null => {
 const ChatBot = () => {
   const [open, setOpen] = useState(false);
   const [messages, setMessages] = useState<ChatMessage[]>([WELCOME]);
+  // Ref mirror of `messages` so `send` reads the latest history synchronously
+  // (state updates batch and aren't visible to the in-flight request body).
+  const messagesRef = useRef<ChatMessage[]>([WELCOME]);
   const [input, setInput] = useState("");
   const [sending, setSending] = useState(false);
   const [listening, setListening] = useState(false);
   const [voiceReplies, setVoiceReplies] = useState(false);
   const scrollRef = useRef<HTMLDivElement>(null);
+
+  useEffect(() => {
+    messagesRef.current = messages;
+  }, [messages]);
   const inputRef = useRef<HTMLTextAreaElement>(null);
   const recognitionRef = useRef<SpeechRecognitionLike | null>(null);
 
