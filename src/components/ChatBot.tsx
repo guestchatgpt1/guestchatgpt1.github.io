@@ -4,47 +4,14 @@ import { Button } from "@/components/ui/button";
 import { toast } from "@/hooks/use-toast";
 import logo from "@/assets/logo.jpg";
 import { chatMessageSchema } from "@/lib/validation";
-import { callWebhook } from "@/lib/webhook";
-import { WEBHOOKS } from "@/lib/webhooks";
-
-/**
- * Floating AI chat assistant with text + voice conversations.
- *
- * Each user turn (plus a compact transcript of the conversation so the
- * workflow can answer multi-turn questions) is sent to the n8n chat webhook
- * and the reply is rendered — and optionally spoken back via the browser's
- * speech synthesis engine.
- */
-type Role = "user" | "assistant";
-type ChatMessage = { id: string; role: Role; content: string };
-
-const WELCOME: ChatMessage = {
-  id: "welcome",
-  role: "assistant",
-  content:
-    "Hi! I'm the QuantumAI Lab assistant. Ask me about our services, technology, pricing, or how quantum-AI can help your team. You can type or tap the mic to talk.",
-};
-
+...
 const newId = () =>
   typeof crypto !== "undefined" && "randomUUID" in crypto
     ? crypto.randomUUID()
     : `${Date.now()}-${Math.random().toString(36).slice(2)}`;
 
-const extractReply = (data: unknown): string | null => {
-  if (typeof data === "string") return data.trim() || null;
-  if (Array.isArray(data)) {
-    for (const item of data) {
-      const r = extractReply(item);
-      if (r) return r;
-    }
-    return null;
-  }
-  if (!data || typeof data !== "object") return null;
-  const obj = data as Record<string, unknown>;
-  const candidates = [obj.reply, obj.message, obj.response, obj.text, obj.output, obj.answer];
-  for (const c of candidates) if (typeof c === "string" && c.trim()) return c.trim();
-  return null;
-};
+/** Backend AI endpoint (edge function streaming from Lovable AI). */
+const CHAT_API_URL = `${import.meta.env.VITE_SUPABASE_URL}/functions/v1/chat`;
 
 type SpeechRecognitionLike = {
   lang: string;
