@@ -187,14 +187,14 @@ describe("chat webhook (GET)", () => {
   });
 });
 
-describe("feedback webhook (POST)", () => {
-  it("POSTs the full feedback payload as JSON", async () => {
+describe("feedback webhook (GET)", () => {
+  it("sends the full feedback payload as query params", async () => {
     fetchMock.mockReturnValueOnce(mockResponse({ body: { ok: true } }));
     const res = await callWebhook({
       name: "feedback.submit",
       url: WEBHOOKS.feedback.url,
       method: WEBHOOKS.feedback.method,
-      body: {
+      query: {
         name: "Ada Lovelace",
         phone: "+91 98765 43210",
         email: "ada@example.com",
@@ -203,10 +203,11 @@ describe("feedback webhook (POST)", () => {
     });
     expect(res.ok).toBe(true);
     const [calledUrl, init] = fetchMock.mock.calls[0];
-    expect(init.method).toBe("POST");
-    expect(calledUrl).toBe("https://jawepah.app.n8n.cloud/webhook/feedback");
-    const body = JSON.parse(init.body as string);
-    expect(body).toMatchObject({ name: "Ada Lovelace", email: "ada@example.com" });
+    expect(init.method).toBe("GET");
+    const url = new URL(calledUrl as string);
+    expect(url.origin + url.pathname).toBe("https://kayoge6.app.n8n.cloud/webhook/feedback");
+    expect(url.searchParams.get("name")).toBe("Ada Lovelace");
+    expect(url.searchParams.get("email")).toBe("ada@example.com");
   });
 
   it("keeps the failure recoverable on 500", async () => {
@@ -215,7 +216,7 @@ describe("feedback webhook (POST)", () => {
       name: "feedback.submit",
       url: WEBHOOKS.feedback.url,
       method: WEBHOOKS.feedback.method,
-      body: { name: "x" },
+      query: { name: "x" },
     });
     expect(res.ok).toBe(false);
     expect(res.status).toBe(500);
