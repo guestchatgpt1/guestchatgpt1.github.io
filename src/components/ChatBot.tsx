@@ -110,11 +110,9 @@ const ChatBot = () => {
       }
 
       const userMessage: ChatMessage = { id: newId(), role: "user", content: parsed.data };
-      let history: ChatMessage[] = [];
-      setMessages((prev) => {
-        history = [...prev, userMessage];
-        return history;
-      });
+      const history = [...messagesRef.current, userMessage];
+      messagesRef.current = history;
+      setMessages(history);
       setInput("");
       setSending(true);
 
