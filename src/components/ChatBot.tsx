@@ -4,7 +4,23 @@ import { Button } from "@/components/ui/button";
 import { toast } from "@/hooks/use-toast";
 import logo from "@/assets/logo.jpg";
 import { chatMessageSchema } from "@/lib/validation";
-...
+
+/**
+ * Floating AI chat assistant with text + voice conversations.
+ *
+ * Replies are streamed from the `chat` edge function (grounded in QuantumAI
+ * Lab's public content) and optionally spoken back via speech synthesis.
+ */
+type Role = "user" | "assistant";
+type ChatMessage = { id: string; role: Role; content: string };
+
+const WELCOME: ChatMessage = {
+  id: "welcome",
+  role: "assistant",
+  content:
+    "Hi! I'm the QuantumAI Lab assistant. Ask me about our services, technology, pricing, or how quantum-AI can help your team. You can type or tap the mic to talk.",
+};
+
 const newId = () =>
   typeof crypto !== "undefined" && "randomUUID" in crypto
     ? crypto.randomUUID()
