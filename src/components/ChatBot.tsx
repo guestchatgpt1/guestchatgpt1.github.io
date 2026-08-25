@@ -135,35 +135,71 @@ const ChatBot = () => {
       setInput("");
       setSending(true);
 
-      const response = await callWebhook({
-        name: "chat.message",
-        url: WEBHOOKS.chat.url,
-        method: WEBHOOKS.chat.method,
-        timeoutMs: 30_000,
-        query: {
-          message: parsed.data,
-          mode: spoken ? "voice" : "text",
-          source: "quantumailab.website",
-          submittedAt: new Date().toISOString(),
-        },
-      });
+      const assistantId = newId();
+      let reply = "";
+      const pushDelta = (text: string) => {
+        reply += text;
+        setMessages((prev) => {
+          const idx = prev.findIndex((m) => m.id === assistantId);
+          if (idx === -1) return [...prev, { id: assistantId, role: "assistant", content: reply }];
+          const next = [...prev];
+          next[idx] = { ...next[idx], content: reply };
+          return next;
+        });
+      };
 
-      if (response.ok) {
-        const reply =
-          extractReply(response.data) ??
-          "Thanks! I've passed that along — our team will follow up shortly. In the meantime, feel free to explore our Services page.";
-        setMessages((prev) => [...prev, { id: newId(), role: "assistant", content: reply }]);
-        if (voiceReplies || spoken) speak(reply);
-      } else {
-        const timedOut = response.error === "Request timed out";
+      try {
+        const res = await fetch(CHAT_API_URL, {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({
+            messages: history.map((m) => ({ role: m.role, content: m.content })),
+          }),
+        });
+
+        if (!res.ok || !res.body) {
+          let message = "I couldn't reach the assistant right now. Please try again in a moment, or email info@quantumailab.in.";
+          try {
+            const data = await res.json();
+            if (typeof data?.error === "string") message = data.error;
+          } catch { /* non-JSON error body */ }
+          setMessages((prev) => [...prev, { id: assistantId, role: "assistant", content: message }]);
+        } else {
+          // Stream the reply (SSE, chat-completions deltas) into the bubble.
+          const reader = res.body.getReader();
+          const decoder = new TextDecoder();
+          let buffer = "";
+          for (;;) {
+            const { done, value } = await reader.read();
+            if (done) break;
+            buffer += decoder.decode(value, { stream: true });
+            const lines = buffer.split("\n");
+            buffer = lines.pop() ?? "";
+            for (const line of lines) {
+              const trimmed = line.trim();
+              if (!trimmed.startsWith("data:")) continue;
+              const data = trimmed.slice(5).trim();
+              if (data === "[DONE]") continue;
+              try {
+                const json = JSON.parse(data);
+                const delta = json?.choices?.[0]?.delta?.content;
+                if (typeof delta === "string") pushDelta(delta);
+              } catch { /* keep-alive / partial frame */ }
+            }
+          }
+          if (!reply.trim()) {
+            reply = "Sorry, I didn't get a response. Please try again.";
+            pushDelta("");
+          }
+          if (voiceReplies || spoken) speak(reply);
+        }
+      } catch {
         setMessages((prev) => [
           ...prev,
           {
-            id: newId(),
+            id: assistantId,
             role: "assistant",
-            content: timedOut
-              ? "That took longer than expected. Please try again, or email support@quantumailab.in."
-              : "I couldn't reach the assistant right now. Please try again in a moment, or email support@quantumailab.in.",
+            content: "I couldn't reach the assistant right now. Please check your connection and try again, or email info@quantumailab.in.",
           },
         ]);
       }
