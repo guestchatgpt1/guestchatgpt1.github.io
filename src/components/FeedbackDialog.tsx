@@ -11,7 +11,7 @@ import {
 import { useToast } from "@/hooks/use-toast";
 import { feedbackSchema, type FeedbackInput } from "@/lib/validation";
 import { callWebhook, getCaptchaToken, HONEYPOT_FIELD, isHoneypotTripped } from "@/lib/webhook";
-import { FEEDBACK_FALLBACK_FORM_URL, WEBHOOKS } from "@/lib/webhooks";
+import { FEEDBACK_FALLBACK_FORM_URL } from "@/lib/webhooks";
 
 const FEEDBACK_API_URL = `${import.meta.env.VITE_SUPABASE_URL}/functions/v1/feedback`;
 

@@ -131,6 +131,7 @@ describe("contact webhook (POST)", () => {
     });
     const [, init] = fetchMock.mock.calls[0];
     expect(init.method).toBe("POST");
+    expect(WEBHOOKS.contact.url).toBe("https://sovivik.app.n8n.cloud/webhook/QuantumAILab-contact-us");
     expect((init.headers as Record<string, string>)["Content-Type"]).toBe("application/json");
     const body = JSON.parse(init.body as string);
     expect(body).toMatchObject({
