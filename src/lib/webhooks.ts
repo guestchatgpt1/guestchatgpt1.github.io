@@ -8,7 +8,7 @@
 
 const env = (import.meta as unknown as { env?: Record<string, string | undefined> }).env ?? {};
 
-const N8N_HOST = "https://fopobiv.app.n8n.cloud/webhook";
+const N8N_HOST = "https://sovivik.app.n8n.cloud/webhook";
 
 export interface WebhookEndpoint {
   url: string;
@@ -29,7 +29,7 @@ export const WEBHOOKS = {
   /** AI chat assistant. */
   chat: {
     url: env.VITE_CHAT_WEBHOOK_URL ?? `${N8N_HOST}/chat-assistant`,
-    method: "GET",
+    method: "POST",
   },
   /** Feedback popup form. */
   feedback: {

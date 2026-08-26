@@ -79,7 +79,7 @@ describe("newsletter webhook (GET subscribe)", () => {
     expect(init.method).toBe("GET");
     expect(init.body).toBeUndefined();
     const url = new URL(calledUrl as string);
-    expect(url.origin + url.pathname).toBe("https://fopobiv.app.n8n.cloud/webhook/QuantumAILabNewsletter");
+    expect(url.origin + url.pathname).toBe("https://sovivik.app.n8n.cloud/webhook/QuantumAILabNewsletter");
     expect(url.searchParams.get("action")).toBe("subscribe");
     expect(url.searchParams.get("email")).toBe("user@example.com");
     expect((init.headers as Record<string, string>)["X-Request-Id"]).toBeTruthy();
@@ -131,6 +131,7 @@ describe("contact webhook (POST)", () => {
     });
     const [, init] = fetchMock.mock.calls[0];
     expect(init.method).toBe("POST");
+    expect(WEBHOOKS.contact.url).toBe("https://sovivik.app.n8n.cloud/webhook/QuantumAILab-contact-us");
     expect((init.headers as Record<string, string>)["Content-Type"]).toBe("application/json");
     const body = JSON.parse(init.body as string);
     expect(body).toMatchObject({
@@ -155,22 +156,22 @@ describe("contact webhook (POST)", () => {
   });
 });
 
-describe("chat webhook (GET)", () => {
-  it("sends the message as a query param and parses the reply", async () => {
+describe("chat webhook (POST)", () => {
+  it("sends the conversation as JSON and parses the reply", async () => {
     fetchMock.mockReturnValueOnce(mockResponse({ body: { reply: "hi there" } }));
     const res = await callWebhook({
       name: "chat.message",
       url: WEBHOOKS.chat.url,
       method: WEBHOOKS.chat.method,
-      query: { message: "hello", source: "quantumailab.website" },
+      body: { message: "hello", messages: [{ role: "user", content: "hello" }], source: "quantumailab.website" },
     });
     expect(res.ok).toBe(true);
     expect((res.data as { reply: string }).reply).toBe("hi there");
     const [calledUrl, init] = fetchMock.mock.calls[0];
-    expect(init.method).toBe("GET");
+    expect(init.method).toBe("POST");
     const url = new URL(calledUrl as string);
-    expect(url.origin + url.pathname).toBe("https://fopobiv.app.n8n.cloud/webhook/chat-assistant");
-    expect(url.searchParams.get("message")).toBe("hello");
+    expect(url.origin + url.pathname).toBe("https://sovivik.app.n8n.cloud/webhook/chat-assistant");
+    expect(JSON.parse(init.body as string)).toMatchObject({ message: "hello", source: "quantumailab.website" });
   });
 
   it("treats network failure as ok:false (no throw)", async () => {
@@ -179,7 +180,7 @@ describe("chat webhook (GET)", () => {
       name: "chat.message",
       url: WEBHOOKS.chat.url,
       method: WEBHOOKS.chat.method,
-      query: { message: "hi" },
+      body: { message: "hi" },
     });
     expect(res.ok).toBe(false);
     expect(res.status).toBe(0);
