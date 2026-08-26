@@ -41,6 +41,21 @@ Deno.serve(async (req) => {
         signal: controller.signal,
         headers: { Accept: "application/json" },
       });
+
+      // The supplied production URL currently advertises POST at runtime even
+      // though its contract is GET. Retry server-side only for that explicit
+      // method-registration mismatch so users can still submit feedback.
+      if (upstream.status === 404) {
+        const detail = await upstream.clone().text();
+        if (detail.includes("not registered for GET") && detail.includes("POST")) {
+          upstream = await fetch(FEEDBACK_WEBHOOK_URL, {
+            method: "POST",
+            signal: controller.signal,
+            headers: { "Content-Type": "application/json", Accept: "application/json" },
+            body: JSON.stringify(parsed.data),
+          });
+        }
+      }
     } finally {
       clearTimeout(timeout);
     }
