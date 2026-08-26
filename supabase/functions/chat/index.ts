@@ -56,6 +56,23 @@ Deno.serve(async (req) => {
           source: "quantumailab.website",
         }),
       });
+
+      // Keep POST as the app contract. If the remote workflow has not yet
+      // published its POST trigger, bridge its legacy GET trigger server-side
+      // without exposing chat messages in the user's browser URL.
+      if (res.status === 404) {
+        const detail = await res.clone().text();
+        if (detail.includes("not registered for POST") && detail.includes("GET")) {
+          const compatibilityUrl = new URL(CHAT_WEBHOOK_URL);
+          compatibilityUrl.searchParams.set("message", history[history.length - 1].content);
+          compatibilityUrl.searchParams.set("source", "quantumailab.website");
+          res = await fetch(compatibilityUrl, {
+            method: "GET",
+            signal: controller.signal,
+            headers: { Accept: "application/json" },
+          });
+        }
+      }
     } finally {
       clearTimeout(timeout);
     }
