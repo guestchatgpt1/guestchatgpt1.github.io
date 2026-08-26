@@ -1,44 +1,36 @@
-/**
- * QuantumAI Lab assistant.
- *
- * Streams a grounded, conversational reply from the Lovable AI gateway so the
- * widget always gets a fast, reliable answer (the previous n8n webhook was
- * intermittently timing out for 90s+).
- */
+/** QuantumAI Lab chat proxy for the configured n8n assistant. */
 const corsHeaders = {
   "Access-Control-Allow-Origin": "*",
   "Access-Control-Allow-Headers": "authorization, x-client-info, apikey, content-type",
   "Access-Control-Allow-Methods": "POST, OPTIONS",
 };
 
-const SYSTEM_PROMPT = `You are the QuantumAI Lab assistant — a friendly, concise expert guide on the QuantumAI Lab website (tagline: "Where Intelligence Meets Infinity").
+const CHAT_WEBHOOK_URL = "https://sovivik.app.n8n.cloud/webhook/chat-assistant";
 
-About the company:
-- QuantumAI Lab builds quantum computing and AI solutions for enterprises.
-- Services: Quantum Computing, AI & Machine Learning, Hybrid Quantum-Classical Systems, Research & Consulting, Enterprise Solutions.
-- Pricing: tiered plans (Starter, Growth/Professional, Enterprise) — for exact figures point users to the /pricing page.
-- Contact: info@quantumailab.in, +91-8652074439, Mumbai, India-421204. Leadership: Mr. Sateesh Singh (M.Sc., MCA).
-- Site pages: /about, /services, /technology, /case-studies, /pricing, /blog, /faq, /contact.
+type Message = { role: "user" | "assistant"; content: string };
 
-Rules:
-- Answer in 2-4 short sentences unless asked for detail. Plain, natural language.
-- Never invent prices, client names, or capabilities. If unsure, say so and point to /contact.
-- Suggest a relevant page link when helpful.`;
+const asReply = (value: unknown): string => {
+  if (typeof value === "string") return value;
+  if (!value || typeof value !== "object") return "";
+  const record = value as Record<string, unknown>;
+  for (const key of ["reply", "response", "output", "message", "text"]) {
+    if (typeof record[key] === "string") return record[key] as string;
+  }
+  if (Array.isArray(value) && value.length > 0) return asReply(value[0]);
+  return "";
+};
+
+const json = (body: unknown, status: number) => new Response(JSON.stringify(body), {
+  status,
+  headers: { ...corsHeaders, "Content-Type": "application/json" },
+});
 
 Deno.serve(async (req) => {
   if (req.method === "OPTIONS") return new Response(null, { headers: corsHeaders });
 
   try {
-    const apiKey = Deno.env.get("LOVABLE_API_KEY");
-    if (!apiKey) {
-      return new Response(JSON.stringify({ error: "AI is not configured." }), {
-        status: 500,
-        headers: { ...corsHeaders, "Content-Type": "application/json" },
-      });
-    }
-
     const { messages } = (await req.json()) as {
-      messages?: { role: "user" | "assistant"; content: string }[];
+      messages?: Message[];
     };
 
     const history = (messages ?? [])
@@ -47,49 +39,49 @@ Deno.serve(async (req) => {
       .map((m) => ({ role: m.role === "assistant" ? "assistant" : "user", content: m.content.slice(0, 2000) }));
 
     if (history.length === 0) {
-      return new Response(JSON.stringify({ error: "No message provided." }), {
-        status: 400,
-        headers: { ...corsHeaders, "Content-Type": "application/json" },
-      });
+      return json({ error: "No message provided." }, 400);
     }
 
-    const res = await fetch("https://ai.gateway.lovable.dev/v1/chat/completions", {
-      method: "POST",
-      headers: {
-        "Lovable-API-Key": apiKey,
-        "Content-Type": "application/json",
-        "X-Lovable-AIG-SDK": "fetch",
-      },
-      body: JSON.stringify({
-        model: "google/gemini-2.5-flash",
-        stream: true,
-        messages: [{ role: "system", content: SYSTEM_PROMPT }, ...history],
-      }),
-    });
+    const controller = new AbortController();
+    const timeout = setTimeout(() => controller.abort(), 20_000);
+    let res: Response;
+    try {
+      res = await fetch(CHAT_WEBHOOK_URL, {
+        method: "POST",
+        signal: controller.signal,
+        headers: { "Content-Type": "application/json", Accept: "application/json" },
+        body: JSON.stringify({
+          message: history[history.length - 1].content,
+          messages: history,
+          source: "quantumailab.website",
+        }),
+      });
+    } finally {
+      clearTimeout(timeout);
+    }
 
     if (!res.ok) {
       const detail = await res.text();
-      const message =
-        res.status === 429
-          ? "The assistant is busy right now. Please try again in a moment."
-          : res.status === 402
-            ? "The assistant is temporarily unavailable. Please email info@quantumailab.in."
-            : "The assistant could not answer that right now.";
-      console.error("ai_gateway_error", res.status, detail.slice(0, 500));
-      return new Response(JSON.stringify({ error: message }), {
-        status: res.status,
-        headers: { ...corsHeaders, "Content-Type": "application/json" },
-      });
+      console.error("chat_webhook_error", res.status, detail.slice(0, 500));
+      return json({ error: "The assistant could not answer that right now." }, 502);
     }
 
-    return new Response(res.body, {
+    const contentType = res.headers.get("content-type") ?? "";
+    const raw = await res.text();
+    let payload: unknown = raw;
+    if (contentType.includes("application/json")) {
+      try { payload = JSON.parse(raw); } catch { /* use raw text */ }
+    }
+    const reply = asReply(payload).trim();
+    if (!reply) return json({ error: "The assistant returned an empty response." }, 502);
+
+    const stream = `data: ${JSON.stringify({ choices: [{ delta: { content: reply } }] })}\n\ndata: [DONE]\n\n`;
+    return new Response(stream, {
       headers: { ...corsHeaders, "Content-Type": "text/event-stream", "Cache-Control": "no-cache" },
     });
   } catch (err) {
     console.error("chat_error", err);
-    return new Response(JSON.stringify({ error: "Unexpected error. Please try again." }), {
-      status: 500,
-      headers: { ...corsHeaders, "Content-Type": "application/json" },
-    });
+    const timedOut = err instanceof DOMException && err.name === "AbortError";
+    return json({ error: timedOut ? "The assistant timed out. Please try again." : "Unexpected error. Please try again." }, timedOut ? 504 : 500);
   }
 });
