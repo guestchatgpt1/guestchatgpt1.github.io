@@ -2,6 +2,10 @@ import { corsHeaders } from "npm:@supabase/supabase-js@2/cors";
 import { z } from "npm:zod@3.25.76";
 
 const FEEDBACK_WEBHOOK_URL = "https://kayoge6.app.n8n.cloud/webhook/feedback";
+const responseHeaders = {
+  ...corsHeaders,
+  "Access-Control-Allow-Headers": `${corsHeaders["Access-Control-Allow-Headers"]}, x-request-id`,
+};
 
 const FeedbackSchema = z.object({
   name: z.string().trim().min(2).max(100),
@@ -16,11 +20,11 @@ const FeedbackSchema = z.object({
 const json = (body: unknown, status = 200) =>
   new Response(JSON.stringify(body), {
     status,
-    headers: { ...corsHeaders, "Content-Type": "application/json" },
+    headers: { ...responseHeaders, "Content-Type": "application/json" },
   });
 
 Deno.serve(async (req) => {
-  if (req.method === "OPTIONS") return new Response("ok", { headers: corsHeaders });
+  if (req.method === "OPTIONS") return new Response("ok", { headers: responseHeaders });
   if (req.method !== "POST") return json({ error: "Method not allowed." }, 405);
 
   try {
