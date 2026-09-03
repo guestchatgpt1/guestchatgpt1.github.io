@@ -33,8 +33,8 @@ export const WEBHOOKS = {
   },
   /** Feedback popup form. */
   feedback: {
-    url: env.VITE_FEEDBACK_WEBHOOK_URL ?? "https://kayoge6.app.n8n.cloud/webhook/feedback",
-    method: "GET",
+    url: env.VITE_FEEDBACK_WEBHOOK_URL ?? "https://mibikef.app.n8n.cloud/webhook/feedback",
+    method: "POST",
   },
 } satisfies Record<string, WebhookEndpoint>;
 

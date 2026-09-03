@@ -1,7 +1,7 @@
 import { corsHeaders } from "npm:@supabase/supabase-js@2/cors";
 import { z } from "npm:zod@3.25.76";
 
-const FEEDBACK_WEBHOOK_URL = "https://kayoge6.app.n8n.cloud/webhook/feedback";
+const FEEDBACK_WEBHOOK_URL = "https://mibikef.app.n8n.cloud/webhook/feedback";
 const responseHeaders = {
   ...corsHeaders,
   "Access-Control-Allow-Headers": `${corsHeaders["Access-Control-Allow-Headers"]}, x-request-id`,
@@ -31,35 +31,16 @@ Deno.serve(async (req) => {
     const parsed = FeedbackSchema.safeParse(await req.json());
     if (!parsed.success) return json({ error: "Please check the feedback fields and try again." }, 400);
 
-    const url = new URL(FEEDBACK_WEBHOOK_URL);
-    for (const [key, value] of Object.entries(parsed.data)) {
-      if (value !== undefined) url.searchParams.set(key, value);
-    }
-
     const controller = new AbortController();
     const timeout = setTimeout(() => controller.abort(), 15_000);
     let upstream: Response;
     try {
-      upstream = await fetch(url, {
-        method: "GET",
+      upstream = await fetch(FEEDBACK_WEBHOOK_URL, {
+        method: "POST",
         signal: controller.signal,
-        headers: { Accept: "application/json" },
+        headers: { "Content-Type": "application/json", Accept: "application/json" },
+        body: JSON.stringify(parsed.data),
       });
-
-      // The supplied production URL currently advertises POST at runtime even
-      // though its contract is GET. Retry server-side only for that explicit
-      // method-registration mismatch so users can still submit feedback.
-      if (upstream.status === 404) {
-        const detail = await upstream.clone().text();
-        if (detail.includes("not registered for GET") && detail.includes("POST")) {
-          upstream = await fetch(FEEDBACK_WEBHOOK_URL, {
-            method: "POST",
-            signal: controller.signal,
-            headers: { "Content-Type": "application/json", Accept: "application/json" },
-            body: JSON.stringify(parsed.data),
-          });
-        }
-      }
     } finally {
       clearTimeout(timeout);
     }
