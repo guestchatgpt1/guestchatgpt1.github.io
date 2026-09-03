@@ -90,7 +90,7 @@ const FeedbackDialog = ({ open, onOpenChange }: FeedbackDialogProps) => {
     };
 
     // Submit through our backend proxy: it validates the payload and performs
-    // the required GET request server-side, avoiding browser CORS failures.
+    // the required POST request server-side, avoiding browser CORS failures.
     const result = await callWebhook({
       name: "feedback.submit",
       url: FEEDBACK_API_URL,
