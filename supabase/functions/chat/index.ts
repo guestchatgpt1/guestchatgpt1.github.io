@@ -5,7 +5,7 @@ const corsHeaders = {
   "Access-Control-Allow-Methods": "POST, OPTIONS",
 };
 
-const CHAT_WEBHOOK_URL = "https://sovivik.app.n8n.cloud/webhook/chat-assistant";
+const CHAT_WEBHOOK_URL = "https://wewefom.app.n8n.cloud/webhook/chat-assistant";
 
 type Message = { role: "user" | "assistant"; content: string };
 
@@ -46,33 +46,16 @@ Deno.serve(async (req) => {
     const timeout = setTimeout(() => controller.abort(), 20_000);
     let res: Response;
     try {
-      res = await fetch(CHAT_WEBHOOK_URL, {
-        method: "POST",
-        signal: controller.signal,
-        headers: { "Content-Type": "application/json", Accept: "application/json" },
-        body: JSON.stringify({
-          message: history[history.length - 1].content,
-          messages: history,
-          source: "quantumailab.website",
-        }),
-      });
+      const chatUrl = new URL(CHAT_WEBHOOK_URL);
+      chatUrl.searchParams.set("message", history[history.length - 1].content);
+      chatUrl.searchParams.set("messages", JSON.stringify(history));
+      chatUrl.searchParams.set("source", "quantumailab.website");
 
-      // Keep POST as the app contract. If the remote workflow has not yet
-      // published its POST trigger, bridge its legacy GET trigger server-side
-      // without exposing chat messages in the user's browser URL.
-      if (res.status === 404) {
-        const detail = await res.clone().text();
-        if (detail.includes("not registered for POST") && detail.includes("GET")) {
-          const compatibilityUrl = new URL(CHAT_WEBHOOK_URL);
-          compatibilityUrl.searchParams.set("message", history[history.length - 1].content);
-          compatibilityUrl.searchParams.set("source", "quantumailab.website");
-          res = await fetch(compatibilityUrl, {
-            method: "GET",
-            signal: controller.signal,
-            headers: { Accept: "application/json" },
-          });
-        }
-      }
+      res = await fetch(chatUrl, {
+        method: "GET",
+        signal: controller.signal,
+        headers: { Accept: "application/json" },
+      });
     } finally {
       clearTimeout(timeout);
     }
