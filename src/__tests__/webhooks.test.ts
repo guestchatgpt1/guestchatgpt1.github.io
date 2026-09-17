@@ -208,7 +208,7 @@ describe("feedback webhook (POST)", () => {
     const [calledUrl, init] = fetchMock.mock.calls[0];
     expect(init.method).toBe("POST");
     const url = new URL(calledUrl as string);
-    expect(url.origin + url.pathname).toBe("https://mibikef.app.n8n.cloud/webhook/feedback");
+    expect(url.origin + url.pathname).toBe("https://xacade.app.n8n.cloud/webhook/feedback");
     expect((init.headers as Record<string, string>)["Content-Type"]).toBe("application/json");
     expect(JSON.parse(init.body as string)).toMatchObject({
       name: "Ada Lovelace",
