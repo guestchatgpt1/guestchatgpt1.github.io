@@ -1,4 +1,4 @@
-import { useCallback, useEffect, useRef, useState, type FormEvent, type KeyboardEvent } from "react";
+import { useCallback, useEffect, useRef, useState, type FormEvent, type KeyboardEvent, type ReactNode } from "react";
 import { MessageCircle, Send, X, Loader2, Mic, MicOff, Volume2, VolumeX } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { toast } from "@/hooks/use-toast";
@@ -19,6 +19,52 @@ const WELCOME: ChatMessage = {
   role: "assistant",
   content:
     "Hi! I'm the QuantumAI Lab assistant. Ask me about our services, technology, pricing, or how quantum-AI can help your team. You can type or tap the mic to talk.",
+};
+
+const renderInlineMarkdown = (text: string): ReactNode[] =>
+  text.split(/(\*\*[^*]+\*\*)/g).map((part, index) => {
+    if (part.startsWith("**") && part.endsWith("**")) {
+      return <strong key={`${part}-${index}`} className="font-semibold">{part.slice(2, -2)}</strong>;
+    }
+    return <span key={`${part}-${index}`}>{part}</span>;
+  });
+
+const renderMarkdown = (content: string): ReactNode => {
+  const lines = content.replace(/\r\n?/g, "\n").split("\n");
+  const blocks: ReactNode[] = [];
+  let bullets: string[] = [];
+
+  const flushBullets = () => {
+    if (bullets.length === 0) return;
+    blocks.push(
+      <ul key={`list-${blocks.length}`} className="my-2 list-disc space-y-1 pl-5">
+        {bullets.map((item, index) => <li key={`${item}-${index}`}>{renderInlineMarkdown(item)}</li>)}
+      </ul>,
+    );
+    bullets = [];
+  };
+
+  lines.forEach((line, index) => {
+    const trimmed = line.trim();
+    if (!trimmed) {
+      flushBullets();
+      return;
+    }
+    const bullet = trimmed.match(/^[-*]\s+(.+)$/);
+    if (bullet) {
+      bullets.push(bullet[1]);
+      return;
+    }
+    flushBullets();
+    const heading = trimmed.match(/^#{1,6}\s+(.+)$/);
+    if (heading) {
+      blocks.push(<p key={`heading-${index}`} className="mt-2 font-semibold first:mt-0">{renderInlineMarkdown(heading[1])}</p>);
+      return;
+    }
+    blocks.push(<p key={`paragraph-${index}`} className="my-1 first:mt-0 last:mb-0">{renderInlineMarkdown(trimmed)}</p>);
+  });
+  flushBullets();
+  return blocks;
 };
 
 const newId = () =>
@@ -317,13 +363,13 @@ const ChatBot = () => {
             {messages.map((m) => (
               <div key={m.id} className={`flex ${m.role === "user" ? "justify-end" : "justify-start"}`}>
                 <div
-                  className={`max-w-[85%] rounded-2xl px-3.5 py-2 text-sm whitespace-pre-wrap break-words ${
+                  className={`max-w-[85%] rounded-2xl px-3.5 py-2 text-sm break-words ${
                     m.role === "user"
                       ? "bg-primary text-primary-foreground rounded-br-sm"
                       : "bg-muted text-foreground rounded-bl-sm"
                   }`}
                 >
-                  {m.content}
+                  {m.role === "assistant" ? renderMarkdown(m.content) : <span className="whitespace-pre-wrap">{m.content}</span>}
                 </div>
               </div>
             ))}
