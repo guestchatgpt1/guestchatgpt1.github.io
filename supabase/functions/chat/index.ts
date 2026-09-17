@@ -50,6 +50,8 @@ Deno.serve(async (req) => {
       chatUrl.searchParams.set("message", history[history.length - 1].content);
       chatUrl.searchParams.set("messages", JSON.stringify(history));
       chatUrl.searchParams.set("source", "quantumailab.website");
+      chatUrl.searchParams.set("response_style", "concise");
+      chatUrl.searchParams.set("instruction", "Answer in a concise, helpful format. Use short paragraphs and at most 4 bullets. Avoid repeating the company introduction unless asked.");
 
       res = await fetch(chatUrl, {
         method: "GET",
