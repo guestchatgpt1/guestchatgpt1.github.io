@@ -5,3 +5,6 @@ verify_jwt = false
 
 [functions.articles]
 verify_jwt = false
+
+[functions.feedback]
+verify_jwt = false

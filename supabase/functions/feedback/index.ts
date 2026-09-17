@@ -1,7 +1,7 @@
 import { corsHeaders } from "npm:@supabase/supabase-js@2/cors";
 import { z } from "npm:zod@3.25.76";
 
-const FEEDBACK_WEBHOOK_URL = "https://mibikef.app.n8n.cloud/webhook/feedback";
+const FEEDBACK_WEBHOOK_URL = "https://xacade.app.n8n.cloud/webhook/feedback";
 const responseHeaders = {
   ...corsHeaders,
   "Access-Control-Allow-Headers": `${corsHeaders["Access-Control-Allow-Headers"]}, x-request-id`,

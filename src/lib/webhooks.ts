@@ -33,7 +33,7 @@ export const WEBHOOKS = {
   },
   /** Feedback popup form. */
   feedback: {
-    url: env.VITE_FEEDBACK_WEBHOOK_URL ?? "https://mibikef.app.n8n.cloud/webhook/feedback",
+    url: env.VITE_FEEDBACK_WEBHOOK_URL ?? "https://xacade.app.n8n.cloud/webhook/feedback",
     method: "POST",
   },
 } satisfies Record<string, WebhookEndpoint>;
@@ -43,7 +43,7 @@ export type WebhookName = keyof typeof WEBHOOKS;
 /** Hosted n8n form used as a fallback when the feedback webhook is unreachable. */
 export const FEEDBACK_FALLBACK_FORM_URL =
   env.VITE_FEEDBACK_FALLBACK_FORM_URL ??
-  "https://kayoge6.app.n8n.cloud/form/3758fb17-b23a-4263-9d39-937774107fc0";
+  "https://xacade.app.n8n.cloud/form/cfcf4fd4-dba8-417c-ba04-19438a58409a";
 
 /** Public social + contact profiles, used across the site. */
 export const SOCIAL_LINKS = {
