@@ -20,6 +20,50 @@ const asReply = (value: unknown): string => {
   return "";
 };
 
+const shorten = (text: string, limit: number) =>
+  text.length > limit ? `${text.slice(0, limit).trimEnd()}…` : text;
+
+/** Keep upstream marketing replies useful without allowing oversized chat bubbles. */
+const compactReply = (text: string): string => {
+  const lines = text.replace(/\r\n?/g, "\n").split("\n");
+  const output: string[] = [];
+  let bulletCount = 0;
+  let paragraphCount = 0;
+  let totalLength = 0;
+
+  for (const line of lines) {
+    const trimmed = line.trim();
+    if (!trimmed) {
+      if (output.length > 0 && output[output.length - 1] !== "") output.push("");
+      continue;
+    }
+
+    const bullet = trimmed.match(/^[-*]\s+(.+)$/);
+    if (bullet) {
+      if (bulletCount >= 4) continue;
+      const next = `- ${shorten(bullet[1], 170)}`;
+      if (totalLength + next.length > 900) continue;
+      output.push(next);
+      totalLength += next.length;
+      bulletCount += 1;
+      continue;
+    }
+
+    const isHeading = /^(#{1,6}\s+|\*\*[^*]+\*\*:?$)/.test(trimmed);
+    if (!isHeading) {
+      if (paragraphCount >= 2) continue;
+      paragraphCount += 1;
+    }
+
+    const next = shorten(trimmed, isHeading ? 100 : 260);
+    if (totalLength + next.length > 900) continue;
+    output.push(next);
+    totalLength += next.length;
+  }
+
+  return output.join("\n").replace(/\n{3,}/g, "\n\n").trim();
+};
+
 const json = (body: unknown, status: number) => new Response(JSON.stringify(body), {
   status,
   headers: { ...corsHeaders, "Content-Type": "application/json" },
@@ -74,7 +118,7 @@ Deno.serve(async (req) => {
     if (contentType.includes("application/json")) {
       try { payload = JSON.parse(raw); } catch { /* use raw text */ }
     }
-    const reply = asReply(payload).trim();
+    const reply = compactReply(asReply(payload).trim());
     if (!reply) return json({ error: "The assistant returned an empty response." }, 502);
 
     const stream = `data: ${JSON.stringify({ choices: [{ delta: { content: reply } }] })}\n\ndata: [DONE]\n\n`;
