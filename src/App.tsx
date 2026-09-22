@@ -37,6 +37,58 @@ const PageLoader = () => (
   </div>
 );
 
+/** Private backend area: rendered bare, without any public site chrome. */
+const AdminArea = () => (
+  <Suspense fallback={<PageLoader />}>
+    <Routes>
+      <Route path="/admin" element={<AdminWebhooks />} />
+      <Route path="/admin/webhooks" element={<AdminWebhooks />} />
+    </Routes>
+  </Suspense>
+);
+
+const SiteArea = () => (
+  <>
+    <a
+      href="#main-content"
+      className="sr-only focus:not-sr-only focus:fixed focus:top-2 focus:left-2 focus:z-[100] focus:bg-primary focus:text-primary-foreground focus:px-4 focus:py-2 focus:rounded-md focus:text-sm focus:font-medium"
+    >
+      Skip to main content
+    </a>
+    <ParticleBackground />
+    <BackToTop />
+    <ChatBot />
+    <FeedbackButton />
+    <Navbar />
+    <main id="main-content" className="relative z-10">
+      <Suspense fallback={<PageLoader />}>
+        <Routes>
+          <Route path="/" element={<Index />} />
+          <Route path="/about" element={<About />} />
+          <Route path="/services" element={<Services />} />
+          <Route path="/technology" element={<Technology />} />
+          <Route path="/case-studies" element={<CaseStudies />} />
+          <Route path="/blog" element={<Blog />} />
+          <Route path="/blog/:slug" element={<BlogPost />} />
+          <Route path="/pricing" element={<Pricing />} />
+          <Route path="/contact" element={<Contact />} />
+          <Route path="/faq" element={<FAQ />} />
+          <Route path="/unsubscribe" element={<Unsubscribe />} />
+          <Route path="/privacy" element={<Privacy />} />
+          <Route path="/terms" element={<Terms />} />
+          <Route path="*" element={<NotFound />} />
+        </Routes>
+      </Suspense>
+      <Footer />
+    </main>
+  </>
+);
+
+const AppShell = () => {
+  const { pathname } = useLocation();
+  return pathname === "/admin" || pathname.startsWith("/admin/") ? <AdminArea /> : <SiteArea />;
+};
+
 const App = () => (
   <ErrorBoundary>
     <QueryClientProvider client={queryClient}>
@@ -45,38 +97,7 @@ const App = () => (
         <Sonner />
         <BrowserRouter>
           <ScrollToTop />
-          <a
-            href="#main-content"
-            className="sr-only focus:not-sr-only focus:fixed focus:top-2 focus:left-2 focus:z-[100] focus:bg-primary focus:text-primary-foreground focus:px-4 focus:py-2 focus:rounded-md focus:text-sm focus:font-medium"
-          >
-            Skip to main content
-          </a>
-          <ParticleBackground />
-          <BackToTop />
-          <ChatBot />
-          <FeedbackButton />
-          <Navbar />
-          <main id="main-content" className="relative z-10">
-            <Suspense fallback={<PageLoader />}>
-              <Routes>
-                <Route path="/" element={<Index />} />
-                <Route path="/about" element={<About />} />
-                <Route path="/services" element={<Services />} />
-                <Route path="/technology" element={<Technology />} />
-                <Route path="/case-studies" element={<CaseStudies />} />
-                <Route path="/blog" element={<Blog />} />
-                <Route path="/blog/:slug" element={<BlogPost />} />
-                <Route path="/pricing" element={<Pricing />} />
-                <Route path="/contact" element={<Contact />} />
-                <Route path="/faq" element={<FAQ />} />
-                <Route path="/unsubscribe" element={<Unsubscribe />} />
-                <Route path="/privacy" element={<Privacy />} />
-                <Route path="/terms" element={<Terms />} />
-                <Route path="*" element={<NotFound />} />
-              </Routes>
-            </Suspense>
-            <Footer />
-          </main>
+          <AppShell />
         </BrowserRouter>
       </TooltipProvider>
     </QueryClientProvider>
