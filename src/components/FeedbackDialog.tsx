@@ -11,7 +11,7 @@ import {
 import { useToast } from "@/hooks/use-toast";
 import { feedbackSchema, type FeedbackInput } from "@/lib/validation";
 import { callWebhook, getCaptchaToken, HONEYPOT_FIELD, isHoneypotTripped } from "@/lib/webhook";
-import { FEEDBACK_FALLBACK_FORM_URL } from "@/lib/webhooks";
+import { getFeedbackFallbackFormUrl } from "@/lib/webhooks";
 
 const FEEDBACK_API_URL = `${import.meta.env.VITE_SUPABASE_URL}/functions/v1/feedback`;
 
@@ -236,7 +236,7 @@ const FeedbackDialog = ({ open, onOpenChange }: FeedbackDialogProps) => {
                 <p className="text-sm text-destructive" role="alert">
                   We couldn't submit your feedback ({lastError}). Please try again, or{" "}
                   <a
-                    href={FEEDBACK_FALLBACK_FORM_URL}
+                    href={getFeedbackFallbackFormUrl()}
                     target="_blank"
                     rel="noopener noreferrer"
                     className="underline underline-offset-2 hover:text-foreground"
