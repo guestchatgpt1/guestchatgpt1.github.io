@@ -27,6 +27,7 @@ const Terms = lazy(() => import("./pages/Terms"));
 const FAQ = lazy(() => import("./pages/FAQ"));
 const Unsubscribe = lazy(() => import("./pages/Unsubscribe"));
 const NotFound = lazy(() => import("./pages/NotFound"));
+const AdminWebhooks = lazy(() => import("./pages/admin/AdminWebhooks"));
 
 const queryClient = new QueryClient();
 
