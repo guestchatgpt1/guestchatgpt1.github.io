@@ -1,9 +1,9 @@
 /**
  * Single source of truth for every outbound n8n webhook.
  *
- * Keeping the URLs + HTTP methods in one place means an endpoint migration
- * is a one-line change and nothing can drift out of sync. Each entry can be
- * overridden at build time with a Vite env var.
+ * The values below are the build-time defaults. At runtime they are
+ * overridden by the rows stored in the backend `webhook_settings` table,
+ * which are managed from the private admin settings page.
  */
 
 const env = (import.meta as unknown as { env?: Record<string, string | undefined> }).env ?? {};
@@ -44,6 +44,33 @@ export type WebhookName = keyof typeof WEBHOOKS;
 export const FEEDBACK_FALLBACK_FORM_URL =
   env.VITE_FEEDBACK_FALLBACK_FORM_URL ??
   "https://xacade.app.n8n.cloud/form/cfcf4fd4-dba8-417c-ba04-19438a58409a";
+
+let feedbackFallbackFormUrl = FEEDBACK_FALLBACK_FORM_URL;
+
+export const getFeedbackFallbackFormUrl = () => feedbackFallbackFormUrl;
+
+/** Key used for the fallback-form row in the backend settings table. */
+export const FEEDBACK_FALLBACK_KEY = "feedback_fallback_form";
+
+/**
+ * Apply runtime overrides loaded from the backend settings table.
+ * Unknown keys are ignored so extra rows can be added safely.
+ */
+export const applyWebhookOverrides = (
+  rows: Array<{ key: string; url: string; method: string; enabled: boolean }>,
+) => {
+  for (const row of rows) {
+    if (!row.enabled || !row.url) continue;
+    if (row.key === FEEDBACK_FALLBACK_KEY) {
+      feedbackFallbackFormUrl = row.url;
+      continue;
+    }
+    const entry = (WEBHOOKS as Record<string, WebhookEndpoint>)[row.key];
+    if (!entry) continue;
+    entry.url = row.url;
+    if (row.method === "GET" || row.method === "POST") entry.method = row.method;
+  }
+};
 
 /** Public social + contact profiles, used across the site. */
 export const SOCIAL_LINKS = {

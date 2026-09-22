@@ -1,0 +1,20 @@
+{
+  "version": "7",
+  "dialect": "postgresql",
+  "entries": [
+    {
+      "idx": 0,
+      "version": "7",
+      "when": 1790092371427,
+      "tag": "0000_webhook_settings_and_admin_roles",
+      "breakpoints": true
+    },
+    {
+      "idx": 1,
+      "version": "7",
+      "when": 1790092426834,
+      "tag": "0001_claim_first_admin",
+      "breakpoints": true
+    }
+  ]
+}
