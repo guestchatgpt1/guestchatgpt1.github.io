@@ -15,6 +15,13 @@
       "when": 1790092426834,
       "tag": "0001_claim_first_admin",
       "breakpoints": true
+    },
+    {
+      "idx": 2,
+      "version": "7",
+      "when": 1790173038803,
+      "tag": "0002_secure_webhook_admin_access_and_profiles",
+      "breakpoints": true
     }
   ]
 }
