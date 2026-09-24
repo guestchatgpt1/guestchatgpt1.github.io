@@ -31,6 +31,7 @@ const FeedbackDialog = ({ open, onOpenChange }: FeedbackDialogProps) => {
   const [errors, setErrors] = useState<Partial<Record<keyof FeedbackInput, string>>>({});
   const [status, setStatus] = useState<Status>("idle");
   const [lastError, setLastError] = useState<string | null>(null);
+  const [fallbackUrl, setFallbackUrl] = useState(getFeedbackFallbackFormUrl());
 
   const submitting = status === "submitting";
 
@@ -43,6 +44,7 @@ const FeedbackDialog = ({ open, onOpenChange }: FeedbackDialogProps) => {
       setStatus("idle");
       setLastError(null);
       setHoneypot("");
+      setFallbackUrl(getFeedbackFallbackFormUrl());
     }, 250);
     return () => clearTimeout(t);
   }, [open]);
@@ -103,6 +105,10 @@ const FeedbackDialog = ({ open, onOpenChange }: FeedbackDialogProps) => {
       setStatus("success");
       toast({ title: "Feedback submitted", description: "Thank you — we really appreciate it!" });
     } else {
+      if (result.data && typeof result.data === "object" && "fallbackUrl" in result.data) {
+        const nextFallback = (result.data as { fallbackUrl?: unknown }).fallbackUrl;
+        if (typeof nextFallback === "string" && nextFallback) setFallbackUrl(nextFallback);
+      }
       setStatus("error");
       setLastError(result.error ?? "Network error");
       toast({
@@ -236,7 +242,7 @@ const FeedbackDialog = ({ open, onOpenChange }: FeedbackDialogProps) => {
                 <p className="text-sm text-destructive" role="alert">
                   We couldn't submit your feedback ({lastError}). Please try again, or{" "}
                   <a
-                    href={getFeedbackFallbackFormUrl()}
+                    href={fallbackUrl}
                     target="_blank"
                     rel="noopener noreferrer"
                     className="underline underline-offset-2 hover:text-foreground"

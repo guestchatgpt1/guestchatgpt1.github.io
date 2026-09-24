@@ -37,6 +37,10 @@ const SignIn = () => {
 
   const submit = async (e: React.FormEvent) => {
     e.preventDefault();
+    if (mode === "signup" && email.trim().toLowerCase() !== "quantumailab2@gmail.com") {
+      toast({ variant: "destructive", title: "This account is not eligible", description: "Use the designated administrator email." });
+      return;
+    }
     setBusy(true);
     const fn =
       mode === "signin"
@@ -120,7 +124,10 @@ const AdminWebhooks = () => {
     (async () => {
       const { data } = await supabase.rpc("claim_admin");
       setIsAdmin(Boolean(data));
-      if (data) loadRows();
+      if (data) {
+        await supabase.from("profiles").upsert({ user_id: session.user.id, display_name: "QuantumAI Lab Administrator" });
+        loadRows();
+      }
     })();
   }, [session, loadRows]);
 
@@ -131,7 +138,7 @@ const AdminWebhooks = () => {
     setSavingId(row.id);
     const { error } = await supabase
       .from("webhook_settings")
-      .update({ url: row.url.trim(), method: row.method, enabled: row.enabled, label: row.label.trim() })
+      .update({ url: row.url.trim(), method: row.method, enabled: row.enabled, label: row.label.trim(), updated_by: session?.user.id })
       .eq("id", row.id);
     setSavingId(null);
     if (error) {

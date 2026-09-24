@@ -7,8 +7,8 @@ import { useToast } from "@/hooks/use-toast";
 import Seo from "@/components/Seo";
 import { contactSchema, type ContactInput } from "@/lib/validation";
 import { callWebhook, getCaptchaToken, HONEYPOT_FIELD, isHoneypotTripped } from "@/lib/webhook";
-import { WEBHOOKS } from "@/lib/webhooks";
 
+const WEBHOOK_PROXY_URL = `${import.meta.env.VITE_SUPABASE_URL}/functions/v1/webhook-proxy`;
 
 const DEPARTMENTS = {
   general: { label: "General Information", email: "info@quantumailab.in" },
@@ -38,10 +38,11 @@ const Contact = () => {
     const captchaToken = await getCaptchaToken();
     return callWebhook({
       name: "contact.submit",
-      url: WEBHOOKS.contact.url,
-      method: WEBHOOKS.contact.method,
+      url: WEBHOOK_PROXY_URL,
+      method: "POST",
       timeoutMs: 20_000,
       body: {
+        key: "contact",
         ...data,
         departmentLabel: DEPARTMENTS[data.department].label,
         routeTo: DEPARTMENTS[data.department].email,
