@@ -7,8 +7,8 @@ import AnimatedSection from "@/components/AnimatedSection";
 import Seo from "@/components/Seo";
 import { emailSchema } from "@/lib/validation";
 import { callWebhook, getCaptchaToken, HONEYPOT_FIELD, isHoneypotTripped } from "@/lib/webhook";
-import { WEBHOOKS } from "@/lib/webhooks";
 
+const WEBHOOK_PROXY_URL = `${import.meta.env.VITE_SUPABASE_URL}/functions/v1/webhook-proxy`;
 
 type Status = "idle" | "submitting" | "success" | "error";
 
@@ -43,14 +43,17 @@ const Unsubscribe = () => {
     const captchaToken = await getCaptchaToken();
     const result = await callWebhook({
       name: "newsletter.unsubscribe",
-      url: WEBHOOKS.newsletter.url,
-      method: WEBHOOKS.newsletter.method,
-      query: {
-        email: parsed.data,
-        action: "unsubscribe",
-        source: "quantumailab.website",
-        submittedAt: new Date().toISOString(),
-        ...(captchaToken ? { captchaToken } : {}),
+      url: WEBHOOK_PROXY_URL,
+      method: "POST",
+      body: {
+        key: "newsletter",
+        query: {
+          email: parsed.data,
+          action: "unsubscribe",
+          source: "quantumailab.website",
+          submittedAt: new Date().toISOString(),
+          ...(captchaToken ? { captchaToken } : {}),
+        },
       },
     });
     if (result.ok) {

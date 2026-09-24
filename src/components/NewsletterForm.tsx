@@ -4,8 +4,8 @@ import { Button } from "@/components/ui/button";
 import { useToast } from "@/hooks/use-toast";
 import { newsletterSchema } from "@/lib/validation";
 import { callWebhook, getCaptchaToken, HONEYPOT_FIELD, isHoneypotTripped } from "@/lib/webhook";
-import { WEBHOOKS } from "@/lib/webhooks";
 
+const WEBHOOK_PROXY_URL = `${import.meta.env.VITE_SUPABASE_URL}/functions/v1/webhook-proxy`;
 
 interface NewsletterFormProps {
   className?: string;
@@ -44,14 +44,17 @@ const NewsletterForm = ({ className = "", compact = false }: NewsletterFormProps
     const captchaToken = await getCaptchaToken();
     const result = await callWebhook({
       name: "newsletter.subscribe",
-      url: WEBHOOKS.newsletter.url,
-      method: WEBHOOKS.newsletter.method,
-      query: {
-        email: parsed.data.email,
-        action: "subscribe",
-        source: "quantumailab.website",
-        submittedAt: new Date().toISOString(),
-        ...(captchaToken ? { captchaToken } : {}),
+      url: WEBHOOK_PROXY_URL,
+      method: "POST",
+      body: {
+        key: "newsletter",
+        query: {
+          email: parsed.data.email,
+          action: "subscribe",
+          source: "quantumailab.website",
+          submittedAt: new Date().toISOString(),
+          ...(captchaToken ? { captchaToken } : {}),
+        },
       },
     });
 

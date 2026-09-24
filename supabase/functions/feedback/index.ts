@@ -1,7 +1,7 @@
 import { corsHeaders } from "npm:@supabase/supabase-js@2/cors";
 import { z } from "npm:zod@3.25.76";
+import { getWebhookSetting, requestWebhook } from "../_shared/webhook-config.ts";
 
-const FEEDBACK_WEBHOOK_URL = "https://xacade.app.n8n.cloud/webhook/feedback";
 const responseHeaders = {
   ...corsHeaders,
   "Access-Control-Allow-Headers": `${corsHeaders["Access-Control-Allow-Headers"]}, x-request-id`,
@@ -31,16 +31,15 @@ Deno.serve(async (req) => {
     const parsed = FeedbackSchema.safeParse(await req.json());
     if (!parsed.success) return json({ error: "Please check the feedback fields and try again." }, 400);
 
+    const setting = await getWebhookSetting("feedback");
+    if (setting.method !== "POST") return json({ error: "The feedback webhook must use POST." }, 502);
+    const fallback = await getWebhookSetting("feedback_fallback_form").catch(() => null);
+    const fallbackUrl = fallback?.url ?? "";
     const controller = new AbortController();
     const timeout = setTimeout(() => controller.abort(), 15_000);
     let upstream: Response;
     try {
-      upstream = await fetch(FEEDBACK_WEBHOOK_URL, {
-        method: "POST",
-        signal: controller.signal,
-        headers: { "Content-Type": "application/json", Accept: "application/json" },
-        body: JSON.stringify(parsed.data),
-      });
+      upstream = await requestWebhook(setting, { signal: controller.signal, body: parsed.data });
     } finally {
       clearTimeout(timeout);
     }
@@ -48,13 +47,13 @@ Deno.serve(async (req) => {
     const raw = await upstream.text();
     if (!upstream.ok) {
       console.error("feedback_webhook_error", upstream.status, raw.slice(0, 300));
-      return json({ error: `Feedback service returned ${upstream.status}.` }, 502);
+      return json({ error: `Feedback service returned ${upstream.status}.`, fallbackUrl }, 502);
     }
 
     return json({ ok: true });
   } catch (error) {
     const timedOut = error instanceof DOMException && error.name === "AbortError";
     console.error("feedback_proxy_error", timedOut ? "timeout" : error);
-    return json({ error: timedOut ? "Feedback service timed out." : "Feedback service is unavailable." }, 504);
+    return json({ error: timedOut ? "Feedback service timed out." : "Feedback service is unavailable.", fallbackUrl: "" }, 504);
   }
 });

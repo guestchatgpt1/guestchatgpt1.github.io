@@ -1,11 +1,10 @@
-/** QuantumAI Lab chat proxy for the configured n8n assistant. */
+/** QuantumAI Lab chat proxy for the administrator-configured n8n assistant. */
+import { getWebhookSetting, requestWebhook } from "../_shared/webhook-config.ts";
 const corsHeaders = {
   "Access-Control-Allow-Origin": "*",
   "Access-Control-Allow-Headers": "authorization, x-client-info, apikey, content-type",
   "Access-Control-Allow-Methods": "POST, OPTIONS",
 };
-
-const CHAT_WEBHOOK_URL = "https://wewefom.app.n8n.cloud/webhook/chat-assistant";
 
 type Message = { role: "user" | "assistant"; content: string };
 
@@ -86,21 +85,21 @@ Deno.serve(async (req) => {
       return json({ error: "No message provided." }, 400);
     }
 
+    const setting = await getWebhookSetting("chat");
+    if (setting.method !== "GET") return json({ error: "The chat webhook must use GET." }, 502);
     const controller = new AbortController();
     const timeout = setTimeout(() => controller.abort(), 20_000);
     let res: Response;
     try {
-      const chatUrl = new URL(CHAT_WEBHOOK_URL);
-      chatUrl.searchParams.set("message", history[history.length - 1].content);
-      chatUrl.searchParams.set("messages", JSON.stringify(history));
-      chatUrl.searchParams.set("source", "quantumailab.website");
-      chatUrl.searchParams.set("response_style", "concise");
-      chatUrl.searchParams.set("instruction", "Answer in a concise, helpful format. Use short paragraphs and at most 4 bullets. Avoid repeating the company introduction unless asked.");
-
-      res = await fetch(chatUrl, {
-        method: "GET",
+      res = await requestWebhook(setting, {
         signal: controller.signal,
-        headers: { Accept: "application/json" },
+        query: {
+          message: history[history.length - 1].content,
+          messages: JSON.stringify(history),
+          source: "quantumailab.website",
+          response_style: "concise",
+          instruction: "Answer in a concise, helpful format. Use short paragraphs and at most 4 bullets. Avoid repeating the company introduction unless asked.",
+        },
       });
     } finally {
       clearTimeout(timeout);
