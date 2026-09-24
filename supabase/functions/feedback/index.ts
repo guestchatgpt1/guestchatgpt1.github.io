@@ -34,6 +34,7 @@ Deno.serve(async (req) => {
     const setting = await getWebhookSetting("feedback");
     if (setting.method !== "POST") return json({ error: "The feedback webhook must use POST." }, 502);
     const fallback = await getWebhookSetting("feedback_fallback_form").catch(() => null);
+    const fallbackUrl = fallback?.url ?? "";
     const controller = new AbortController();
     const timeout = setTimeout(() => controller.abort(), 15_000);
     let upstream: Response;
@@ -46,7 +47,7 @@ Deno.serve(async (req) => {
     const raw = await upstream.text();
     if (!upstream.ok) {
       console.error("feedback_webhook_error", upstream.status, raw.slice(0, 300));
-      return json({ error: `Feedback service returned ${upstream.status}.`, fallbackUrl: fallback?.url }, 502);
+      return json({ error: `Feedback service returned ${upstream.status}.`, fallbackUrl }, 502);
     }
 
     return json({ ok: true });

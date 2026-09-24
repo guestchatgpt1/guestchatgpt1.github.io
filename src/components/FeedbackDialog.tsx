@@ -11,7 +11,6 @@ import {
 import { useToast } from "@/hooks/use-toast";
 import { feedbackSchema, type FeedbackInput } from "@/lib/validation";
 import { callWebhook, getCaptchaToken, HONEYPOT_FIELD, isHoneypotTripped } from "@/lib/webhook";
-import { getFeedbackFallbackFormUrl } from "@/lib/webhooks";
 
 const FEEDBACK_API_URL = `${import.meta.env.VITE_SUPABASE_URL}/functions/v1/feedback`;
 
@@ -31,7 +30,7 @@ const FeedbackDialog = ({ open, onOpenChange }: FeedbackDialogProps) => {
   const [errors, setErrors] = useState<Partial<Record<keyof FeedbackInput, string>>>({});
   const [status, setStatus] = useState<Status>("idle");
   const [lastError, setLastError] = useState<string | null>(null);
-  const [fallbackUrl, setFallbackUrl] = useState(getFeedbackFallbackFormUrl());
+  const [fallbackUrl, setFallbackUrl] = useState("");
 
   const submitting = status === "submitting";
 
@@ -44,7 +43,7 @@ const FeedbackDialog = ({ open, onOpenChange }: FeedbackDialogProps) => {
       setStatus("idle");
       setLastError(null);
       setHoneypot("");
-      setFallbackUrl(getFeedbackFallbackFormUrl());
+      setFallbackUrl("");
     }, 250);
     return () => clearTimeout(t);
   }, [open]);
@@ -240,16 +239,8 @@ const FeedbackDialog = ({ open, onOpenChange }: FeedbackDialogProps) => {
             <div aria-live="polite" aria-atomic="true">
               {status === "error" && (
                 <p className="text-sm text-destructive" role="alert">
-                  We couldn't submit your feedback ({lastError}). Please try again, or{" "}
-                  <a
-                    href={fallbackUrl}
-                    target="_blank"
-                    rel="noopener noreferrer"
-                    className="underline underline-offset-2 hover:text-foreground"
-                  >
-                    use our backup feedback form
-                  </a>
-                  .
+                  We couldn't submit your feedback ({lastError}). Please try again{fallbackUrl ? ", or " : "."}
+                  {fallbackUrl && <><a href={fallbackUrl} target="_blank" rel="noopener noreferrer" className="underline underline-offset-2 hover:text-foreground">use our backup feedback form</a>.</>}
                 </p>
               )}
             </div>
