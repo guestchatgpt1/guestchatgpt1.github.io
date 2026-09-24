@@ -119,23 +119,25 @@ describe("contact webhook (POST)", () => {
       method: "POST",
       body: {
         key: "contact",
+        body: {
         name: "Ada Lovelace",
         email: "ada@example.com",
         department: "sales",
         message: "Hello there from a curious user.",
         source: "quantumailab.website",
+        },
       },
     });
     const [, init] = fetchMock.mock.calls[0];
     expect(init.method).toBe("POST");
     expect((init.headers as Record<string, string>)["Content-Type"]).toBe("application/json");
     const body = JSON.parse(init.body as string);
-    expect(body).toMatchObject({
+    expect(body).toMatchObject({ key: "contact", body: {
       name: "Ada Lovelace",
       email: "ada@example.com",
       department: "sales",
       source: "quantumailab.website",
-    });
+    }});
   });
 
   it("surfaces failures with status code", async () => {
@@ -144,7 +146,7 @@ describe("contact webhook (POST)", () => {
       name: "contact.submit",
       url: "https://project.example/functions/v1/webhook-proxy",
       method: "POST",
-      body: { name: "x" },
+      body: { key: "contact", body: { name: "x" } },
     });
     expect(res.ok).toBe(false);
     expect(res.status).toBe(500);
@@ -188,7 +190,7 @@ describe("feedback proxy (POST)", () => {
     const res = await callWebhook({
       name: "feedback.submit",
       url: "https://project.example/functions/v1/feedback",
-      method: WEBHOOKS.feedback.method,
+      method: "POST",
       body: {
         name: "Ada Lovelace",
         phone: "+91 98765 43210",
@@ -214,7 +216,7 @@ describe("feedback proxy (POST)", () => {
     const res = await callWebhook({
       name: "feedback.submit",
       url: "https://project.example/functions/v1/feedback",
-      method: WEBHOOKS.feedback.method,
+      method: "POST",
       body: { name: "x" },
     });
     expect(res.ok).toBe(false);
