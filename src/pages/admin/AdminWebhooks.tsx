@@ -159,6 +159,16 @@ const AdminWebhooks = () => {
 
   const addRow = async (e: React.FormEvent) => {
     e.preventDefault();
+    try {
+      new URL(draft.url.trim());
+    } catch {
+      toast({ variant: "destructive", title: "Invalid URL", description: "Enter a complete URL beginning with https://." });
+      return;
+    }
+    if (!/^[a-z0-9_]+$/i.test(draft.key.trim())) {
+      toast({ variant: "destructive", title: "Invalid key", description: "Use letters, numbers, and underscores only." });
+      return;
+    }
     const { data, error } = await supabase
       .from("webhook_settings")
       .insert({ key: draft.key.trim(), label: draft.label.trim(), url: draft.url.trim(), method: draft.method })
