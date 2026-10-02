@@ -43,12 +43,14 @@ const Contact = () => {
       timeoutMs: 20_000,
       body: {
         key: "contact",
-        ...data,
-        departmentLabel: DEPARTMENTS[data.department].label,
-        routeTo: DEPARTMENTS[data.department].email,
-        source: "quantumailab.website",
-        submittedAt: new Date().toISOString(),
-        ...(captchaToken ? { captchaToken } : {}),
+        body: {
+          ...data,
+          departmentLabel: DEPARTMENTS[data.department].label,
+          routeTo: DEPARTMENTS[data.department].email,
+          source: "quantumailab.website",
+          submittedAt: new Date().toISOString(),
+          ...(captchaToken ? { captchaToken } : {}),
+        },
       },
     });
   };
