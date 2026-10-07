@@ -1,0 +1,1 @@
+- Keep the article spreadsheet URL in the private `webhook_settings` store and have the articles function validate and read it server-side, so only the administrator can change the source without exposing backend settings in the public app.
