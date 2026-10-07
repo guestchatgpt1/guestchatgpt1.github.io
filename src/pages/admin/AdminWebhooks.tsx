@@ -6,13 +6,14 @@
  */
 import { useCallback, useEffect, useState } from "react";
 import { Helmet } from "react-helmet-async";
-import { Loader2, Plus, RefreshCw, Save, Trash2 } from "lucide-react";
+import { FileSpreadsheet, Loader2, Plus, RefreshCw, Save, Trash2 } from "lucide-react";
 import { supabase } from "@/integrations/supabase/client";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Switch } from "@/components/ui/switch";
 import { useToast } from "@/hooks/use-toast";
+import { getGoogleSheetCsvUrl } from "@/lib/googleSheetUrl";
 import type { Session } from "@supabase/supabase-js";
 
 interface Row {
@@ -94,6 +95,8 @@ const AdminWebhooks = () => {
   const [rows, setRows] = useState<Row[]>([]);
   const [loading, setLoading] = useState(false);
   const [savingId, setSavingId] = useState<string | null>(null);
+  const [savingSheet, setSavingSheet] = useState(false);
+  const [sheetUrl, setSheetUrl] = useState("");
   const [draft, setDraft] = useState(emptyDraft);
 
   useEffect(() => {
@@ -113,7 +116,9 @@ const AdminWebhooks = () => {
       toast({ variant: "destructive", title: "Could not load settings", description: error.message });
       return;
     }
-    setRows((data ?? []) as Row[]);
+    const nextRows = (data ?? []) as Row[];
+    setRows(nextRows);
+    setSheetUrl(nextRows.find((row) => row.key === "articles_sheet")?.url ?? "");
   }, [toast]);
 
   useEffect(() => {
@@ -146,6 +151,30 @@ const AdminWebhooks = () => {
       return;
     }
     toast({ title: "Saved", description: `${row.label} updated.` });
+  };
+
+  const saveSheet = async (e: React.FormEvent) => {
+    e.preventDefault();
+    if (!getGoogleSheetCsvUrl(sheetUrl)) {
+      toast({ variant: "destructive", title: "Invalid spreadsheet link", description: "Paste a Google Sheets sharing link, including the /spreadsheets/d/ part." });
+      return;
+    }
+    const sheetRow = rows.find((row) => row.key === "articles_sheet");
+    if (!sheetRow) {
+      toast({ variant: "destructive", title: "Spreadsheet setting unavailable", description: "Refresh this page and try again." });
+      return;
+    }
+    setSavingSheet(true);
+    const { error } = await supabase
+      .from("webhook_settings")
+      .update({ url: sheetUrl.trim(), method: "GET", enabled: true, updated_by: session?.user.id })
+      .eq("id", sheetRow.id);
+    setSavingSheet(false);
+    if (error) {
+      toast({ variant: "destructive", title: "Could not save spreadsheet", description: error.message });
+      return;
+    }
+    toast({ title: "Spreadsheet saved", description: "The article list will use this Google Sheet." });
   };
 
   const remove = async (row: Row) => {
@@ -221,8 +250,8 @@ const AdminWebhooks = () => {
       <div className="mx-auto max-w-4xl px-4 py-16 space-y-8">
         <header className="flex flex-wrap items-center justify-between gap-4">
           <div>
-            <h1 className="text-3xl font-display">Webhook settings</h1>
-            <p className="text-sm text-muted-foreground">Private backend configuration. Changes apply to the live site.</p>
+            <h1 className="text-3xl font-display">Backend settings</h1>
+            <p className="text-sm text-muted-foreground">Private configuration. Changes apply to the live site.</p>
           </div>
           <div className="flex gap-2">
             <Button variant="outline" size="sm" onClick={loadRows} disabled={loading}>
@@ -232,8 +261,37 @@ const AdminWebhooks = () => {
           </div>
         </header>
 
+        <section className="rounded-xl border border-border bg-card/50 p-4 space-y-4" aria-labelledby="article-sheet-heading">
+          <div className="flex items-center gap-3">
+            <FileSpreadsheet size={18} className="text-primary" aria-hidden="true" />
+            <div>
+              <h2 id="article-sheet-heading" className="font-medium">Google Sheets article source</h2>
+              <p className="text-sm text-muted-foreground">Choose the spreadsheet and tab used for the latest articles.</p>
+            </div>
+          </div>
+          <form onSubmit={saveSheet} className="flex flex-col gap-3 sm:flex-row">
+            <div className="flex-1 space-y-1">
+              <Label htmlFor="articles-sheet-url">Google Sheets link</Label>
+              <Input
+                id="articles-sheet-url"
+                type="url"
+                required
+                value={sheetUrl}
+                onChange={(e) => setSheetUrl(e.target.value)}
+                placeholder="https://docs.google.com/spreadsheets/d/..."
+              />
+            </div>
+            <Button type="submit" className="sm:self-end" disabled={savingSheet || !sheetUrl.trim()}>
+              {savingSheet ? <Loader2 size={16} className="animate-spin" /> : <Save size={16} />}
+              Save spreadsheet
+            </Button>
+          </form>
+        </section>
+
+        <section className="space-y-4" aria-labelledby="webhook-settings-heading">
+          <h2 id="webhook-settings-heading" className="font-display text-lg">Webhook links</h2>
         <div className="space-y-4">
-          {rows.map((row) => (
+          {rows.filter((row) => row.key !== "articles_sheet").map((row) => (
             <div key={row.id} className="rounded-xl border border-border bg-card/50 p-4 space-y-3">
               <div className="flex flex-wrap items-center justify-between gap-3">
                 <div>
@@ -279,6 +337,7 @@ const AdminWebhooks = () => {
             </div>
           ))}
         </div>
+        </section>
 
         <form onSubmit={addRow} className="rounded-xl border border-dashed border-border p-4 space-y-3">
           <p className="font-medium">Add another link</p>
