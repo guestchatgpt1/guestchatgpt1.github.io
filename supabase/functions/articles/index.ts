@@ -1,4 +1,5 @@
 import { corsHeaders } from "npm:@supabase/supabase-js@2/cors";
+import { getWebhookSetting } from "../_shared/webhook-config.ts";
 
 /**
  * Public proxy for the LinkedIn article index kept in a Google Sheet.
@@ -7,8 +8,22 @@ import { corsHeaders } from "npm:@supabase/supabase-js@2/cors";
  * fetch it directly. This function fetches it server-side, parses the CSV
  * and returns a small, typed JSON payload.
  */
-const SHEET_ID = "1aY2vjwibg1M2zfFOlFrX4fu8YG8MoR6xutZQ55oAFvA";
-const SHEET_CSV = `https://docs.google.com/spreadsheets/d/${SHEET_ID}/export?format=csv&gid=0`;
+function getCsvExportUrl(value: string): URL | null {
+  try {
+    const source = new URL(value.trim());
+    const match = source.pathname.match(/^\/spreadsheets\/d\/([a-zA-Z0-9_-]+)(?:\/|$)/);
+    if (source.protocol !== "https:" || source.hostname !== "docs.google.com" || !match) return null;
+    const fragmentGid = source.hash.match(/(?:^#|&)gid=(\d+)/)?.[1];
+    const gid = source.searchParams.get("gid") ?? fragmentGid ?? "0";
+    if (!/^\d+$/.test(gid)) return null;
+    const exportUrl = new URL(`https://docs.google.com/spreadsheets/d/${match[1]}/export`);
+    exportUrl.searchParams.set("format", "csv");
+    exportUrl.searchParams.set("gid", gid);
+    return exportUrl;
+  } catch {
+    return null;
+  }
+}
 
 function parseCsv(text: string): string[][] {
   const rows: string[][] = [];
@@ -55,10 +70,23 @@ Deno.serve(async (req) => {
   if (req.method === "OPTIONS") return new Response("ok", { headers: corsHeaders });
 
   try {
+    const setting = await getWebhookSetting("articles_sheet");
+    const sheetUrl = getCsvExportUrl(setting.url);
+    if (!sheetUrl) {
+      return new Response(JSON.stringify({ error: "The saved Google Sheets link is invalid.", articles: [] }), {
+        status: 500,
+        headers: { ...corsHeaders, "Content-Type": "application/json" },
+      });
+    }
+
     const controller = new AbortController();
     const timeout = setTimeout(() => controller.abort(), 15_000);
-    const res = await fetch(SHEET_CSV, { signal: controller.signal, redirect: "follow" });
-    clearTimeout(timeout);
+    let res: Response;
+    try {
+      res = await fetch(sheetUrl, { signal: controller.signal, redirect: "follow" });
+    } finally {
+      clearTimeout(timeout);
+    }
 
     if (!res.ok) {
       return new Response(JSON.stringify({ error: `Sheet fetch failed (${res.status})`, articles: [] }), {
